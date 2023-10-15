@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.carebridge.backend.service;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

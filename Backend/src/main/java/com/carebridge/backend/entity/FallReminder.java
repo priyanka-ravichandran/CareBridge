@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.carebridge.backend.entity;
 
 public class FallReminder {
     private String ReceiverId;
