@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Edit Emergency Contact for Elderly</title>
 </head>
 <body>
-$END$
+<h1>Elderly Information</h1>
+
+<div id="elderlyInfo">
+  <strong>Elderly ID:</strong> <span id="ElderlyID">123</span><br>
+  <strong>Guardian ID:</strong> <span id="GuardianID">456</span><br>
+  <strong>Hobbies:</strong> <span id="Hobbies">Reading, Gardening</span><br>
+  <strong>Emergency Contact:</strong> <span id="EmergencyContact">123456789</span><br>
+</div>
+
+<h2>Edit Emergency Contact</h2>
+
+<label for="newEmergencyContact">New Emergency Contact:</label>
+<input type="text" id="newEmergencyContact" placeholder="New Emergency Contact">
+
+<button onclick="addEmergencyContact()">Add Emergency Contact</button>
+
+<script>
+  function addEmergencyContact() {
+      const ElderlyID = document.getElementById('ElderlyID').innerText;
+      const GuardianID = document.getElementById('GuardianID').innerText;
+      const Hobbies = document.getElementById('Hobbies').innerText;
+      const currentEmergencyContact = document.getElementById('EmergencyContact').innerText;
+      const newEmergencyContact = document.getElementById('newEmergencyContact').value;
+
+      // Update the emergency contact locally
+      document.getElementById('EmergencyContact').innerText = newEmergencyContact;
+
+      // Reset the input field
+      document.getElementById('newEmergencyContact').value = '';
+
+      // Assuming you have an API endpoint to add the emergency contact
+      // Send a POST request to update the emergency contact on the server
+      // Replace with your actual API endpoint and logic
+      const apiUrl = `/api/v1/emergencyContact/editContact`;
+      const data = {
+          ElderlyID,
+          GuardianID,
+          Hobbies,
+          EmergencyContact:  newEmergencyContact
+      };
+
+      fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+      });
+      /*.then(response => response.json())
+      .then(data => {
+          console.log('Emergency contact added successfully:', data);
+      })
+      .catch(error => {
+          console.error('Error adding emergency contact:', error);
+      })*/
+  }
+</script>
 </body>
 </html>

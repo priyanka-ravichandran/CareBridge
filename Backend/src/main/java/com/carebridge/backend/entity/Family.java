@@ -1,11 +1,11 @@
 package com.carebridge.backend.entity;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 
-@Entity
-@Table
+//@Entity
+//@Table
 public class Family extends AppUser{
-    @Id
+    /*@Id
     @SequenceGenerator(
             name="Family_sequence",
             sequenceName = "Family_sequence",
@@ -14,7 +14,7 @@ public class Family extends AppUser{
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "Family_sequence"
-    )
+    )*/
     private String FamilyMemberID;
     private String Languages;
 

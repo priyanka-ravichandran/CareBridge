@@ -1,12 +1,12 @@
 package com.carebridge.backend.entity;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 
-@Entity
-@Table
+//@Entity
+//@Table
 public class SOSAlerts {
-    @Id
+    /*@Id
     @SequenceGenerator(
             name="SOSAlerts_sequence",
             sequenceName = "SOSAlerts_sequence",
@@ -15,7 +15,7 @@ public class SOSAlerts {
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "SOSAlerts_sequence"
-    )
+    )*/
     private String ElderlyID;
     private String VolunteerID;
     private LocalDateTime Time;

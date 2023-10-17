@@ -13,19 +13,37 @@ public class EmergencyContactController {
 private EmergencyContactService ECS;
     @Autowired
     public EmergencyContactController(EmergencyContactService ECS){this.ECS=ECS;}
-    @RequestMapping(value = "/addContact",method = RequestMethod.GET)
+    @RequestMapping(value = "/addContact",method = RequestMethod.POST)
     public ResponseEntity<String> addContact(@RequestBody Elderly elderly){
         boolean ifAdded=false;
         ifAdded=ECS.addEmergencyContact(elderly);
         if(ifAdded==false){
+            System.out.println("Failed to add Emergency contact");
             return  ResponseEntity.ok("Failed to add new contact");
         }
         else{
+            System.out.println("Emergency contact added successfully");
             String guardianID = elderly.getGuardianID();
             String hobbies = elderly.getHobbies();
             String emergencyContact = elderly.getEmergencyContact();
             return ResponseEntity.ok("Successfully added details: guardian id:"+guardianID
                     +"  hobbies:"+hobbies+"  emergency contact:"+emergencyContact);
+        }
+    }
+    @RequestMapping(value = "/editContact",method = RequestMethod.POST)
+    public ResponseEntity<String> editContact(@RequestBody Elderly elderly){
+        boolean ifAdded=false;
+        ifAdded=ECS.editEmergencyContact(elderly);
+        if(ifAdded==false){
+            System.out.println("Failed to edit Emergency contact");
+            return  ResponseEntity.ok("Failed to edit contact");
+        }
+        else{
+            System.out.println("Emergency contact edit successfully");
+            String guardianID = elderly.getGuardianID();
+            String hobbies = elderly.getHobbies();
+            String emergencyContact = elderly.getEmergencyContact();
+            return ResponseEntity.ok("Successfully edited");
         }
     }
 }

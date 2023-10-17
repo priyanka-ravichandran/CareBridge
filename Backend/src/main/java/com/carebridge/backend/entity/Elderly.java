@@ -1,10 +1,10 @@
 package com.carebridge.backend.entity;
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 
-@Entity
-@Table
+//@Entity
+//@Table
 public class Elderly extends AppUser {
-    @Id
+    /*@Id
     @SequenceGenerator(
             name="Elderly_sequence",
             sequenceName = "Elderly_sequence",
@@ -13,9 +13,9 @@ public class Elderly extends AppUser {
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "Elderly_sequence"
-    )
+    )*/
     private String ElderlyID;
-    private String VolunteerID;
+    private String GuardianID;
     private String Hobbies;
     private String EmergencyContact;
 
@@ -27,12 +27,12 @@ public class Elderly extends AppUser {
         ElderlyID = elderlyID;
     }
 
-    public String getVolunteerID() {
-        return VolunteerID;
+    public String getGuardianID() {
+        return GuardianID;
     }
 
-    public void setVolunteerID(String volunteerID) {
-        VolunteerID = volunteerID;
+    public void setGuardianID(String guardianID) {
+        GuardianID = guardianID;
     }
 
     public String getHobbies() {

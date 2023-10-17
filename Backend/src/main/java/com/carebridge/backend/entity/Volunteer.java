@@ -1,11 +1,11 @@
 package com.carebridge.backend.entity;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 
-@Entity
-@Table
+//@Entity
+//@Table
 public class Volunteer extends AppUser{
-    @Id
+    /*@Id
     @SequenceGenerator(
             name="Volunteer_sequence",
             sequenceName = "Volunteer_sequence",
@@ -14,7 +14,7 @@ public class Volunteer extends AppUser{
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "Volunteer_sequence"
-    )
+    )*/
     private String VolunteerID;
     private String Preferred_Assistance;
     private String Availability;

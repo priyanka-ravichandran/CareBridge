@@ -1,10 +1,11 @@
 package com.carebridge.backend.entity;
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 
 import java.time.LocalTime;
-@Entity
-@Table
+//@Entity
+//@Table
 public class AppUser {
+    /*
     @Id
     @SequenceGenerator(
             name="AppUser_sequence",
@@ -14,7 +15,7 @@ public class AppUser {
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "AppUser_sequence"
-    )
+    )*/
     protected String UserID;
     protected String Phone_Number;
     protected String First_Name;
