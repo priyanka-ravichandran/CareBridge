@@ -16,6 +16,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth->{
                     auth.requestMatchers("/").permitAll();
+                    auth.requestMatchers("/secured").authenticated();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(Customizer.withDefaults())
