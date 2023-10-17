@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 const UserTabs = ({ route, navigation }) => {
     const { userType } = route.params;
     return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       {userType === 'family' && <Tab.Screen name="familyHomeScreen" component={FamilyHomeScreen} />}
       {userType === 'seniorCitizen' && <Tab.Screen name="seniorCitizenHomeScreen" component={SeniorCitizenHomeScreen} />}
       {userType === 'volunteer' && <Tab.Screen name="volunteerHomeScreen" component={VolunteerHomeScreen} />}
