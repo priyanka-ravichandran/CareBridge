@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "certification")
+@Table(name = "Certification")
 @IdClass(Certification.class)
 public class Certification implements Serializable {
     @Id

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "sosalerts")
+@Table(name = "SOSAlerts")
 @IdClass(SOSAlerts.class)
 public class SOSAlerts implements Serializable {
     @Id
