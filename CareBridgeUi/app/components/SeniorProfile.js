@@ -6,8 +6,8 @@ const SeniorprofileScreen = () => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
-  const [Numbera, setnumberb] = useState("");
-  const [Numberb, setnumbera] = useState("");
+  const [phonenumber, setphonenumber] = useState("");
+  const [alternatenumber, setalternatenumber] = useState("");
   const [Age, setage] = useState("");
   const [Address, setaddress] = useState("");
 
@@ -50,17 +50,17 @@ const SeniorprofileScreen = () => {
               
             <TextInput
             style={styles.input}
-            placeholder="Numbera"
-            value={Numbera}
-            onChangeText={setnumbera}
+            placeholder="Phone Number"
+            value={phonenumber}
+            onChangeText={setphonenumber}
             />
             <Text>Alternate Number</Text>
 
             <TextInput
             style={styles.input}
-            placeholder="Numberb"
-            value={Numberb}
-            onChangeText={setnumberb}
+            placeholder="Alternate Number"
+            value={alternatenumber}
+            onChangeText={setalternatenumber}
             />
             <Text>Gender</Text>
 

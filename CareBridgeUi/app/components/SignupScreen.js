@@ -9,7 +9,7 @@ const SignupScreen = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState(null);
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest({
-    clientId: 'http://1071408551074-7h7t6vcthqqlr13s3m6fibff3lvp6d0u.apps.googleusercontent.com/',
+    clientId: '1071408551074-7h7t6vcthqqlr13s3m6fibff3lvp6d0u.apps.googleusercontent.com',
     redirectUri: AuthSession.makeRedirectUri(),
     scopes: ['profile', 'email'],
     responseType: 'token',

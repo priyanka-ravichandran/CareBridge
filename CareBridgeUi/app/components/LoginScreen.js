@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import * as AuthSession from 'expo-auth-session';
 
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
+  console.log("Generated Redirect URI:", AuthSession.makeRedirectUri());
   
   const [request, response, promptAsync] = AuthSession.useAuthRequest({
-    clientId: 'http://1071408551074-7h7t6vcthqqlr13s3m6fibff3lvp6d0u.apps.googleusercontent.com/',
+    clientId: '1071408551074-7h7t6vcthqqlr13s3m6fibff3lvp6d0u.apps.googleusercontent.com',
     redirectUri: AuthSession.makeRedirectUri(),
     scopes: ['profile', 'email'],
     responseType: 'token',
