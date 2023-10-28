@@ -1,22 +1,15 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
-import axios from "axios"; 
 
-const TodoApp = () => {
+const MedicineList= () => {
   const [tasks, setTasks] = useState([]);
   const [taskText, setTaskText] = useState('');
-  useEffect(() => {
-    axios.get("http://csci5308vm20.research.cs.dal.ca:8080/checklist") .then((response) => { 
-               console.log(response);
-            }); 
-
-  }, []);  
 
   const addTask = () => {
     if (taskText.trim() !== '') {
-      setTasks([...tasks, { id: Date.now(), text: taskText, completed: false }]);
+      setTasks([...tasks, { id: Date.now(), text: taskText, completed: false, time: '' }]);
       setTaskText('');
     }
   };
@@ -33,19 +26,26 @@ const TodoApp = () => {
     setTasks(updatedTasks);
   };
 
+  const updateTime = (taskId, timeValue) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId ? { ...task, time: timeValue } : task
+    );
+    setTasks(updatedTasks);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.header}>Shopping List</Text>
+        <Text style={styles.header}>Medicine List</Text>
       </View>
       <TextInput
         style={styles.input}
-        placeholder="Add Item"
+        placeholder="Add Medicines"
         value={taskText}
         onChangeText={setTaskText}
       />
       <TouchableOpacity style={styles.addButton} onPress={addTask}>
-        <Text style={styles.addButtonText}>Add Item</Text>
+        <Text style={styles.addButtonText}>Add Medicines</Text>
       </TouchableOpacity>
       <FlatList
         data={tasks}
@@ -65,6 +65,12 @@ const TodoApp = () => {
             >
               {item.text}
             </Text>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="Time"
+              value={item.time}
+              onChangeText={(value) => updateTime(item.id, value)}
+            />
             <TouchableOpacity onPress={() => removeTask(item.id)}>
               <Icon name="trash" size={20} color="black" />
             </TouchableOpacity>
@@ -96,6 +102,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     padding: 10,
     marginBottom: 10,
+    borderRadius: 5,
   },
   addButton: {
     backgroundColor: 'black',
@@ -124,10 +131,21 @@ const styles = StyleSheet.create({
   },
   taskText: {
     flex: 1,
+    marginRight: 10,
   },
   completedTask: {
     textDecorationLine: 'line-through',
   },
+  timeInput: {
+    width: 50,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    textAlign: 'center',
+    borderRadius: 5,
+  },
 });
 
-export default TodoApp;
+export default MedicineList;
