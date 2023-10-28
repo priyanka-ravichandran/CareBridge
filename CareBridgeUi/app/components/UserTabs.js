@@ -49,7 +49,7 @@ const UserTabs = ({ route, navigation }) => {
         }}
       >
         <Tab.Screen name="medicinelist" component={MedicineList} />
-        <Tab.Screen name="todoapp" component={TodoApp} />
+        <Tab.Screen name="Shoppinglist" component={TodoApp} />
         <Tab.Screen name="seniorprofile" component={SeniorProfile} />
       </Tab.Navigator>
   );
