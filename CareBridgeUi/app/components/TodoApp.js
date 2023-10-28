@@ -9,9 +9,12 @@ const TodoApp = () => {
   const [taskText, setTaskText] = useState('');
   useEffect(() => {
     axios.get("http://csci5308vm20.research.cs.dal.ca:8080/checklist") .then((response) => { 
-               console.log(response);
+              response.map((task)=>{
+                setTasks([...tasks, { id: Date.now(), text: task.itemName, completed: false }]);
+              })                
+              
             }); 
-
+      
   }, []);  
 
   const addTask = () => {
