@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class MedicineReminderService {
         return isAdded;
     }
     @Async
-    public MedicineReminderList fetchMedReminderOfToday(String UserID, String ElderlyID){
+    public MedicineReminderList fetchMedReminderOfToday(String UserID){
         List<MedicineReminder> reminders = new ArrayList<>();
         reminders.add(new MedicineReminder("Antibiotics", LocalDateTime.of(2023,10,22,12, 15), false, "Alice Johnson"));
         MedicineReminderList reminderList = new MedicineReminderList(UserID,reminders);

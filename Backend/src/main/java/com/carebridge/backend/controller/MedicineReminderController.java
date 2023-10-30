@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/medicineReminder")
 public class MedicineReminderController {
@@ -56,5 +59,10 @@ public MedicineReminderController(MedicineReminderService medicineReminderServic
         }
         return ResponseEntity.ok("error adding");
 
+    }
+    @RequestMapping(value = "/todayMeds",method = RequestMethod.GET)
+    public ResponseEntity<String> fetchTodayMeds(@RequestParam String UserID){
+        medList=medicineReminderService.fetchMedReminderOfToday(UserID);
+        return ResponseEntity.ok("Today's medicine reminders fetched");
     }
 }
