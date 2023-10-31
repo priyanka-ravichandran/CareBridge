@@ -19,14 +19,16 @@ public class Checklist implements Serializable {
     @Column(name = "Item")
     private String itemName;
     private int amount;
+    private int status;
 
     public Checklist() {}
-    public Checklist(int guardianID, int elderlyID, int checklistNum, String itemName, int amount) {
+    public Checklist(int guardianID, int elderlyID, int checklistNum, String itemName, int amount, int status) {
         this.guardianID = guardianID;
         this.elderlyID = elderlyID;
         this.checklistNum = checklistNum;
         this.itemName = itemName;
         this.amount = amount;
+        this.status = status;
     }
 
     public int getGuardianID() {
@@ -67,5 +69,13 @@ public class Checklist implements Serializable {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

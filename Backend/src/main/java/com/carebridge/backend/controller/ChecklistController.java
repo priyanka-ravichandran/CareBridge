@@ -45,6 +45,7 @@ public class ChecklistController {
                     checklist.setGuardianID(newChecklist.getGuardianID());
                     checklist.setItemName(newChecklist.getItemName());
                     checklist.setAmount(newChecklist.getAmount());
+                    checklist.setStatus(newChecklist.getStatus());
                     return checklistRepository.save(checklist);
                 });
     }

@@ -47,6 +47,8 @@ public class AppUserController {
                     appUser.setLast_name(updatedAppUser.getLast_name());
                     appUser.setEmail(updatedAppUser.getEmail());
                     appUser.setBirthdate(updatedAppUser.getBirthdate());
+                    appUser.setAddress(updatedAppUser.getAddress());
+                    appUser.setGender(updatedAppUser.getGender());
                     return appUserRepository.save(appUser);
                 });
     }

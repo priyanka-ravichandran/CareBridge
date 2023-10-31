@@ -22,12 +22,16 @@ public class AppUser {
     private Date birthdate;
     private int type;
 
+    private String address;
+    private int gender;
+
     private String hashedPassword;
 
     public AppUser() {}
 
     public AppUser(final long userID, final String phone_number, final String first_name, final String last_name,
-                   final String email, final Date birthdate, final int type, final String hashedPassword) {
+                   final String email, final Date birthdate, final int type, final String hashedPassword,
+                   final String address, final int gender) {
         this.userID = userID;
         this.phone_number = phone_number;
         this.first_name = first_name;
@@ -36,6 +40,8 @@ public class AppUser {
         this.birthdate = birthdate;
         this.type = type;
         this.hashedPassword = hashedPassword;
+        this.address = address;
+        this.gender = gender;
     }
 
     public long getUserID() {
@@ -100,6 +106,22 @@ public class AppUser {
 
     public void setHashedPassword(String hashedPassword) {
         this.hashedPassword = hashedPassword;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 
     @Override
