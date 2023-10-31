@@ -17,7 +17,7 @@ public class AppUserController {
     }
 
     @PostMapping("/users")
-    AppUser appUser(@RequestBody AppUser appUser) {
+    public AppUser appUser(@RequestBody AppUser appUser) {
         return appUserRepository.save(appUser);
     }
 
