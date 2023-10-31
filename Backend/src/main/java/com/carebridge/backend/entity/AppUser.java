@@ -12,19 +12,25 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "USERID")
     private long userID;
-    @Column(unique = true)
+    @Column(unique = true, name = "PHONE_NUMBER")
     private String phone_number;
+    @Column(name = "FIRST_NAME")
     private String first_name;
+    @Column(name = "LAST_NAME")
     private String last_name;
-    @Column(unique = true)
+    @Column(unique = true, name = "EMAIL")
     private String email;
+    @Column(name = "BIRTHDATE")
     private Date birthdate;
+    @Column(name = "TYPE")
     private int type;
-
+    @Column(name = "ADDRESS")
     private String address;
+    @Column(name = "GENDER")
     private int gender;
-
+    @Column(name = "HASHEDPASSWORD")
     private String hashedPassword;
 
     public AppUser() {}
