@@ -70,6 +70,38 @@ public class AppUser {
         return hashedPassword;
     }
 
+    public void setUserID(long userID) {
+        this.userID = userID;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(this.userID, this.first_name, this.last_name);
