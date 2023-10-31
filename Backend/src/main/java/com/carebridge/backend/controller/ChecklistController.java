@@ -17,21 +17,25 @@ public class ChecklistController {
     }
 
     @PostMapping("/checklist")
+    @CrossOrigin(origins = "*")
     Checklist checklist(@RequestBody Checklist checklist) {
         return checklistRepository.save(checklist);
     }
 
     @GetMapping("/checklist")
+    @CrossOrigin(origins = "*")
     List<Checklist> all() {
         return checklistRepository.findAll();
     }
 
     @GetMapping("/checklist/q")
+    @CrossOrigin(origins = "*")
     List<Checklist> getChecklistForGuardianAndElderly(@RequestParam int guardianId, @RequestParam int elderlyId) {
         return checklistRepository.findChecklistByGuardianIDAndElderlyID(guardianId, elderlyId);
     }
 
     @PutMapping("/checklist/q")
+    @CrossOrigin(origins = "*")
     Optional<Checklist> updateChecklistItem(@RequestBody Checklist newChecklist, @RequestParam int guardianId, @RequestParam int elderlyId,
                               @RequestParam int checkListNum, @RequestParam String itemName) {
         return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumAndItemName(guardianId, elderlyId, checkListNum, itemName)
@@ -43,5 +47,10 @@ public class ChecklistController {
                     checklist.setAmount(newChecklist.getAmount());
                     return checklistRepository.save(checklist);
                 });
+    }
+
+    @DeleteMapping("/checklist/q")
+    void deleteChecklistItem(@RequestParam int checkListNum, @RequestParam String itemName) {
+        checklistRepository.deleteAllByChecklistNumAndItemName(checkListNum, itemName);
     }
 }

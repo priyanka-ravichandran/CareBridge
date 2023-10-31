@@ -17,16 +17,19 @@ public class AppUserController {
     }
 
     @PostMapping("/users")
+    @CrossOrigin(origins = "*")
     AppUser appUser(@RequestBody AppUser appUser) {
         return appUserRepository.save(appUser);
     }
 
     @GetMapping("/users")
+    @CrossOrigin(origins = "*")
     List<AppUser> all() {
         return appUserRepository.findAll();
     }
 
     @GetMapping("/users/{userId}")
+    @CrossOrigin(origins = "*")
     AppUser one(@PathVariable Long userId) {
         return appUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

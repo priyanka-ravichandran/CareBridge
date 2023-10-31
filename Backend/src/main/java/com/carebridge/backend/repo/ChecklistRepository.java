@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     List<Checklist> findChecklistByGuardianIDAndElderlyID(int guardianId, int elderlyId);
     Optional<Checklist> findChecklistByGuardianIDAndElderlyIDAndChecklistNumAndItemName(int guardianId, int elderlyId, int checklistNum, String itemName);
+
+    void deleteAllByChecklistNumAndItemName(int checkListNum, String itemName);
 }

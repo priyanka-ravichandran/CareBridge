@@ -15,16 +15,19 @@ public class SOSAlertsController {
     }
 
     @PostMapping("/sosAlerts")
+    @CrossOrigin(origins = "*")
     SOSAlerts sosAlerts(@RequestBody SOSAlerts sosAlerts) {
         return sosAlertsRepository.save(sosAlerts);
     }
 
     @GetMapping("/sosAlerts")
+    @CrossOrigin(origins = "*")
     List<SOSAlerts> all() {
         return sosAlertsRepository.findAll();
     }
 
     @GetMapping("/sosAlerts/q")
+    @CrossOrigin(origins = "*")
     List<SOSAlerts> forElderlyAndVolunteer(@RequestParam int elderlyId, @RequestParam int volunteerId) {
         return sosAlertsRepository.findSOSAlertsByElderlyIDAndVolunteerID(elderlyId, volunteerId);
     }

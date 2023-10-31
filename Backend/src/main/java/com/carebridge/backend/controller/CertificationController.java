@@ -15,11 +15,13 @@ public class CertificationController {
     }
 
     @PostMapping("/certification")
+    @CrossOrigin(origins = "*")
     Certification certification(@RequestBody Certification certification) {
         return certificationRepository.save(certification);
     }
 
     @GetMapping("/certification/q")
+    @CrossOrigin(origins = "*")
     List<Certification> certifications(@RequestParam int volunteerId) {
         return certificationRepository.findCertificationByVolunteerID(volunteerId);
     }
