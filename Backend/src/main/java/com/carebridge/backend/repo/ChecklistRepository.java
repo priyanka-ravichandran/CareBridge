@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     List<Checklist> findChecklistByGuardianIDAndElderlyID(int guardianId, int elderlyId);
-    Optional<Checklist> findChecklistByGuardianIDAndElderlyIDAndChecklistNum(int guardianId, int elderlyId, long checklistNum);
+    Optional<Checklist> findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(int guardianId, int elderlyId, String checklistNum);
     List<Checklist> findChecklistByElderlyID(int elderlyId);
 }

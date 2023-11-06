@@ -1,5 +1,6 @@
 package com.carebridge.backend.entity;
 
+import com.carebridge.backend.entity.id.ChecklistItemId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -9,28 +10,29 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "ChecklistItem")
-@IdClass(ChecklistItem.class)
+@IdClass(ChecklistItemId.class)
 public class ChecklistItem implements Serializable {
     @Id
-    private long checklistNumber;
+    private String checklistNumber;
+    @Id
     private String itemName;
     private int amount;
     private int status;
 
     public ChecklistItem() {}
 
-    public ChecklistItem(long checklistNumber, String itemName, int amount, int status) {
+    public ChecklistItem(String checklistNumber, String itemName, int amount, int status) {
         this.checklistNumber = checklistNumber;
         this.itemName = itemName;
         this.amount = amount;
         this.status = status;
     }
 
-    public long getChecklistNumber() {
+    public String getChecklistNumber() {
         return checklistNumber;
     }
 
-    public void setChecklistNumber(int checklistNumber) {
+    public void setChecklistNumber(String checklistNumber) {
         this.checklistNumber = checklistNumber;
     }
 

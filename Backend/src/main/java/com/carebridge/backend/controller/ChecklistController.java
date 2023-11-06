@@ -43,10 +43,10 @@ public class ChecklistController {
     @PutMapping("/checklist/q")
     @CrossOrigin(origins = "*")
     Optional<Checklist> updateChecklistForElderlyGuardianAndNumber(@RequestBody Checklist newChecklist
-            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam long checklistNumber) {
-        return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNum(guardianId, elderlyId, checklistNumber)
+            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam String checklistNumber) {
+        return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(guardianId, elderlyId, checklistNumber)
                 .map(checklist -> {
-                    checklist.setChecklistName(newChecklist.getChecklistName());
+                    checklist.setChecklist_name(newChecklist.getChecklist_name());
                     return checklistRepository.save(checklist);
                 });
     }

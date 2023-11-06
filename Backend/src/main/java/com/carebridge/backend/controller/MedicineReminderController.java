@@ -4,7 +4,6 @@ import com.carebridge.backend.entity.MedicineReminder;
 import com.carebridge.backend.repo.MedicineReminderRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,22 +33,22 @@ public class MedicineReminderController {
         return medicineReminderRepository.getMedicineReminderByElderlyId(elderlyId);
     }
 
-    @GetMapping("/medicineReminder/{elderlyId}/{date}")
+    @GetMapping("/medicineReminder/{elderlyId}/{day}")
     @CrossOrigin(origins = "*")
-    List<MedicineReminder> getRemindersForElderly(@PathVariable int elderlyId, @PathVariable Date date) {
-        return medicineReminderRepository.getMedicineReminderByElderlyIdAndDate(elderlyId, date);
+    List<MedicineReminder> getRemindersForElderly(@PathVariable int elderlyId, @PathVariable String day) {
+        return medicineReminderRepository.getMedicineReminderByElderlyIdAndDay(elderlyId, day);
     }
 
     @PutMapping("/medicineReminder/q")
     @CrossOrigin(origins = "*")
     Optional<MedicineReminder> updateChecklistItem(@RequestBody MedicineReminder newMedicineReminder,
                                                 @RequestParam int elderlyId, @RequestParam int volunteerId,
-                                                @RequestParam String medicineName, @RequestParam Date date,
+                                                @RequestParam String medicineName, @RequestParam String day,
                                                    @RequestParam String time) {
-        return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineNameAndDateAndTime(elderlyId, volunteerId, medicineName, date, time)
+        return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineNameAndDayAndTime(elderlyId, volunteerId, medicineName, day, time)
                 .map(medicineReminder -> {
                     medicineReminder.setMedicineName(newMedicineReminder.getMedicineName());
-                    medicineReminder.setDate(newMedicineReminder.getDate());
+                    medicineReminder.setDay(newMedicineReminder.getDay());
                     medicineReminder.setTime(newMedicineReminder.getTime());
                     return medicineReminderRepository.save(medicineReminder);
                 });
@@ -57,8 +56,8 @@ public class MedicineReminderController {
 
     @DeleteMapping("/medicineReminder/{elderlyId}/q?")
     @CrossOrigin(origins = "*")
-    void deleteReminder(@PathVariable("elderlyId") int elderlyId, @RequestParam String medicineName, @RequestParam Date date) {
-        medicineReminderRepository.deleteMedicineRemindersByElderlyIdAndMedicineNameAndDate(elderlyId, medicineName, date);
+    void deleteReminder(@PathVariable("elderlyId") int elderlyId, @RequestParam String medicineName, @RequestParam String day) {
+        medicineReminderRepository.deleteMedicineRemindersByElderlyIdAndMedicineNameAndDay(elderlyId, medicineName, day);
     }
 
 }

@@ -24,26 +24,27 @@ public class ChecklistItemController {
 
     @GetMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
-    List<ChecklistItem> getAllChecklistItems(@RequestParam long checklistNumber) {
+    List<ChecklistItem> getAllChecklistItems(@RequestParam String checklistNumber) {
         return checklistItemRepository.findChecklistItemsByChecklistNumber(checklistNumber);
     }
 
     @PutMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
     Optional<ChecklistItem> updateChecklistItem(@RequestBody ChecklistItem newChecklistItem,
-                                            @RequestParam long checklistNumber, @RequestParam String itemName) {
-        return checklistItemRepository.findChecklistItemsByChecklistNumberAndItemName(checklistNumber, itemName)
+                                            @RequestParam String checklistNumber, @RequestParam String itemName) {
+        return checklistItemRepository.findChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName)
                 .map(checklistItem -> {
                     checklistItem.setItemName(newChecklistItem.getItemName());
                     checklistItem.setAmount(newChecklistItem.getAmount());
                     checklistItem.setStatus(newChecklistItem.getStatus());
+
                     return checklistItemRepository.save(checklistItem);
                 });
     }
 
     @DeleteMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
-    void deleteChecklistItem(@RequestParam long checkListNumber, @RequestParam String itemName) {
+    void deleteChecklistItem(@RequestParam String checkListNumber, @RequestParam String itemName) {
         checklistItemRepository.deleteChecklistItemByChecklistNumberAndItemName(checkListNumber, itemName);
     }
 }
