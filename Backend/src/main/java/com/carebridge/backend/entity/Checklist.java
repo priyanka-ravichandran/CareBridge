@@ -14,21 +14,17 @@ public class Checklist implements Serializable {
     private int elderlyID;
     @Id
     @Column(name = "ChecklistNumber")
-    private int checklistNum;
+    private long checklistNum;
     @Id
-    @Column(name = "Item")
-    private String itemName;
-    private int amount;
-    private int status;
+    private String checklistName;
+
 
     public Checklist() {}
-    public Checklist(int guardianID, int elderlyID, int checklistNum, String itemName, int amount, int status) {
+    public Checklist(int guardianID, int elderlyID, long checklistNum, String checklistName) {
         this.guardianID = guardianID;
         this.elderlyID = elderlyID;
         this.checklistNum = checklistNum;
-        this.itemName = itemName;
-        this.amount = amount;
-        this.status = status;
+        this.checklistName = checklistName;
     }
 
     public int getGuardianID() {
@@ -39,16 +35,16 @@ public class Checklist implements Serializable {
         return elderlyID;
     }
 
-    public int getChecklistNum() {
+    public long getChecklistNum() {
         return checklistNum;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getChecklistName() {
+        return checklistName;
     }
 
-    public int getAmount() {
-        return amount;
+    public void setChecklistName(String checklistName) {
+        this.checklistName = checklistName;
     }
 
     public void setGuardianID(int guardianID) {
@@ -59,23 +55,7 @@ public class Checklist implements Serializable {
         this.elderlyID = elderlyID;
     }
 
-    public void setChecklistNum(int checklistNum) {
+    public void setChecklistNum(long checklistNum) {
         this.checklistNum = checklistNum;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 }

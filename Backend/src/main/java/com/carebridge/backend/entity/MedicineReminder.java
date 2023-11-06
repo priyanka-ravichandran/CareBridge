@@ -3,6 +3,7 @@ package com.carebridge.backend.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -25,11 +26,16 @@ public class MedicineReminder implements Serializable {
     @Column(name = "MedicineName")
     private String medicineName;
 
-    public MedicineReminder(int elderlyId, int volunteerId, String time, String medicineName) {
+    @Id
+    @Column(name = "Date")
+    private Date date;
+
+    public MedicineReminder(int elderlyId, int volunteerId, String time, String medicineName, Date date) {
         this.elderlyId = elderlyId;
         this.volunteerId = volunteerId;
         this.time = time;
         this.medicineName = medicineName;
+        this.date = date;
     }
 
     public MedicineReminder() {}
@@ -48,6 +54,30 @@ public class MedicineReminder implements Serializable {
 
     public String getMedicineName() {
         return medicineName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setElderlyId(int elderlyId) {
+        this.elderlyId = elderlyId;
+    }
+
+    public void setVolunteerId(int volunteerId) {
+        this.volunteerId = volunteerId;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setMedicineName(String medicineName) {
+        this.medicineName = medicineName;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

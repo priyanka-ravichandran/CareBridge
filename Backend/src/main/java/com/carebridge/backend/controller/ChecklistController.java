@@ -28,30 +28,26 @@ public class ChecklistController {
         return checklistRepository.findAll();
     }
 
+    @GetMapping("/checklist/{elderlyId}")
+    @CrossOrigin(origins = "*")
+    List<Checklist> getChecklistForGuardianAndElderly(@PathVariable int elderlyId) {
+        return checklistRepository.findChecklistByElderlyID(elderlyId);
+    }
+
     @GetMapping("/checklist/q")
     @CrossOrigin(origins = "*")
-    List<Checklist> getChecklistForGuardianAndElderly(@RequestParam int guardianId, @RequestParam int elderlyId) {
+    List<Checklist> getChecklistForElderly(@RequestParam int guardianId, @RequestParam int elderlyId) {
         return checklistRepository.findChecklistByGuardianIDAndElderlyID(guardianId, elderlyId);
     }
 
     @PutMapping("/checklist/q")
     @CrossOrigin(origins = "*")
-    Optional<Checklist> updateChecklistItem(@RequestBody Checklist newChecklist, @RequestParam int guardianId, @RequestParam int elderlyId,
-                              @RequestParam int checkListNum, @RequestParam String itemName) {
-        return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumAndItemName(guardianId, elderlyId, checkListNum, itemName)
+    Optional<Checklist> updateChecklistForElderlyGuardianAndNumber(@RequestBody Checklist newChecklist
+            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam long checklistNumber) {
+        return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNum(guardianId, elderlyId, checklistNumber)
                 .map(checklist -> {
-                    checklist.setElderlyID(newChecklist.getElderlyID());
-                    checklist.setChecklistNum(newChecklist.getChecklistNum());
-                    checklist.setGuardianID(newChecklist.getGuardianID());
-                    checklist.setItemName(newChecklist.getItemName());
-                    checklist.setAmount(newChecklist.getAmount());
-                    checklist.setStatus(newChecklist.getStatus());
+                    checklist.setChecklistName(newChecklist.getChecklistName());
                     return checklistRepository.save(checklist);
                 });
-    }
-
-    @DeleteMapping("/checklist/q")
-    void deleteChecklistItem(@RequestParam int checkListNum, @RequestParam String itemName) {
-        checklistRepository.deleteAllByChecklistNumAndItemName(checkListNum, itemName);
     }
 }
