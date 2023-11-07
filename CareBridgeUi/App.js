@@ -1,15 +1,22 @@
 // App.js
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigator from './app/components/AuthNavigator';
-import SeniorProfile from './app/components/SeniorProfile';
-import FamilyProfile from './app/components/FamilyProfile';
-import TodoApp from './app/components/TodoApp';
-import ReminderApp from './app/components/ReminderApp';
-import AddReminder from './app/components/AddReminder';
-import MedicineList from './app/components/MedicineList';
-import HomeScreen1 from './app/components/HomeScreen1';
+import { NavigationContainer } from "@react-navigation/native";
+import AuthNavigator from "./app/components/navigation/AuthNavigator";
+import UserTabs from "./app/components/navigation/UserTabs";
+
+
+
+import VolunteerSlot from "./app/components/volunteer/VolunteerSlot";
+import VolunteerBooking from "./app/components/volunteer/VolunteerBooking";
+
+
+import FamilyProfile from "./app/components/familyAndFriends/FamilyProfile";
+import Reminder from "./app/components/shared/Reminder";
+import BookVolunteer from "./app/components/familyAndFriends/BookVolunteer";
+import MedicineList from "./app/components/shared/MedicineList";
+import Verification from "./app/components/familyAndFriends/Verification";
+import AddNew from "./app/components/familyAndFriends/AddNew";
 
 
 
@@ -18,18 +25,10 @@ const App = () => {
   const [userType, setUserType] = useState(null); // Change to 'admin' or 'user' when the user is logged in
 
   return (
-    
-    <NavigationContainer>
+   <NavigationContainer>
       {userType ? <UserTabs userType={userType} /> : <AuthNavigator />}
-    </NavigationContainer> 
-   // <SeniorProfile/>
-    //<FamilyProfile/>
-    //<TodoApp/>
-    //<MedicineList/>
-    
-    //<HomeScreen1/>
-
-   ///<ReminderApp/>
+    </NavigationContainer>
+    //<AddNew/>
   );
 };
 
