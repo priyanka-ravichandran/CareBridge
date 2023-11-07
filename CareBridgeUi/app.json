@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -31,6 +29,7 @@
       "eas": {
         "projectId": "45c6fdff-21dd-4539-a893-0c4449f0f022"
       }
-    }
+    },
+    "scheme": "com.yoursite.yourapp"
   }
 }
