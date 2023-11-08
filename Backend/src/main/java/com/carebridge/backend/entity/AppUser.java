@@ -13,7 +13,7 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "USERID")
-    private long userID;
+    private int userID;
     @Column(unique = true, name = "PHONE_NUMBER")
     private String phone_number;
     @Column(name = "FIRST_NAME")
@@ -32,12 +32,14 @@ public class AppUser {
     private int gender;
     @Column(name = "HASHEDPASSWORD")
     private String hashedPassword;
+    @Column(name = "PAIR_CODE")
+    private String pairCode;
 
     public AppUser() {}
 
-    public AppUser(final long userID, final String phone_number, final String first_name, final String last_name,
+    public AppUser(final int userID, final String phone_number, final String first_name, final String last_name,
                    final String email, final Date birthdate, final int type, final String hashedPassword,
-                   final String address, final int gender) {
+                   final String address, final int gender, final String pairCode) {
         this.userID = userID;
         this.phone_number = phone_number;
         this.first_name = first_name;
@@ -48,9 +50,10 @@ public class AppUser {
         this.hashedPassword = hashedPassword;
         this.address = address;
         this.gender = gender;
+        this.pairCode = pairCode;
     }
 
-    public long getUserID() {
+    public int getUserID() {
         return userID;
     }
 
@@ -82,7 +85,7 @@ public class AppUser {
         return hashedPassword;
     }
 
-    public void setUserID(long userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 
@@ -128,6 +131,14 @@ public class AppUser {
 
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public String getPairCode() {
+        return pairCode;
+    }
+
+    public void setPairCode(String pairCode) {
+        this.pairCode = pairCode;
     }
 
     @Override

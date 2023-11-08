@@ -10,4 +10,5 @@ public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     List<Checklist> findChecklistByGuardianIDAndElderlyID(int guardianId, int elderlyId);
     Optional<Checklist> findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(int guardianId, int elderlyId, String checklistNum);
     List<Checklist> findChecklistByElderlyID(int elderlyId);
+    void deleteChecklistByChecklistNumber(String checklistNumber);
 }

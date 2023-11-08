@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.Checklist;
 import com.carebridge.backend.repo.ChecklistRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,5 +50,12 @@ public class ChecklistController {
                     checklist.setChecklist_name(newChecklist.getChecklist_name());
                     return checklistRepository.save(checklist);
                 });
+    }
+
+    @Transactional
+    @DeleteMapping("/checklist/q")
+    @CrossOrigin(origins = "*")
+    public void deleteChecklist(@RequestParam String checklistNumber) {
+        checklistRepository.deleteChecklistByChecklistNumber(checklistNumber);
     }
 }
