@@ -23,7 +23,7 @@ private EmergencyContactService ECS;
         }
         else{
             System.out.println("Emergency contact added successfully");
-            String guardianID = elderly.getGuardianID();
+            int guardianID = elderly.getGuardianId();
             String hobbies = elderly.getHobbies();
             String emergencyContact = elderly.getEmergencyContact();
             return ResponseEntity.ok("Successfully added details: guardian id:"+guardianID
@@ -40,7 +40,7 @@ private EmergencyContactService ECS;
         }
         else{
             System.out.println("Emergency contact edit successfully");
-            String guardianID = elderly.getGuardianID();
+            int guardianID = elderly.getGuardianId();
             String hobbies = elderly.getHobbies();
             String emergencyContact = elderly.getEmergencyContact();
             return ResponseEntity.ok("Successfully edited");
