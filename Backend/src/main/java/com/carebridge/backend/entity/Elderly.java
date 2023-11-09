@@ -1,53 +1,31 @@
 package com.carebridge.backend.entity;
-//import jakarta.persistence.*;
 
-//@Entity
-//@Table
-public class Elderly extends AppUser {
-    /*@Id
-    @SequenceGenerator(
-            name="Elderly_sequence",
-            sequenceName = "Elderly_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Elderly_sequence"
-    )*/
-    private String ElderlyID;
-    private String GuardianID;
-    private String Hobbies;
-    private String EmergencyContact;
+public class Elderly {
+    private int elderlyId;
+    private int guardianId;
+    private String hobbies;
+    private String emergencyContact;
 
-    public String getElderlyID() {
-        return ElderlyID;
+    public Elderly(int elderlyId, int guardianId, String hobbies, String emergencyContact) {
+        this.elderlyId = elderlyId;
+        this.guardianId = guardianId;
+        this.hobbies = hobbies;
+        this.emergencyContact = emergencyContact;
     }
 
-    public void setElderlyID(String elderlyID) {
-        ElderlyID = elderlyID;
+    public int getElderlyId() {
+        return elderlyId;
     }
 
-    public String getGuardianID() {
-        return GuardianID;
-    }
-
-    public void setGuardianID(String guardianID) {
-        GuardianID = guardianID;
+    public int getGuardianId() {
+        return guardianId;
     }
 
     public String getHobbies() {
-        return Hobbies;
-    }
-
-    public void setHobbies(String hobbies) {
-        Hobbies = hobbies;
+        return hobbies;
     }
 
     public String getEmergencyContact() {
-        return EmergencyContact;
-    }
-
-    public void setEmergencyContact(String emergencyContact) {
-        EmergencyContact = emergencyContact;
+        return emergencyContact;
     }
 }

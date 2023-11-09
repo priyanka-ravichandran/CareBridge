@@ -1,54 +1,31 @@
 package com.carebridge.backend.entity;
 
-//import jakarta.persistence.*;
+public class Volunteer {
+    private int volunteerID;
+    private String preferredAssistance;
+    private String availability;
+    private float rating;
 
-//@Entity
-//@Table
-public class Volunteer extends AppUser{
-    /*@Id
-    @SequenceGenerator(
-            name="Volunteer_sequence",
-            sequenceName = "Volunteer_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Volunteer_sequence"
-    )*/
-    private String VolunteerID;
-    private String Preferred_Assistance;
-    private String Availability;
-    private int Rating;
-
-    public String getVolunteerID() {
-        return VolunteerID;
+    public Volunteer(int volunteerID, String preferredAssistance, String availability, float rating) {
+        this.volunteerID = volunteerID;
+        this.preferredAssistance = preferredAssistance;
+        this.availability = availability;
+        this.rating = rating;
     }
 
-    public void setVolunteerID(String volunteerID) {
-        VolunteerID = volunteerID;
+    public int getVolunteerID() {
+        return volunteerID;
     }
 
-    public String getPreferred_Assistance() {
-        return Preferred_Assistance;
-    }
-
-    public void setPreferred_Assistance(String preferred_Assistance) {
-        Preferred_Assistance = preferred_Assistance;
+    public String getPreferredAssistance() {
+        return preferredAssistance;
     }
 
     public String getAvailability() {
-        return Availability;
+        return availability;
     }
 
-    public void setAvailability(String availability) {
-        Availability = availability;
-    }
-
-    public int getRating() {
-        return Rating;
-    }
-
-    public void setRating(int rating) {
-        Rating = rating;
+    public float getRating() {
+        return rating;
     }
 }

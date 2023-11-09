@@ -1,55 +1,59 @@
 package com.carebridge.backend.entity;
-import java.time.LocalDateTime;
 
-//import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
-//@Entity
-//@Table
-public class SOSAlerts {
-    /*@Id
-    @SequenceGenerator(
-            name="SOSAlerts_sequence",
-            sequenceName = "SOSAlerts_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "SOSAlerts_sequence"
-    )*/
-    private String ElderlyID;
-    private String VolunteerID;
-    private LocalDateTime Time;
-    private String Reason;
+import java.io.Serializable;
+import java.util.Objects;
 
-    public String getElderlyID() {
-        return ElderlyID;
+@Entity
+@Table(name = "SOSAlerts")
+@IdClass(SOSAlerts.class)
+public class SOSAlerts implements Serializable {
+    @Id
+    private int elderlyID;
+    @Id
+    private int volunteerID;
+    @Id
+    private String time;
+    @Id
+    private String reason;
+
+    public SOSAlerts() {}
+
+    public SOSAlerts(int elderlyID, int volunteerID, String time, String reason) {
+        this.elderlyID = elderlyID;
+        this.volunteerID = volunteerID;
+        this.time = time;
+        this.reason = reason;
     }
 
-    public void setElderlyID(String elderlyID) {
-        ElderlyID = elderlyID;
+    public int getElderlyID() {
+        return elderlyID;
     }
 
-    public String getVolunteerID() {
-        return VolunteerID;
+    public int getVolunteerID() {
+        return volunteerID;
     }
 
-    public void setVolunteerID(String volunteerID) {
-        VolunteerID = volunteerID;
-    }
-
-    public LocalDateTime getTime() {
-        return Time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        Time = time;
+    public String getTime() {
+        return time;
     }
 
     public String getReason() {
-        return Reason;
+        return reason;
     }
 
-    public void setReason(String reason) {
-        Reason = reason;
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.elderlyID, this.volunteerID, this.time);
+    }
+
+    @Override
+    public String toString() {
+        return "SOSAlert{" + "ElderlyId=" + this.elderlyID + ", volunteerId='" + this.volunteerID +
+                ", time=" + this.time + ", reason=" + this.reason + "}";
     }
 }

@@ -1,0 +1,20 @@
+[
+  {
+    "medicineName": "Aspirin",
+    "time": "08:30:00",
+    "isRecurring": false,
+    "elderlyName": "John Doe"
+  },
+  {
+    "medicineName": "Vitamin C",
+    "time": "09:00:00",
+    "isRecurring": true,
+    "elderlyName": "Jane Smith"
+  },
+  {
+    "medicineName": "Antibiotics",
+    "time": "12:15:00",
+    "isRecurring": false,
+    "elderlyName": "Alice Johnson"
+  }
+]

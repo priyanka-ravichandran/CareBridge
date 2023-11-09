@@ -1,36 +1,19 @@
 package com.carebridge.backend.entity;
 
-//import jakarta.persistence.*;
+public class Family {
+    private int familyMemberId;
+    private String languages;
 
-//@Entity
-//@Table
-public class Family extends AppUser{
-    /*@Id
-    @SequenceGenerator(
-            name="Family_sequence",
-            sequenceName = "Family_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "Family_sequence"
-    )*/
-    private String FamilyMemberID;
-    private String Languages;
-
-    public String getFamilyMemberID() {
-        return FamilyMemberID;
+    public Family(int familyMemberId, String languages) {
+        this.familyMemberId = familyMemberId;
+        this.languages = languages;
     }
 
-    public void setFamilyMemberID(String familyMemberID) {
-        FamilyMemberID = familyMemberID;
+    public int getFamilyMemberId() {
+        return familyMemberId;
     }
 
     public String getLanguages() {
-        return Languages;
-    }
-
-    public void setLanguages(String languages) {
-        Languages = languages;
+        return languages;
     }
 }
