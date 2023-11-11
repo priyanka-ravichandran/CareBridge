@@ -29,9 +29,9 @@ const SignupScreen = ({ navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [open, setOpen] = useState(false);
   const [usertypes, setUserTypes] = useState([
-    { label: "Family/Friends", value: 1 },
-    { label: "Seniorcitizen", value: 0 },
-    { label: "Volunteer", value: 2 },
+    { label: "Family/Friends", value: "family" },
+    { label: "Seniorcitizen", value: "senior" },
+    { label: "Volunteer", value: "volunteer" },
   ]);
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {

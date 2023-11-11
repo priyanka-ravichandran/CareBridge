@@ -40,7 +40,7 @@ const SeniorProfileListNavigator=()=>(
 )
 const renderTabsBasedOnUserType = (userDetails) => {
   let tabs = [];
-  if (userDetails.type === 0) {
+  if (userDetails.type === "senior") {
     tabs.push(
       <Tab.Screen
         name="Home"
@@ -62,7 +62,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="profile"
       />
     );
-  } else if (userDetails.type === 1) {
+  } else if (userDetails.type === "family") {
     tabs.push(
       <Tab.Screen
         name="Home"
@@ -91,7 +91,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
      
  
     );
-  } else if (userDetails.type === 2) {
+  } else if (userDetails.type === "volunteer") {
     tabs.push(
       <Tab.Screen
         name="Home"
@@ -156,7 +156,7 @@ const UserTabs = ({ route }) => {
               iconName= "person-add";
             }
             else if (route.name === "Profile") {
-              iconName = userDetails.type === 0 ? "elderly" : "person";
+              iconName = userDetails.type === "senior" ? "elderly" : "person";
             }
            
             return <MaterialIcons name={iconName} size={size} color={color} />;
