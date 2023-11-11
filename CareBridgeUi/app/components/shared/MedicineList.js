@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -12,27 +12,50 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
+import UserDetailsContext from "./context/userDetailsContext";
 
-const mockMedicines = {
-  Monday: [{ id: "1", name: "Medicine 1", time: new Date() }],
-};
-
-export default function MedicineList() {
+// { id: "1", name: "Medicine 1", time: new Date() }
+const MedicineList = () => {
   const [selectedDay, setSelectedDay] = useState("Monday");
-  const [medicinesByDay, setMedicinesByDay] = useState(mockMedicines);
+  const [medicinesByDay, setMedicinesByDay] = useState({
+    M: [],
+    T: [],
+    W: [],
+    Th: [],
+    F: [],
+    S: [],
+    Su: [],
+  });
   const [isModalVisible, setModalVisible] = useState(false);
   const [newMedicineName, setNewMedicineName] = useState("");
   const [newMedicineTime, setNewMedicineTime] = useState(new Date());
+  const userDetails = useContext(UserDetailsContext);
 
-  const days = ["M", "T", "W", "Th", "F", "S", "Su"]; 
+  const days = ["M", "T", "W", "Th", "F", "S", "Su"];
 
   useEffect(() => {
     axios
-      .get("http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/1001")
+      .get(
+        `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/${userDetails.userID}`
+      )
       .then((response) => {
         if (response && response.data) {
-          // Assume response.data is structured correctly
-          setMedicinesByDay(response.data);
+          let medicines = medicinesByDay;
+          let keyMap = {
+            Monday: "M",
+            Tuesday: "T",
+            Wednesday: "W",
+            Thursday: "Th",
+            Friday: "F",
+            Saturday: "S",
+            Sunday: "Su",
+          };
+          response.data.map((medicine) => {
+            medicines[keyMap[medicine.day]].push(medicine);
+          });
+          console.log(response.data);
+          console.log(medicines);
+          setMedicinesByDay(medicines);
         }
       })
       .catch((error) => {
@@ -46,48 +69,102 @@ export default function MedicineList() {
 
   const addMedicine = () => {
     const newMedicine = {
-      id: String(medicinesByDay[selectedDay].length + 1),
+      elderlyId: userDetails.userID,
       name: newMedicineName,
-      time: newMedicineTime,
+      time: newMedicineTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
+      volunteerId: "1002",
+      day: selectedDay,
     };
-    setMedicinesByDay({
-      ...medicinesByDay,
-      [selectedDay]: [...medicinesByDay[selectedDay], newMedicine],
-    });
-    setNewMedicineName("");
-    setModalVisible(false);
+    axios
+      .post(
+        "http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder",
+        newMedicine,
+        {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+
+        setMedicinesByDay({
+          ...medicinesByDay,
+          [selectedDay]: [...medicinesByDay[selectedDay], newMedicine],
+        });
+        setNewMedicineName("");
+        setModalVisible(false);
+      });
   };
 
-  const removeMedicine = (day, id) => {
-    setMedicinesByDay({
-      ...medicinesByDay,
-      [day]: medicinesByDay[day].filter((medicine) => medicine.id !== id),
-    });
+  const removeMedicine = (day, medicineName) => {
+    let medicineToDelete = medicinesByDay[day].filter((medicine) => medicine.medicineName === medicineName)[0]
+    console.log(medicineToDelete,medicineToDelete.medicineName)
+    // axios
+    //   .delete(
+    //     `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?medicineName=${medicineToDelete.medicineName}&itemName=${items[index].itemName}`
+    //   )
+    //   .then((response) => {
+    //     if (response) {
+    //       setMedicinesByDay({
+    //         ...medicinesByDay,
+    //         [day]: medicinesByDay[day].filter((medicine) => medicine.medicineName !== medicineName),
+    //       });
+    //     }
+    //   });
   };
 
-  const renderMedicine = ({ item }) => (
-    <View style={styles.medicineItem}>
-      <Text style={styles.medicineName}>{item.name}</Text>
-      <View style={styles.medicineTimeDeleteContainer}>
-        <DateTimePicker
-          value={item.time}
-          mode="time"
-          display="default"
-          onChange={(event, selectedTime) => {
-            // Here you should handle updating the time in your state
-            // This part will require a function to update the time of a specific medicine
-          }}
-          style={styles.timePicker}
-        />
-        <Pressable
-          style={styles.deleteButton}
-          onPress={() => removeMedicine(selectedDay, item.id)}
-        >
-          <MaterialIcons name="delete" size="24" color="black" />
-        </Pressable>
+  const renderMedicine = ({ item }) => {
+    console.log(item.time);
+    const [hours, minutes] = item.time.split(":");
+    const currentDate = new Date();
+    currentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
+    return (
+      <View style={styles.medicineItem}>
+        <Text style={styles.medicineName}>{item.medicineName}</Text>
+        <View style={styles.medicineTimeDeleteContainer}>
+          <DateTimePicker
+            value={currentDate}
+            mode="time"
+            display="default"
+            onChange={(event, selectedTime) => {
+              axios
+                .put(
+                  `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/q?elderlyId=${
+                    item.elderlyId
+                  }&volunteerId=${item.volunteerId}&medicineName=${
+                    item.name
+                  }&day=${selectedDay}&time=${selectedTime.toLocaleTimeString(
+                    "en-US",
+                    { hour: "2-digit", minute: "2-digit", hour12: false }
+                  )}`,
+                  userData,
+                  {
+                    headers: {
+                      "Content-Type": "application/json;charset=UTF-8",
+                    },
+                  }
+                )
+                .then((response) => {
+                  console.log(response);
+                });
+            }}
+            style={styles.timePicker}
+          />
+          <Pressable
+            style={styles.deleteButton}
+            onPress={() => removeMedicine(selectedDay, item.medicineName)}
+          >
+            <MaterialIcons name="delete" size={24} color="black" />
+          </Pressable>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -112,11 +189,11 @@ export default function MedicineList() {
       <FlatList
         data={medicinesByDay[selectedDay]}
         renderItem={renderMedicine}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.medicineName}
         style={styles.medicineList}
       />
       <Pressable style={styles.addButton} onPress={() => setModalVisible(true)}>
-        <MaterialIcons name="add" size="24" color="white" />
+        <MaterialIcons name="add" size={24} color="white" />
       </Pressable>
       <Modal
         animationType="slide"
@@ -128,6 +205,12 @@ export default function MedicineList() {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <MaterialIcons name="close" size={24} color="black" />
+            </Pressable>
             <View style={styles.inputRow}>
               <TextInput
                 style={styles.input}
@@ -153,7 +236,7 @@ export default function MedicineList() {
       </Modal>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -267,3 +350,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+export default MedicineList;
