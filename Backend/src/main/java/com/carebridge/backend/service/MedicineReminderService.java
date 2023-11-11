@@ -13,13 +13,8 @@ import java.util.List;
 public class MedicineReminderService {
     @Async
    public MedicineReminderList fetchList(String UserID){
-        List<MedicineReminder> reminders = new ArrayList<>();
-        reminders.add(new MedicineReminder("Aspirin", LocalDateTime.of(2023,10,20,8, 30), false, "John Doe"));
-        reminders.add(new MedicineReminder("Vitamin C", LocalDateTime.of(2023,10,29,9, 0), true, "Jane Smith"));
-        reminders.add(new MedicineReminder("Antibiotics", LocalDateTime.of(2023,10,22,12, 15), false, "Alice Johnson"));
-        reminders.add(new MedicineReminder("Painkiller", LocalDateTime.of(2023,10,16,16, 0), true, "Bob Brown"));
-        MedicineReminderList reminderList = new MedicineReminderList(UserID,reminders);
-        return reminderList;
+
+        return null;
     }
     @Async
     public boolean addMedicineReminder(MedicineReminder newMedReminder){
@@ -41,9 +36,7 @@ public class MedicineReminderService {
     }
     @Async
     public MedicineReminderList fetchMedReminderOfToday(String UserID){
-        List<MedicineReminder> reminders = new ArrayList<>();
-        reminders.add(new MedicineReminder("Antibiotics", LocalDateTime.of(2023,10,22,12, 15), false, "Alice Johnson"));
-        MedicineReminderList reminderList = new MedicineReminderList(UserID,reminders);
-        return reminderList;
+
+        return null;
     }
 }
