@@ -5,13 +5,14 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const AddNew = () => {
+const AddNew = ({navigation}) => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [birthDate, setBirthDate] = useState("1985-08-04");
   const [Address, setAddress] = useState("");
+  const[password,setPassword]=useState("");
 
   const [gender, setgender] = useState(null);
   const [genders, setgenders] = useState([
@@ -22,17 +23,17 @@ const AddNew = () => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [userId, setUserId] = useState(1001);
-  useEffect(() => {
-    axios
-      .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userId)
-      .then((response) => {
-        setFirstname(response.data.first_name);
-        setLastname(response.data.last_name);
-        setEmail(response.data.email);
-        setPhonenumber(response.data.phone_number);
-        setBirthDate("1955-05-21");
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userId)
+  //     .then((response) => {
+  //       setFirstname(response.data.first_name);
+  //       setLastname(response.data.last_name);
+  //       setEmail(response.data.email);
+  //       setPhonenumber(response.data.phone_number);
+  //       setBirthDate("1955-05-21");
+  //     });
+  // }, []);
   // Validation Functions
   const onChangeBirthDate = (event, selectedDate) => {
     const currentDate = selectedDate || birthDate;
@@ -47,6 +48,16 @@ const AddNew = () => {
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
+  };
+
+  const validatePassword = () => {
+    if (!password) {
+      return false;
+    } else if (password.length < 4) {
+      return false;
+    } else {
+      return true;
+    }
   };
 
   const validatePhoneNumber = (number) => {
@@ -69,7 +80,7 @@ const AddNew = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleAdd = () => {
     let errorMessages = {};
 
     if (!validateName(FirstName))
@@ -81,31 +92,28 @@ const AddNew = () => {
       errorMessages.phonenumber = "Invalid phone number";
     if (!gender) errorMessages.gender = "Please select a gender";
     if (!validateBirthDate()) errorMessages.birthDate = "Invalid Birth Date";
-
+    if(!validatePassword()) errorMessages.password = "Invalid Password";
     setErrors(errorMessages);
 
     if (Object.keys(errorMessages).length === 0) {
-      const userData = {
-        userId: userId,
-        email,
-        phone_number: phonenumber,
-        first_name: FirstName,
-        last_name: LastName,
-        birthdate: birthDate,
-        gender: gender,
-        address: Address,
-      };
+        const userData = {
+          email,
+          hashedPassword: password,
+          phone_number: phonenumber,
+          first_name: FirstName,
+          last_name: LastName,
+          birthdate: birthDate,
+          type: 0,
+          pairCode: '999999'
+        };
       axios
-        .put(
-          "http://csci5308vm20.research.cs.dal.ca:8080/users/" + userId,
-          userData,
-          {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8",
-            },
-          }
-        )
+        .post("http://csci5308vm20.research.cs.dal.ca:8080/users", userData, {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        })
         .then((response) => {
+          navigation.navigate("AddSeniorCitizen");
           console.log(response);
         });
     }
@@ -162,6 +170,23 @@ const AddNew = () => {
           }}
         />
         <Text style={{ color: "red" }}>{errors.email}</Text>
+
+        <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={(value) => {
+          setPassword(value);
+          setErrors((prevErrors) => {
+            let newErrors = { ...prevErrors };
+            delete newErrors.password;
+            return newErrors;
+          });
+        }}
+       secureTextEntry
+      />
+      <Text style={{ color: "red" }}>{errors.password}</Text>
+
         <Text>Phone Number</Text>
         <TextInput
           style={styles.input}
@@ -231,7 +256,7 @@ const AddNew = () => {
           }}
         />
       </View>
-      <Pressable style={styles.save} onPress={handleSave}>
+      <Pressable style={styles.save} onPress={handleAdd}>
         <Text style={styles.saveText}>ADD</Text>
       </Pressable>
     </View>
