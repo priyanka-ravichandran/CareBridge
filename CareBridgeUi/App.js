@@ -15,8 +15,8 @@ import FamilyProfile from "./app/components/familyAndFriends/FamilyProfile";
 import Reminder from "./app/components/shared/Reminder";
 import BookVolunteer from "./app/components/familyAndFriends/BookVolunteer";
 import MedicineList from "./app/components/shared/MedicineList";
-import Verification from "./app/components/familyAndFriends/Verification";
-import AddNew from "./app/components/familyAndFriends/AddNew";
+import Verification from "./app/components/familyAndFriends/addexisting/Verification";
+
 
 
 

@@ -30,8 +30,8 @@ const SignupScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [usertypes, setUserTypes] = useState([
     { label: "Family/Friends", value: 1 },
-    { label: "Seniorcitizen", value: 2 },
-    { label: "Volunteer", value: 3 },
+    { label: "Seniorcitizen", value: 0 },
+    { label: "Volunteer", value: 2 },
   ]);
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -73,8 +73,8 @@ const SignupScreen = ({ navigation }) => {
     if (!password) {
       setPasswordError("Password is required.");
       return false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long.");
+    } else if (password.length < 4) {
+      setPasswordError("Password must be at least 4 characters long.");
       return false;
     } else {
       setPasswordError(null);
@@ -166,8 +166,10 @@ const SignupScreen = ({ navigation }) => {
           },
         })
         .then((response) => {
+          navigation.navigate("Login");
           console.log(response);
         });
+        
     }
   };
 
@@ -236,9 +238,9 @@ const SignupScreen = ({ navigation }) => {
         setOpen={setOpen}
         value={userType}
         items={usertypes}
+        style={styles.input}
         setValue={setUserType}
         setItems={setUserTypes}
-        style={styles.input}
         dropDownContainerStyle={styles.dropDownContainerStyle}
         dropDownDirection="AUTO"
       />
@@ -287,6 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
     width: "100%",
   },
   header: {
@@ -295,7 +298,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: "80%",
+    width: "100%",
     height: 40,
     backgroundColor: "#E6E6E6",
     marginVertical: 10,
@@ -303,7 +306,6 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   picker: {
-    width: "80%",
     height: 40,
     marginVertical: 10,
     backgroundColor: "#E6E6E6",
@@ -346,7 +348,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   dateInputContainer: {
-    width: "80%",
+    width: "100%",
     height: 40,
     flexDirection: "row",
     alignItems: "center",
