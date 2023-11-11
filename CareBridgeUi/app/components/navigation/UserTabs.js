@@ -9,25 +9,35 @@ import SeniorProfile from "../shared/SeniorProfile";
 import SeniorCitizenHome from "../seniorCitizen/SeniorCitizenHome";
 import CheckListItems from "../shared/checklist/CheckListItems";
 import axios from "axios";
-import FamilyProfile from "../familyAndFriends/FamilyProfile";
 import VolunteerProfile from "../volunteer/VolunteerProfile";
 import VolunteerHomeScreen from "../volunteer/VolunteerHomeScreen";
-import Verification from "../familyAndFriends/Verification";
-import AddExisting from "../familyAndFriends/AddExisting";
 
-import FamilyHomeScreen from "../familyAndFriends/FamilyHomeScreen";
-import AddNew from "../familyAndFriends/AddNew";
+
+
+import FamilyProfile from "../familyAndFriends/FamilyProfile";
+import AddNew from "../familyAndFriends/addexisting/AddNew";
 import VolunteerBooking from "../volunteer/VolunteerBooking";
 import UserDetailsContext from "../shared/context/userDetailsContext";
+import AddSeniorCitizen from "../familyAndFriends/addexisting/AddSeniorCitizen";
+import FamilyHomeScreen from "../familyAndFriends/FamilyHomeScreen";
+import Verification from "../familyAndFriends/addexisting/Verification";
 
 const Tab = createBottomTabNavigator();
 const ChecklistStack = createStackNavigator();
+const SeniorProfileStack = createStackNavigator();
 const ChecklistNavigator = () => (
   <ChecklistStack.Navigator>
-    <ChecklistStack.Screen name="CheckLists" component={CheckLists} />
-    <ChecklistStack.Screen name="CheckListItems" component={CheckListItems} />
+    <ChecklistStack.Screen name="ShoppingList" component={CheckLists} />
+    <ChecklistStack.Screen name="ShoppingListItems" component={CheckListItems} />
   </ChecklistStack.Navigator>
 );
+const SeniorProfileListNavigator=()=>(
+    <SeniorProfileStack.Navigator>
+      <SeniorProfileStack.Screen name="AddSeniorCitizen" component={AddSeniorCitizen} options={{ headerShown: false }}/>
+      <SeniorProfileStack.Screen name="AddNew" component={AddNew}/>
+      <SeniorProfileStack.Screen name="Verification" component={Verification}/>
+    </SeniorProfileStack.Navigator>
+)
 const renderTabsBasedOnUserType = (userDetails) => {
   let tabs = [];
   if (userDetails.type === 0) {
@@ -40,7 +50,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
       />,
       <Tab.Screen name="Medicine" component={MedicineList} key="medicine" />,
       <Tab.Screen
-        name="CheckList"
+        name="ShoppingList"
         component={ChecklistNavigator}
         options={{ headerShown: false }}
         key="checklist"
@@ -61,10 +71,16 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="home"
       />,
       <Tab.Screen
-        name="CheckList"
+        name="ShoppingList"
         component={ChecklistNavigator}
         options={{ headerShown: false }}
         key="checklist"
+      />,
+      <Tab.Screen
+      name="AddSeniorCitizen"
+      component={SeniorProfileListNavigator}
+      options={{headShown:false}}
+      key="addseniorcitizen"
       />,
       <Tab.Screen
         name="Profile"
@@ -72,23 +88,13 @@ const renderTabsBasedOnUserType = (userDetails) => {
         options={{ headerShown: false }}
         key="profile"
       />
-      // <Tab.Screen
-      // name="AddNew"
-      // component={AddNew}
-      // options={{headshown:false}}
-      // key="addnew"
-      // />,
-      // <Tab.Screen
-      // name="AddExisting"
-      // component={AddExisting}
-      // options={{headshown:false}}
-      // key="addexisting"
-      // />
+     
+ 
     );
   } else if (userDetails.type === 2) {
     tabs.push(
       <Tab.Screen
-        name="home"
+        name="Home"
         component={VolunteerHomeScreen}
         options={{ headerShown: false }}
         key="home"
@@ -100,7 +106,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="volunteerbooking"
       />,
       <Tab.Screen
-        name="profile"
+        name="Profile"
         component={VolunteerProfile}
         options={{ headerShown: false }}
         key="profile"
@@ -144,11 +150,15 @@ const UserTabs = ({ route }) => {
               iconName = "home";
             } else if (route.name === "Medicine") {
               iconName = "medical-services";
-            } else if (route.name === "CheckList") {
+            } else if (route.name === "ShoppingList") {
               iconName = "view-list";
-            } else if (route.name === "Profile") {
+            }  else if(route.name === "AddSeniorCitizen"){
+              iconName= "person-add";
+            }
+            else if (route.name === "Profile") {
               iconName = userDetails.type === 0 ? "elderly" : "person";
             }
+           
             return <MaterialIcons name={iconName} size={size} color={color} />;
           },
         })}
