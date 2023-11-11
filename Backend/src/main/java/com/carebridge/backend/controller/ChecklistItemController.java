@@ -46,7 +46,7 @@ public class ChecklistItemController {
     @Transactional
     @DeleteMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
-    public void deleteChecklistItem(@RequestParam String checklistNumber, @RequestParam String itemName) {
-        checklistItemRepository.deleteChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName);
+    public long deleteChecklistItem(@RequestParam String checklistNumber, @RequestParam String itemName) {
+        return checklistItemRepository.deleteChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName);
     }
 }
