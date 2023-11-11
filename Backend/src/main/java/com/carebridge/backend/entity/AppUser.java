@@ -25,7 +25,7 @@ public class AppUser {
     @Column(name = "BIRTHDATE")
     private Date birthdate;
     @Column(name = "TYPE")
-    private int type;
+    private String type;
     @Column(name = "ADDRESS")
     private String address;
     @Column(name = "GENDER")
@@ -38,7 +38,7 @@ public class AppUser {
     public AppUser() {}
 
     public AppUser(final int userID, final String phone_number, final String first_name, final String last_name,
-                   final String email, final Date birthdate, final int type, final String hashedPassword,
+                   final String email, final Date birthdate, final String type, final String hashedPassword,
                    final String address, final int gender, final String pairCode) {
         this.userID = userID;
         this.phone_number = phone_number;
@@ -77,7 +77,7 @@ public class AppUser {
         return birthdate;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
@@ -109,7 +109,7 @@ public class AppUser {
         this.birthdate = birthdate;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
