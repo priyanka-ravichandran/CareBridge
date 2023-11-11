@@ -1,118 +1,210 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import React, { useState, useMemo } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { Calendar, LocaleConfig } from "react-native-calendars";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
+const Arrow = ({ direction }) => {
+  return (
+    <MaterialIcons
+      name={direction === "left" ? "arrow-back" : "arrow-forward"}
+      size={24}
+      color="black"
+    />
+  );
+};
+
+LocaleConfig.locales["en"] = {
+  monthNames: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  monthNamesShort: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+  dayNames: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
+  dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+};
+LocaleConfig.defaultLocale = "en";
 
 const VolunteerBooking = () => {
+  const [slots, setSlots] = useState({
+    "2023-11-11": {
+      "06:00 AM - 8.00 AM": "available",
+      "8:00 AM - 10.00 AM": "not available",
+      "12.00 PM - 2.00 PM": "booked",
+      "2:00 PM - 4.00 PM": "available",
+      "4:00 PM - 6.00 PM": "not available",
+      "6.00 PM - 8.00 PM": "booked",
+      "8:00 PM - 10.00 PM": "available",
+      "10:00 PM - 12.00 PM": "not available",
+    },
+    // Additional dates here
+  });
+  const [selectedDate, setSelectedDate] = useState("");
+  const markedDates = useMemo(
+    () => ({
+      [selectedDate]: {
+        selected: true,
+        selectedColor: "#222222",
+        selectedTextColor: "white",
+      },
+    }),
+    [selectedDate]
+  );
+
+  const toggleSlotAvailability = (date, time) => {
+    setSlots((currentSlots) => {
+      const newSlots = { ...currentSlots };
+      newSlots[date][time] =
+        newSlots[date][time] === "available" ? "not-available" : "available";
+      return newSlots;
+    });
+  };
+
+  const getBookingDetails = (date, time) => {
+    // Placeholder function to simulate fetching booking details
+    // Replace this with your actual logic to fetch booking details
+    alert(`Details for booking on ${date} at ${time}`);
+  };
+
+  const renderSlots = (date) => {
+    const daySlots = slots[date] || {};
+    const slotTimes = Object.keys(daySlots);
+    const rows = [];
+
+    for (let i = 0; i < slotTimes.length; i += 2) {
+      rows.push(
+        <View key={i} style={styles.row}>
+          {slotTimes.slice(i, i + 2).map((time) => (
+            <TouchableOpacity
+              key={time}
+              style={[
+                styles.slot,
+                daySlots[time] === "available"
+                  ? styles.availableSlot
+                  : daySlots[time] === "booked"
+                  ? styles.bookedSlot
+                  : styles.notAvailableSlot,
+              ]}
+              onPress={() =>
+                setSelectedSlot({ date, time, status: daySlots[time] })
+              }
+              disabled={daySlots[time] === "booked"}
+            >
+              <Text style={styles.slotText}>{time}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      );
+    }
+
+    return rows;
+  };
+
   return (
     <View style={styles.container}>
       <Calendar
-        // Style and other calendar props
-        style={styles.calendar}
-        current={'2023-09-02'}
-        markedDates={{
-          '2023-09-02': { selected: true, marked: true, selectedColor: 'blue' },
+        monthFormat={"yyyy MMMM"}
+        onDayPress={(day) => {
+          setSelectedDate(day.dateString);
         }}
-        // Hide the arrows if you don't need them
-        hideArrows={true}
-        // Theme your calendar to match the image as close as possible
-        theme={{
-          selectedDayBackgroundColor: '#00adf5',
-          todayTextColor: '#00adf5',
-          dayTextColor: '#2d4150',
-          textDisabledColor: '#d9e1e8',
+        markedDates={markedDates}
+        hideExtraDays={true}
+        firstDay={1}
+        onMonthChange={(month) => {
+          console.log("month changed", month);
         }}
+        hideArrows={false}
+        renderArrow={(direction) => <Arrow direction={direction} />}
+        disableAllTouchEventsForDisabledDays={true}
+        enableSwipeMonths={true}
       />
-      <ScrollView style={styles.appointmentsList}>
-        <AppointmentItem
-          time="10:00-13:00"
-          title="Booking from Mary"
-          description="Take him for a walk for 15 mins"
-        />
-        <AppointmentItem
-          time="10:00-13:00"
-          title="Booking from David"
-          description="Take him for a walk for 15 mins"
-        />
-        {/* ... other appointments */}
+      <ScrollView style={styles.slotsContainer}>
+        {selectedDate ? (
+          renderSlots(selectedDate)
+        ) : (
+          <Text>Select a date to see available slots.</Text>
+        )}
       </ScrollView>
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
     </View>
   );
 };
 
-const AppointmentItem = ({ time, title, description }) => (
-  <View style={styles.appointmentItem}>
-    <Text style={styles.timeText}>{time}</Text>
-    <View style={styles.detailContainer}>
-      <Text style={styles.titleText}>{title}</Text>
-      <Text style={styles.descriptionText}>{description}</Text>
-    </View>
-  </View>
-);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 50,
+    backgroundColor: "#f0f0f0",
   },
-  calendar: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ececec',
-  },
-  appointmentsList: {
+  slotsContainer: {
     flex: 1,
-    marginTop: 10,
+    paddingTop: 20,
   },
-  appointmentItem: {
-    flexDirection: 'row',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ececec',
-    backgroundColor: '#fff',
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Distribute slots evenly across the container
+    paddingHorizontal: 10, // Side padding to ensure there's space on the sides
+    marginBottom: 10, // Space between rows
   },
-  timeText: {
+  slot: {
+    flex: 1, // This ensures each slot will take up an equal amount of space
+    marginHorizontal: 5, // Ensure there's space between slots
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    // Shadow and elevation styles as before
+  },
+  slotText: {
     fontSize: 16,
-    color: '#333',
-    width: 75, // Fixed width for alignment
+    fontWeight: "bold", // If the text is bold in the image
+    color: "#333",
   },
-  detailContainer: {
-    flex: 1, // Take up the rest of the space
-    paddingLeft: 10, // Give some space between the time and details
+  availableSlot: {
+    // Additional styles for available slot if needed
   },
-  titleText: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: 'bold',
+  bookedSlot: {
+    backgroundColor: "#A9A9A9", // Darker grey to indicate booked slot
   },
-  descriptionText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  addButton: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    backgroundColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 30,
-    lineHeight: 30, // Adjust the line height to center the plus sign
+  notAvailableSlot: {
+    backgroundColor: "#D3D3D3", // Lighter grey to indicate not available slot
   },
 });
 
