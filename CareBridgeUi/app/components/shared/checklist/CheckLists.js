@@ -14,7 +14,7 @@ import UserDetailsContext from "../context/userDetailsContext";
 const CheckLists = ({ route, navigation }) => {
   const [checklists, setChecklists] = useState([]);
   const [newChecklist, setNewChecklist] = useState("");
-  const userDetails =useContext(UserDetailsContext);
+  const userDetails =useContext(UserDetailsContext); 
   const createChecklist = () => {
     if (newChecklist) {
       let checklistData = {
@@ -63,12 +63,18 @@ const CheckLists = ({ route, navigation }) => {
   }, []);
 
   const deleteChecklist = (checklistNum) => {
+    axios
+    .delete(
+      "http://csci5308vm20.research.cs.dal.ca:8080/checklist/q?checklistNumber=" +
+      checklistNum
+    )
+    .then((response) => {
     setChecklists(
       checklists.filter(
         (checklist) => checklist.checklist_number !== checklistNum
       )
-    );
-  };
+    )
+      })};
 
   return (
     <View style={styles.container}>
@@ -86,7 +92,7 @@ const CheckLists = ({ route, navigation }) => {
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Pressable
-              onPress={() => navigation.navigate("CheckListItems", { item })}
+              onPress={() => navigation.navigate("ShoppingListItems", { item })}
             >
               <Text style={styles.text}>{item.checklist_name}</Text>
             </Pressable>
@@ -131,15 +137,7 @@ const styles = {
     padding: 10,
     borderBottomWidth: 1,
     borderColor: "black",
-  },
-  listItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "black",
-  },
+  }
 };
 
 export default CheckLists;
