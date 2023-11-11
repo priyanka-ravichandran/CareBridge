@@ -31,6 +31,8 @@ const SeniorProfile = () => {
         setEmail(response.data.email);
         setPhonenumber(response.data.phone_number);
         setBirthDate("1955-05-21");
+        setAddress(response.data.address);
+        setgender(response.data.gender)
       });
   }, []);
   // Validation Functions
@@ -233,8 +235,8 @@ const SeniorProfile = () => {
       </View>
       <View style={styles.buttonContainer}>
         <Button  
-        title="LOGOUT"
-        buttonStyle={styles.logout}
+        title="Save"
+        color="black"
         onPress={handleSave}
         /></View>
     </View>

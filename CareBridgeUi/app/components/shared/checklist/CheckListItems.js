@@ -16,7 +16,7 @@ const CheckListItems = ({ route }) => {
   const [items, setItems] = useState([]);
   const [newItemName, setNewItemName] = useState("");
   const [newItemAmount, setNewItemAmount] = useState(1);
-  const { checklist_name, checklist_number } = route.params.item;
+  const { checklist_name, checklist_number } = route.params.item;  
   useEffect(() => {
     axios
       .get(
@@ -37,9 +37,9 @@ const CheckListItems = ({ route }) => {
   };
   const addItem = () => {
     let checklistItemData = {
-      checklist_number,
-      ItemName: newItemName,
-      Amount: newItemAmount,
+      checklistNumber:checklist_number,
+      itemName: newItemName,
+      amount: newItemAmount,
       status: 0,
     };
     axios
@@ -70,7 +70,7 @@ const CheckListItems = ({ route }) => {
     const newItems = [...items];
     newItems[index].status = value ? 1 : 0;
     let response = await updateTable(newItems[index]);
-    if (response == null) {
+    if (response) {
       setItems(newItems);
     }
   };
@@ -79,7 +79,7 @@ const CheckListItems = ({ route }) => {
     const newItems = [...items];
     newItems[index].amount = text;
     let response = await updateTable(newItems[index]);
-    if (response == null) {
+    if (response) {
       setItems(newItems);
     }
   };
@@ -88,7 +88,7 @@ const CheckListItems = ({ route }) => {
     const newItems = [...items];
     newItems[index].amount = String(Number(newItems[index].amount) + 1);
     let response = await updateTable(newItems[index]);
-    if (response == null) {
+    if (response) {
       setItems(newItems);
     }
   };
@@ -109,7 +109,7 @@ const CheckListItems = ({ route }) => {
   const deleteItem = (index) => {
     axios
       .delete(
-        `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checkListNumber=${checklist_number}&itemName=${checklist_name}`
+        `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=${items[index].checklistNumber}&itemName=${items[index].itemName}`
       )
       .then((response) => {
         if(response){
@@ -122,10 +122,11 @@ const CheckListItems = ({ route }) => {
     try {
       const response = await axios.put(
         "http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=" +
-          checklist_number +
+        updateObj.checklistNumber +
           "&itemName=" +
-          checklist_name,
+          updateObj.itemName,
         {
+          checklistNumber: updateObj.checklistNumber,
           itemName: updateObj.itemName,
           status: updateObj.status,
           amount: updateObj.amount,
