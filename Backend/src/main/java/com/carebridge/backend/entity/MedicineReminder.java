@@ -1,14 +1,14 @@
 package com.carebridge.backend.entity;
 
+import com.carebridge.backend.entity.id.MedicineReminderId;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name="MedicineReminders")
-@IdClass(MedicineReminder.class)
-public class MedicineReminder implements Serializable {
+@IdClass(MedicineReminderId.class)
+public class MedicineReminder {
     @Id
     @Column(name = "ElderlyID")
     private int elderlyId;
@@ -18,20 +18,22 @@ public class MedicineReminder implements Serializable {
     private int volunteerId;
 
     @Id
+    @Column(name = "MedicineReminderNumber")
+    private String medicineReminderNumber;
+
     @Column(name = "Time")
     private String time;
 
-    @Id
     @Column(name = "MedicineName")
     private String medicineName;
 
-    @Id
     @Column(name = "Day")
     private String day;
 
-    public MedicineReminder(int elderlyId, int volunteerId, String time, String medicineName, String day) {
+    public MedicineReminder(int elderlyId, int volunteerId, String medicineReminderNumber, String time, String medicineName, String day) {
         this.elderlyId = elderlyId;
         this.volunteerId = volunteerId;
+        this.medicineReminderNumber = medicineReminderNumber;
         this.time = time;
         this.medicineName = medicineName;
         this.day = day;
@@ -77,6 +79,14 @@ public class MedicineReminder implements Serializable {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getMedicineReminderNumber() {
+        return medicineReminderNumber;
+    }
+
+    public void setMedicineReminderNumber(String medicineReminderNumber) {
+        this.medicineReminderNumber = medicineReminderNumber;
     }
 
     @Override

@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface MedicineReminderRepository extends JpaRepository<MedicineReminder, Long> {
     List<MedicineReminder> getMedicineReminderByElderlyId(int elderlyId);
     List<MedicineReminder> getMedicineReminderByElderlyIdAndDay(int elderlyId, String day);
-    Optional<MedicineReminder> getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineNameAndDayAndTime(int elderlyId, int volunteerId, String medicineName, String day, String time);
-    void deleteMedicineRemindersByElderlyIdAndMedicineNameAndDay(int elderlyId, String medicineName, String day);
+    Optional<MedicineReminder> getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineReminderNumber(int elderlyId, int volunteerId, String medicineReminderNumber);
+    void deleteMedicineReminderByMedicineReminderNumber(String medicineReminderNumber);
 }

@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.MedicineReminder;
 import com.carebridge.backend.repo.MedicineReminderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,9 +44,8 @@ public class MedicineReminderController {
     @CrossOrigin(origins = "*")
     Optional<MedicineReminder> updateChecklistItem(@RequestBody MedicineReminder newMedicineReminder,
                                                 @RequestParam int elderlyId, @RequestParam int volunteerId,
-                                                @RequestParam String medicineName, @RequestParam String day,
-                                                   @RequestParam String time) {
-        return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineNameAndDayAndTime(elderlyId, volunteerId, medicineName, day, time)
+                                                @RequestParam String medicineReminderNumber) {
+        return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineReminderNumber(elderlyId, volunteerId, medicineReminderNumber)
                 .map(medicineReminder -> {
                     medicineReminder.setMedicineName(newMedicineReminder.getMedicineName());
                     medicineReminder.setDay(newMedicineReminder.getDay());
@@ -54,10 +54,11 @@ public class MedicineReminderController {
                 });
     }
 
-    @DeleteMapping("/medicineReminder/{elderlyId}/q?")
+    @Transactional
+    @DeleteMapping("/medicineReminder/q")
     @CrossOrigin(origins = "*")
-    void deleteReminder(@PathVariable("elderlyId") int elderlyId, @RequestParam String medicineName, @RequestParam String day) {
-        medicineReminderRepository.deleteMedicineRemindersByElderlyIdAndMedicineNameAndDay(elderlyId, medicineName, day);
+    public void deleteReminder(@RequestParam String medicineReminderNumber) {
+        medicineReminderRepository.deleteMedicineReminderByMedicineReminderNumber(medicineReminderNumber);
     }
 
 }
