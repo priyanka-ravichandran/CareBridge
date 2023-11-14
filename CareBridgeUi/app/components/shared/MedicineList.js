@@ -32,7 +32,15 @@ const MedicineList = () => {
   const userDetails = useContext(UserDetailsContext);
 
   const days = ["M", "T", "W", "Th", "F", "S", "Su"];
-
+  const keyMap = {
+    Monday: "M",
+    Tuesday: "T",
+    Wednesday: "W",
+    Thursday: "Th",
+    Friday: "F",
+    Saturday: "S",
+    Sunday: "Su",
+  };
   useEffect(() => {
     axios
       .get(
@@ -41,20 +49,10 @@ const MedicineList = () => {
       .then((response) => {
         if (response && response.data) {
           let medicines = medicinesByDay;
-          let keyMap = {
-            Monday: "M",
-            Tuesday: "T",
-            Wednesday: "W",
-            Thursday: "Th",
-            Friday: "F",
-            Saturday: "S",
-            Sunday: "Su",
-          };
+
           response.data.map((medicine) => {
             medicines[keyMap[medicine.day]].push(medicine);
           });
-          console.log(response.data);
-          console.log(medicines);
           setMedicinesByDay(medicines);
         }
       })
@@ -68,16 +66,18 @@ const MedicineList = () => {
   }, []);
 
   const addMedicine = () => {
+    let day = Object.keys(keyMap).find((key) => keyMap[key] === selectedDay);
     const newMedicine = {
       elderlyId: userDetails.userID,
-      name: newMedicineName,
+      medicineName: newMedicineName,
       time: newMedicineTime.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
       }),
-      volunteerId: "1002",
-      day: selectedDay,
+      volunteerId: 1002,
+      day: day,
+      medicineReminderNumber: userDetails.userID + String(Date.now()),
     };
     axios
       .post(
@@ -102,24 +102,33 @@ const MedicineList = () => {
   };
 
   const removeMedicine = (day, medicineName) => {
-    let medicineToDelete = medicinesByDay[day].filter((medicine) => medicine.medicineName === medicineName)[0]
-    console.log(medicineToDelete,medicineToDelete.medicineName)
-    // axios
-    //   .delete(
-    //     `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?medicineName=${medicineToDelete.medicineName}&itemName=${items[index].itemName}`
-    //   )
-    //   .then((response) => {
-    //     if (response) {
-    //       setMedicinesByDay({
-    //         ...medicinesByDay,
-    //         [day]: medicinesByDay[day].filter((medicine) => medicine.medicineName !== medicineName),
-    //       });
-    //     }
-    //   });
+    let medicineToDelete = medicinesByDay[day].filter(
+      (medicine) => medicine.medicineName === medicineName
+    )[0];
+    axios
+      .delete(
+        `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/q?medicineReminderNumber=${medicineToDelete.medicineReminderNumber}`
+      )
+      .then((response) => {
+        if (response) {
+          setMedicinesByDay({
+            ...medicinesByDay,
+            [day]: medicinesByDay[day].filter(
+              (medicine) => medicine.medicineName !== medicineName
+            ),
+          });
+        }
+      });
   };
-
+  // /q?elderlyId=${
+  //   item.elderlyId
+  // }&volunteerId=${item.volunteerId}&medicineReminderNumber=${
+  //   item.medicineReminderNumber
+  // }&day=${selectedDay}&time=${selectedTime.toLocaleTimeString(
+  //   "en-US",
+  //   { hour: "2-digit", minute: "2-digit", hour12: false }
+  // )}
   const renderMedicine = ({ item }) => {
-    console.log(item.time);
     const [hours, minutes] = item.time.split(":");
     const currentDate = new Date();
     currentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
@@ -132,17 +141,25 @@ const MedicineList = () => {
             mode="time"
             display="default"
             onChange={(event, selectedTime) => {
+              let day = Object.keys(keyMap).find(
+                (key) => keyMap[key] === selectedDay
+              );
+              const medicine = {
+                elderlyId: item.elderlyId,
+                medicineName: item.medicineName,
+                time: selectedTime.toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                }),
+                volunteerId: 1002,
+                day: day,
+                medicineReminderNumber: item.medicineReminderNumber,
+              };
               axios
                 .put(
-                  `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/q?elderlyId=${
-                    item.elderlyId
-                  }&volunteerId=${item.volunteerId}&medicineName=${
-                    item.name
-                  }&day=${selectedDay}&time=${selectedTime.toLocaleTimeString(
-                    "en-US",
-                    { hour: "2-digit", minute: "2-digit", hour12: false }
-                  )}`,
-                  userData,
+                  `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder`,
+                  medicine,
                   {
                     headers: {
                       "Content-Type": "application/json;charset=UTF-8",
@@ -189,7 +206,7 @@ const MedicineList = () => {
       <FlatList
         data={medicinesByDay[selectedDay]}
         renderItem={renderMedicine}
-        keyExtractor={(item) => item.medicineName}
+        keyExtractor={(item) => item.medicineReminderNumber}
         style={styles.medicineList}
       />
       <Pressable style={styles.addButton} onPress={() => setModalVisible(true)}>
