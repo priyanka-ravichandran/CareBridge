@@ -6,9 +6,25 @@ function Verification() {
   const [code, setCode] = useState('');
 
   const handleVerify = () => {
-    // Assume verification is done for the example; implement actual verification logic here
-    const verificationDone = true; // This should be the result of your actual verification logic
-
+    const verificationDone = true; 
+    const is = validatePassword();
+    setDbError(null);
+    if (isEmailValid && isPasswordValid) {
+      let userType = "seniorCitizen";
+      axios
+        .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+        .then((response) => {
+          console.log(response.data);
+          const user = response.data.find((user) => user.email === email);
+          if (user && user.hashedPassword === password) {
+            const userId = user.userID;
+            console.log("Password matches for the given email ID.");
+            navigation.replace("UserTabs", {userId});
+          } else {
+            setDbError("Password does not match or user not found.");
+          }
+        });
+    }
     if (verificationDone) {
       Alert.alert('Verification', 'Verification is done!', [{ text: 'OK' }]);
     } else {
