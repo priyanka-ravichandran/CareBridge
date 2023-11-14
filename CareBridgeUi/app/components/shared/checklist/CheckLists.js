@@ -84,7 +84,10 @@ const CheckLists = ({ route, navigation }) => {
         onChangeText={setNewChecklist}
         placeholder="New Checklist"
         />
-      <Button title="Create" onPress={createChecklist} color="black" />
+     
+      <Pressable style={styles.createButton} onPress={createChecklist}>
+        <Text style={styles.createText}>Create</Text>
+      </Pressable>
         
       <FlatList
         data={checklists}
@@ -113,6 +116,7 @@ const styles = {
     flex: 1,
     backgroundColor: "white",
     padding: 20,
+    paddingTop: 20,
   },
   text: {
     color: "black",
@@ -126,10 +130,16 @@ const styles = {
     color: "black",
     marginBottom: 20,
   },
-  button: {
+  createButton: {
     backgroundColor: "black",
-    color: "white",
+    padding: 10,
+    borderRadius: 5,
     marginTop: 10,
+    width: "100%",
+  },
+  createText: {
+    color: "white",
+    textAlign: "center",
   },
   listItem: {
     flexDirection: "row",
