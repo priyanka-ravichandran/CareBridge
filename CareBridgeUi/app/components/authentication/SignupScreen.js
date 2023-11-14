@@ -166,8 +166,7 @@ const SignupScreen = ({ navigation }) => {
           },
         })
         .then((response) => {
-          navigation.navigate("Login");
-          console.log(response);
+          navigation.navigate("LandingScreen");
         });
         
     }
@@ -275,8 +274,8 @@ const SignupScreen = ({ navigation }) => {
       </Pressable>
 
       <View style={styles.row}>
-        <Pressable onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.loginText}>Already have an account? Login</Text>
+        <Pressable onPress={() => navigation.navigate("LandingScreen")}>
+          <Text style={styles.landingPage}>Go Back</Text>
         </Pressable>
       </View>
     </View>
@@ -337,7 +336,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     zIndex: -1,
   },
-  loginText: {
+  landingPage: {
     color: "black",
     textDecorationLine: "underline",
   },

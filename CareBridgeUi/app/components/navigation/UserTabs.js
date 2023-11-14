@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-
+import {
+  createStackNavigator,
+  HeaderBackButton,
+} from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 import CheckLists from "../shared/checklist/CheckLists";
 import MedicineList from "../shared/MedicineList";
 import SeniorProfile from "../shared/SeniorProfile";
@@ -12,8 +15,6 @@ import axios from "axios";
 import VolunteerProfile from "../volunteer/VolunteerProfile";
 import VolunteerHomeScreen from "../volunteer/VolunteerHomeScreen";
 
-
-
 import FamilyProfile from "../familyAndFriends/FamilyProfile";
 import AddNew from "../familyAndFriends/addexisting/AddNew";
 import VolunteerBooking from "../volunteer/VolunteerBooking";
@@ -21,38 +22,72 @@ import UserDetailsContext from "../shared/context/userDetailsContext";
 import AddSeniorCitizen from "../familyAndFriends/addexisting/AddSeniorCitizen";
 import FamilyHomeScreen from "../familyAndFriends/FamilyHomeScreen";
 import Verification from "../familyAndFriends/addexisting/Verification";
+import { Pressable } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const ChecklistStack = createStackNavigator();
 const SeniorProfileStack = createStackNavigator();
-const ChecklistNavigator = () => (
-  <ChecklistStack.Navigator>
-    <ChecklistStack.Screen name="ShoppingList" component={CheckLists} />
-    <ChecklistStack.Screen name="ShoppingListItems" component={CheckListItems} />
-  </ChecklistStack.Navigator>
+const ChecklistNavigator = () => {
+  const navigation = useNavigation();
+  return (
+    <ChecklistStack.Navigator>
+      <ChecklistStack.Screen
+        name="ShoppingList"
+        component={CheckLists}
+        options={({ navigation, route }) => ({
+          // headerTitle: (props) => <LogoTitle {...props} />,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
+        })}
+      />
+      <ChecklistStack.Screen
+        name="ShoppingListItems"
+        component={CheckListItems}
+      />
+    </ChecklistStack.Navigator>
+  );
+};
+const SeniorProfileListNavigator = () => (
+  <SeniorProfileStack.Navigator>
+    <SeniorProfileStack.Screen
+      name="AddSeniorCitizen"
+      component={AddSeniorCitizen}
+      options={{ headerShown: false }}
+    />
+    <SeniorProfileStack.Screen name="AddNew" component={AddNew} />
+    <SeniorProfileStack.Screen name="Verification" component={Verification} />
+  </SeniorProfileStack.Navigator>
 );
-const SeniorProfileListNavigator=()=>(
-    <SeniorProfileStack.Navigator>
-      <SeniorProfileStack.Screen name="AddSeniorCitizen" component={AddSeniorCitizen} options={{ headerShown: false }}/>
-      <SeniorProfileStack.Screen name="AddNew" component={AddNew}/>
-      <SeniorProfileStack.Screen name="Verification" component={Verification}/>
-    </SeniorProfileStack.Navigator>
-)
 const renderTabsBasedOnUserType = (userDetails) => {
   let tabs = [];
   if (userDetails.type === "senior") {
     tabs.push(
+      <Tab.Screen name="Home" component={SeniorCitizenHome} key="home" />,
       <Tab.Screen
-        name="Home"
-        component={SeniorCitizenHome}
-        options={{ headerShown: false }}
-        key="home"
+        name="Medicine"
+        component={MedicineList}
+        key="medicine"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        }}
       />,
-      <Tab.Screen name="Medicine" component={MedicineList} key="medicine" />,
       <Tab.Screen
         name="ShoppingList"
         component={ChecklistNavigator}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        }}
         key="checklist"
       />,
       <Tab.Screen
@@ -67,7 +102,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
       <Tab.Screen
         name="Home"
         component={FamilyHomeScreen}
-        options={{ headerShown: false }}
+        //options={{ headerShown: false }}
         key="home"
       />,
       <Tab.Screen
@@ -77,10 +112,10 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="checklist"
       />,
       <Tab.Screen
-      name="AddSeniorCitizen"
-      component={SeniorProfileListNavigator}
-      options={{headShown:false}}
-      key="addseniorcitizen"
+        name="AddSeniorCitizen"
+        component={SeniorProfileListNavigator}
+        options={{ headShown: false }}
+        key="addseniorcitizen"
       />,
       <Tab.Screen
         name="Profile"
@@ -88,8 +123,6 @@ const renderTabsBasedOnUserType = (userDetails) => {
         options={{ headerShown: false }}
         key="profile"
       />
-     
- 
     );
   } else if (userDetails.type === "volunteer") {
     tabs.push(
@@ -152,13 +185,12 @@ const UserTabs = ({ route }) => {
               iconName = "medical-services";
             } else if (route.name === "ShoppingList") {
               iconName = "view-list";
-            }  else if(route.name === "AddSeniorCitizen"){
-              iconName= "person-add";
+            } else if (route.name === "AddSeniorCitizen") {
+              iconName = "person-add";
+            } else if (route.name === "Profile") {
+              iconName = "person";
             }
-            else if (route.name === "Profile") {
-              iconName = userDetails.type === "senior" ? "elderly" : "person";
-            }
-           
+
             return <MaterialIcons name={iconName} size={size} color={color} />;
           },
         })}
