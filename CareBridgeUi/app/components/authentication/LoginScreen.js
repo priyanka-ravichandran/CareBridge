@@ -122,8 +122,8 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </Pressable>
         <Text style={styles.separator}>|</Text>
-        <Pressable onPress={() => navigation.navigate("Signup")}>
-          <Text style={styles.signup}>Signup</Text>
+        <Pressable onPress={() => navigation.navigate("LandingScreen")}>
+          <Text style={styles.landingPage}>Go Back</Text>
         </Pressable>
       </View>
     </View>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   separator: {
     marginHorizontal: 5,
   },
-  signup: {
+  landingPage: {
     color: "black",
   },
   errorText: {
