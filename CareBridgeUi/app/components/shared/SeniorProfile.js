@@ -4,8 +4,9 @@ import { StyleSheet, Text, View, TextInput, Button, Pressable} from "react-nativ
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
 
-const SeniorProfile = () => {
+const SeniorProfile = ({navigation}) => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -85,7 +86,7 @@ const SeniorProfile = () => {
     if (!validateBirthDate()) errorMessages.birthDate = "Invalid Birth Date";
 
     setErrors(errorMessages);
-
+   
     if (Object.keys(errorMessages).length === 0) {
       const userData = {
         userId: userId,
@@ -112,6 +113,9 @@ const SeniorProfile = () => {
         });
     }
   };
+  const handleLogout = () =>{
+    navigation.navigate("LandingScreen");
+  }
 
   return (
     <View style={styles.container}>
@@ -239,7 +243,14 @@ const SeniorProfile = () => {
         color="black"
         onPress={handleSave}
         /></View>
-    </View>
+    
+     <View style={styles.buttonContainer}>
+     <Button  
+     title="Logout"
+     color="black"
+     onPress={handleLogout}
+     /></View>
+ </View>
   );
 };
 
