@@ -237,19 +237,14 @@ const SeniorProfile = ({navigation}) => {
           }}
         />
       </View>
-      <View style={styles.buttonContainer}>
-        <Button  
-        title="Save"
-        color="black"
-        onPress={handleSave}
-        /></View>
+      
     
-     <View style={styles.buttonContainer}>
-     <Button  
-     title="Logout"
-     color="black"
-     onPress={handleLogout}
-     /></View>
+    <Pressable style={styles.buttonContainer} onPress={handleLogout}>
+        <Text style={styles.createText}>Save</Text>
+      </Pressable>
+      <Pressable style={styles.buttonContainer} onPress={handleLogout}>
+        <Text style={styles.createText}>Logout</Text>
+      </Pressable>
  </View>
   );
 };
@@ -284,8 +279,11 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    width: '40%',
-    marginBottom: 10,
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: "50%",
   },
   logout: {
     backgroundColor: 'black', 
@@ -294,6 +292,10 @@ const styles = StyleSheet.create({
     marginBottom: 10, 
     width: '80%', 
     alignItems: 'center', 
+  },
+  createText: {
+    color: "white",
+    textAlign: "center",
   },
   row: {
     flexDirection: "row",
