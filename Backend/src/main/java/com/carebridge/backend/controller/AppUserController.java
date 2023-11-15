@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 public class AppUserController {
@@ -20,6 +21,10 @@ public class AppUserController {
     @PostMapping("/users")
     @CrossOrigin(origins = "*")
     AppUser appUser(@RequestBody AppUser appUser) {
+        long seed = appUser.getEmail().hashCode();
+        Random random = new Random(seed);
+        int code = 100000 + random.nextInt(900000);
+        appUser.setPairCode(String.valueOf(code));
         return appUserRepository.save(appUser);
     }
 

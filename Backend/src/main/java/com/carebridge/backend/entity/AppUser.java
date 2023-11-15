@@ -32,7 +32,7 @@ public class AppUser {
     private int gender;
     @Column(name = "HASHEDPASSWORD")
     private String hashedPassword;
-    @Column(name = "PAIR_CODE")
+    @Column(name = "PAIR_CODE", nullable = true)
     private String pairCode;
 
     public AppUser() {}
