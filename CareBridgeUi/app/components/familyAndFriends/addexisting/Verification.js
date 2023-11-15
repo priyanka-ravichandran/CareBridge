@@ -1,91 +1,201 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from "react";
+import { View, TextInput, Text, StyleSheet, Pressable } from "react-native";
+import Autocomplete from "react-native-autocomplete-input";
+import axios from "axios";
+import UserDetailsContext from "../../shared/context/userDetailsContext";
 
+const Verification = ({ navigation }) => {
+  const [query, setQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedValue, setSelectedValue] = useState({});
+  const [disableAutoComplete, setDisableAutoComplete] = useState(true);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [data, setData] = useState([]);
+  const [errors, setErrors] = useState({});
+  const userDetails = useContext(UserDetailsContext);
+  const [pairCode, setPairCode] = useState("");
 
-function Verification() {
-  const [code, setCode] = useState('');
+  const handleSelect = (item) => {
+    setQuery(item.first_name + " " + item.last_name);
+    setPairCode(item.pairCode);
+    setSelectedValue(item);
+    setFilteredData([]);
+    setDisableAutoComplete(false);
+  };
+  useEffect(() => {
+    axios
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+      .then((response) => {
+        if (response.data) {
+          let seniorCitizens = [];
+          response.data.map((user) => {
+            if (user.type === "senior") {
+              seniorCitizens.push(user);
+            }
+          });
+          setData(seniorCitizens);
+        }
+      });
+  }, []);
 
-  const handleVerify = () => {
-    const verificationDone = true; 
-    const is = validatePassword();
-    setDbError(null);
-    if (isEmailValid && isPasswordValid) {
-      let userType = "seniorCitizen";
+  useEffect(() => {
+    if (query) {
+      const regex = new RegExp(`${query.trim()}`, "i");
+      setFilteredData(
+        data.filter(
+          (item) => (item.first_name + " " + item.last_name).search(regex) >= 0
+        )
+      );
+    } else {
+      setFilteredData([]);
+    }
+  }, [query]);
+  const verifyCode = () => {
+    let errorMessages = errors;
+    console.log(pairCode, verificationCode);
+    if (pairCode === verificationCode) {
+      let pairingData = {
+        seniorCitizenId: selectedValue.userID,
+        familyId: userDetails.userID,
+      };
       axios
-        .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+        .post(
+          "http://csci5308vm20.research.cs.dal.ca:8080/pairings",
+          pairingData,
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+            },
+          }
+        )
         .then((response) => {
-          console.log(response.data);
-          const user = response.data.find((user) => user.email === email);
-          if (user && user.hashedPassword === password) {
-            const userId = user.userID;
-            console.log("Password matches for the given email ID.");
-            navigation.replace("UserTabs", {userId});
+          if (response.status === 200) {
+            navigation.navigate("AddSeniorCitizen");
           } else {
-            setDbError("Password does not match or user not found.");
+            console.log(response);
           }
         });
-    }
-    if (verificationDone) {
-      Alert.alert('Verification', 'Verification is done!', [{ text: 'OK' }]);
     } else {
-      Alert.alert('Verification', 'Verification not done.', [{ text: 'OK' }]);
+      console.log("in");
+      errorMessages.pairingCode = "Incorrect code";
+      setErrors(errorMessages);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Enter 6-digit Code</Text>
-      
-      <TextInput
-        style={styles.input}
-        onChangeText={setCode}
-        value={code}
-        keyboardType="numeric"
-        maxLength={6}
-        placeholder=""
-        textAlign="center"
-      />
-      
-      <TouchableOpacity style={styles.button} onPress={handleVerify}>
-        <Text style={styles.buttonText}>VERIFY</Text>
-      </TouchableOpacity>
+      <View>
+        <Text style={styles.header}>Search for senior citizen</Text>
+        <Autocomplete
+          autoCapitalize="none"
+          editable={disableAutoComplete}
+          autoCorrect={false}
+          containerStyle={styles.autocompleteContainer}
+          data={filteredData}
+          value={query}
+          onChangeText={(text) => setQuery(text)}
+          placeholder="Enter Item Name"
+          flatListProps={{
+            keyboardShouldPersistTaps: "always",
+            keyExtractor: (item) => item.first_name + item.last_name,
+            renderItem: ({ item }) => (
+              <Pressable
+                style={styles.itemText}
+                onPress={() => handleSelect(item)}
+              >
+                {item.first_name + " " + item.last_name}
+              </Pressable>
+            ),
+          }}
+        />
+      </View>
+      {!disableAutoComplete && (
+        <View>
+          <Text style={styles.header}>Enter 6-digit Code</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => {
+              setVerificationCode(value);
+              if (errors.pairCode) {
+                setErrors((prevErrors) => {
+                  let newErrors = { ...prevErrors };
+                  delete newErrors.pairCode;
+                  return newErrors;
+                });
+              }
+            }}
+            value={verificationCode}
+            maxLength={6}
+            placeholder=""
+            textAlign="center"
+          />
+          <Text style={{ color: "red" }}>{errors.pairingCode}</Text>
+          <View style={styles.buttonContainer}>
+            <Pressable style={styles.button} onPress={verifyCode}>
+              <Text style={styles.buttonText}>Verify</Text>
+            </Pressable>
+
+            <Pressable
+              style={styles.button}
+              onPress={() => {
+                setQuery("");
+                setDisableAutoComplete(true);
+              }}
+            >
+              <Text style={styles.buttonText}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        padding: 20,
-        justifyContent: 'center',
-      },
-      header: {
-        fontSize: 20,
-        marginBottom: 20,
-        textAlign: 'center',
-      },
-      button:{
-        backgroundColor: 'black',
-        padding: 10,
-        alignItems: 'center',
-        borderRadius: 5,
-        marginBottom: 10,
-       
-      },
-      buttonText: {
-        color: 'white',
-        fontSize: 18,
-        textAlign: 'center',
-      },
-      input: {
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 5,
-        fontSize: 24,
-        marginBottom: 20,
-        padding: 10,
-      },
-    });
-    
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+    paddingTop: 25,
+  },
+  header: {
+    fontSize: 20,
+    marginBottom: 20,
+    textAlign: "left",
+  },
+  autocompleteContainer: {
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  itemText: {
+    fontSize: 15,
+    margin: 2,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: "white",
+    color: "black",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignSelf: "stretch",
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginHorizontal: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+  },
+});
+
 export default Verification;

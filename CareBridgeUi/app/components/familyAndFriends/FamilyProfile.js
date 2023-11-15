@@ -291,8 +291,15 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    width: "40%",
-    marginBottom: 10,
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: "50%",
+  },
+  createText: {
+    color: "white",
+    textAlign: "center",
   },
   logout: {
     backgroundColor: "black",

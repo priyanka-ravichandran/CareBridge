@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -7,37 +7,41 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-
+import UserDetailsContext from "../shared/context/userDetailsContext";
 
 const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const FamilyHomeScreen = ({ navigation }) => {
+  const userDetails = useContext(UserDetailsContext);
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };
 
-
   return (
     <View style={styles.container}>
-      {/* <View style={styles.boxRow}>
+      <View style={styles.welcomeContainer}>
+        <Text style={styles.welcomeText}>
+          Welcome back, {userDetails.first_name}
+        </Text>
+      </View>
+      <View style={styles.boxRow}>
         <TouchableOpacity
           style={[styles.imageBox, styles.leftBox]}
-          //onPress={() => navigateToPage("SOS")}
+          onPress={() => navigateToPage("AddSeniorCitizen")}
         >
           <Image
-            source={require("../../assets/seniorprofile.png")}
+            source={require("../../assets/addsenior.png")}
             style={{ width: boxSize - 35, height: boxSize - 35 }}
-            onPress={() => navigateToPage("SeniorProfileListNavigator")}
           />
           <Text style={styles.boxText}>SOS</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.imageBox, , styles.rightBox]}
-          onPress={() => navigateToPage("Medicine")}
+          onPress={() => navigateToPage("ShoppingList")}
         >
           <Image
-            source={require("../../assets/pills.jpg")}
+            source={require("../../assets/shopping.jpg")}
             style={{ width: boxSize - 35, height: boxSize - 35 }}
           />
         </TouchableOpacity>
@@ -48,20 +52,20 @@ const FamilyHomeScreen = ({ navigation }) => {
           onPress={() => navigateToPage("Reminders")}
         >
           <Image
-            source={require("../../assets/reminder.png")}
+            source={require("../../assets/alarm.png")}
             style={{ width: boxSize - 35, height: boxSize - 35 }}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.imageBox, styles.rightBox]}
-          onPress={() => navigateToPage("ShoppingList")}
+          onPress={() => navigateToPage("Medicine")}
         >
           <Image
-            source={require("../../assets/shopping.png")}
-            style={{ width: boxSize - 35, height: boxSize -35 }}
+            source={require("../../assets/pills.jpg")}
+            style={{ width: boxSize - 35, height: boxSize - 35 }}
           />
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 };
@@ -73,6 +77,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
+  },
+  welcomeContainer: {
+    width: "100%",
+    alignItems: "flex-start",
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
   },
   boxRow: {
     flexDirection: "row",
@@ -93,9 +108,29 @@ const styles = StyleSheet.create({
   },
   leftBox: {
     marginRight: 5,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8, // Only has effect on Android
+    borderRadius: 10,
   },
   rightBox: {
     marginLeft: 5,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+    borderRadius: 10,
   },
   boxText: {
     color: "white",
