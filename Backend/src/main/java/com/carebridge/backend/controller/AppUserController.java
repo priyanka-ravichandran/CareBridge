@@ -1,6 +1,7 @@
 package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.AppUser;
+import com.carebridge.backend.entity.Login;
 import com.carebridge.backend.exception.UserNotFoundException;
 import com.carebridge.backend.repo.AppUserRepository;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,20 @@ public class AppUserController {
         Random random = new Random(seed);
         int code = 100000 + random.nextInt(900000);
         appUser.setPairCode(String.valueOf(code));
+
+        Login login = new Login();
+        appUser.setHashedPassword(login.hashPasswordMD5(appUser.getHashedPassword()));
         return appUserRepository.save(appUser);
+    }
+
+    @PostMapping("/login")
+    @CrossOrigin(origins = "*")
+    boolean loginUser(@RequestBody Login login) {
+        String email = login.getEmail();
+        String password = login.hashPasswordMD5(login.getPassword());
+
+        Optional<AppUser> appUser = appUserRepository.findAppUserByEmail(email);
+        return appUser.filter(user -> password.equals(user.getHashedPassword())).isPresent();
     }
 
     @GetMapping("/users")
