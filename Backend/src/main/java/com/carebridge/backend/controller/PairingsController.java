@@ -27,6 +27,7 @@ public class PairingsController {
     }
 
     @GetMapping("/pairings/q")
+    @CrossOrigin(origins = "*")
     List<Pairings> getPairingsForElderly(@RequestParam(required = false) Integer elderlyId, @RequestParam(required = false) Integer familyId) {
         if (familyId == null) {
             return pairingsRepository.getPairingsBySeniorCitizenId(elderlyId);
