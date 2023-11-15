@@ -2,67 +2,57 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.MedicineReminder;
 import com.carebridge.backend.entity.MedicineReminderList;
+import com.carebridge.backend.repo.MedicineReminderRepository;
 import com.carebridge.backend.service.MedicineReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/medicineReminder")
 public class MedicineReminderController {
-private MedicineReminderService medicineReminderService;
-private MedicineReminderList medList;
-@Autowired
-public MedicineReminderController(MedicineReminderService medicineReminderService){
-    this.medicineReminderService=medicineReminderService;
-}
-@RequestMapping(value = "/seeMedReminders",method = RequestMethod.POST)
-    public ResponseEntity<String> showReminder(@RequestParam String UserID){
-    medList=medicineReminderService.fetchList(UserID);
-    System.out.println("showing medicine reminder");
-    return ResponseEntity.ok("showing medicine reminders");
-}
-@RequestMapping(value="/addMedReminders",method = RequestMethod.GET)
-    public  ResponseEntity<String> addReminder(@RequestBody MedicineReminder medicineReminder){
-    boolean res=true;
-    res=medicineReminderService.addMedicineReminder(medicineReminder);
-    if(res==true)
-    {
-        System.out.println("added successful");
-        return ResponseEntity.ok("added successful");
-    }
-    return ResponseEntity.ok("error adding");
-}
-    @RequestMapping(value="/editMedReminders",method = RequestMethod.GET)
-    public  ResponseEntity<String> editReminder(@RequestBody MedicineReminder medicineReminder){
-        boolean res=true;
-        res=medicineReminderService.editMedicineReminder(medicineReminder);
-        if(res==true)
-        {
-            System.out.println("edit successful");
-            return ResponseEntity.ok("edit successful");
-        }
-        return ResponseEntity.ok("error editing");
-    }
-    @RequestMapping(value = "/addFamily",method = RequestMethod.GET)
-    public ResponseEntity<String> addFamily(@RequestParam String UserID,@RequestParam String familyID){
-        boolean res=true;
-        res=medicineReminderService.addFamily(UserID,familyID);
-        if(res==true)
-        {
-            System.out.println("add successful");
-            return ResponseEntity.ok("add successful");
-        }
-        return ResponseEntity.ok("error adding");
+private final MedicineReminderRepository medicineReminderRepository;
 
+public MedicineReminderController(MedicineReminderRepository medicineReminderRepository){
+    this.medicineReminderRepository=medicineReminderRepository;
+}
+   @GetMapping( "/medicineReminder")
+   List<MedicineReminder> showReminder(){
+    return medicineReminderRepository.findAll();
+}
+   @GetMapping("/medicineReminder/byFamily")
+   List<MedicineReminder> showReminderByFamily(@RequestParam int familyMemberId){
+    return medicineReminderRepository.findMedicineReminderByFamilyMemberId(familyMemberId);
+}
+@PostMapping("/medicineReminder")
+    MedicineReminder addReminder(@RequestBody MedicineReminder medicineReminder){
+    return medicineReminderRepository.save(medicineReminder);
+}
+    @PutMapping("/medicineReminder")
+    Optional<MedicineReminder> editReminder(@RequestBody MedicineReminder newMedicineReminder,
+                          @RequestParam int elderlyId, @RequestParam int familyMemberId){
+
+       return medicineReminderRepository.findMedicineReminderByFamilyMemberIdAndElderlyId(familyMemberId,elderlyId)
+               .map(
+                       medicineReminder -> {
+                           medicineReminder.setElderlyId(newMedicineReminder.getElderlyId());
+                           medicineReminder.setFamilyMemberId(newMedicineReminder.getFamilyMemberId());
+                           medicineReminder.setMedicineName(newMedicineReminder.getMedicineName());
+                           medicineReminder.setTime(newMedicineReminder.getTime());
+                           medicineReminder.setRecurring(newMedicineReminder.isRecurring());
+                           return medicineReminder;
+
+                       }
+               );
     }
-    @RequestMapping(value = "/todayMeds",method = RequestMethod.GET)
-    public ResponseEntity<String> fetchTodayMeds(@RequestParam String UserID){
-        medList=medicineReminderService.fetchMedReminderOfToday(UserID);
-        return ResponseEntity.ok("Today's medicine reminders fetched");
+
+    @GetMapping( "/medicineReminder/today")
+    List<MedicineReminder> fetchTodayMeds(@RequestParam int familyMemberId,@RequestParam LocalDateTime time){
+        return medicineReminderRepository.findMedicineReminderByFamilyMemberIdAndTime(familyMemberId,time);
     }
 }
