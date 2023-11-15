@@ -106,15 +106,49 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="home"
       />,
       <Tab.Screen
+        name="Medicine"
+        component={MedicineList}
+        key="medicine"
+        options={({ navigation, route }) => ({
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
+        })}
+      />,
+      <Tab.Screen
         name="ShoppingList"
         component={ChecklistNavigator}
-        options={{ headerShown: false }}
+        options={({ navigation, route }) => ({
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+          headerShown: false,
+        })}
         key="checklist"
       />,
       <Tab.Screen
         name="AddSeniorCitizen"
         component={SeniorProfileListNavigator}
-        options={{ headShown: false }}
+        options={({ navigation, route }) => ({
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
+        })}
         key="addseniorcitizen"
       />,
       <Tab.Screen

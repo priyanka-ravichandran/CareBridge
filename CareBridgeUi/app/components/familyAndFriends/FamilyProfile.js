@@ -1,19 +1,26 @@
 import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Pressable} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Pressable,
+} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserDetailsContext from "../shared/context/userDetailsContext";
+import { ScrollView } from "react-native-gesture-handler";
 
-const FamilyProfile = () => {
+const FamilyProfile = ({ navigation }) => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [Address, setAddress] = useState("");
-  
 
   const [gender, setgender] = useState(null);
   const [genders, setgenders] = useState([
@@ -24,10 +31,13 @@ const FamilyProfile = () => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [userId, setUserId] = useState();
-  const userDetails = useContext(UserDetailsContext); 
+  const userDetails = useContext(UserDetailsContext);
   useEffect(() => {
     axios
-      .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userDetails.userID)
+      .get(
+        "http://csci5308vm20.research.cs.dal.ca:8080/users/" +
+          userDetails.userID
+      )
       .then((response) => {
         setFirstname(response.data.first_name);
         setLastname(response.data.last_name);
@@ -35,7 +45,7 @@ const FamilyProfile = () => {
         setPhonenumber(response.data.phone_number);
         setBirthDate("1955-05-21");
         setAddress(response.data.address);
-        setgender(response.data.gender)
+        setgender(response.data.gender);
       });
   }, []);
   // Validation Functions
@@ -115,134 +125,139 @@ const FamilyProfile = () => {
         });
     }
   };
+  const handleLogout = () => {
+    navigation.navigate("LandingScreen");
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Profile</Text>
-      <View style={styles.innerContainer}>
-        <Text>First Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="FirstName"
-          value={FirstName}
-          onChangeText={(value) => {
-            setFirstname(value);
-            setErrors((prevErrors) => {
-              let newErrors = { ...prevErrors };
-              delete newErrors.FirstName;
-              return newErrors;
-            });
-          }}
-        />
-        <Text style={{ color: "red" }}>{errors.FirstName}</Text>
-
-        <Text>Last Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="LastName"
-          value={LastName}
-          onChangeText={(value) => {
-            setLastname(value);
-            setErrors((prevErrors) => {
-              let newErrors = { ...prevErrors };
-              delete newErrors.LastName;
-              return newErrors;
-            });
-          }}
-        />
-        <Text style={{ color: "red" }}>{errors.LastName}</Text>
-
-        <Text>Email Id</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="email"
-          value={email}
-          onChangeText={(value) => {
-            setEmail(value);
-            setErrors((prevErrors) => {
-              let newErrors = { ...prevErrors };
-              delete newErrors.email;
-              return newErrors;
-            });
-          }}
-        />
-        <Text style={{ color: "red" }}>{errors.email}</Text>
-        <Text>Phone Number</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={phonenumber}
-          onChangeText={(value) => {
-            setPhonenumber(value);
-            setErrors((prevErrors) => {
-              let newErrors = { ...prevErrors };
-              delete newErrors.phonenumber;
-              return newErrors;
-            });
-          }}
-        />
-        <Text style={{ color: "red" }}>{errors.phonenumber}</Text>
-        <Text>Gender</Text>
-        <DropDownPicker
-          open={open}
-          setOpen={setOpen}
-          value={gender}
-          items={genders}
-          setValue={setgender}
-          setItems={setgenders}
-          style={{ borderColor: errors.gender ? "red" : "#000" }}
-        />
-        <Text style={{ color: "red" }}>{errors.gender}</Text>
-        <Text>Birthdate</Text>
-        <Pressable
-          onPress={() => setShowDatePicker(true)}
-          style={styles.dateInputContainer}
-        >
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Profile</Text>
+        <View style={styles.innerContainer}>
+          <Text>First Name</Text>
           <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="YYYY-MM-DD"
-            value={birthDate}
-            editable={false}
+            style={styles.input}
+            placeholder="FirstName"
+            value={FirstName}
+            onChangeText={(value) => {
+              setFirstname(value);
+              setErrors((prevErrors) => {
+                let newErrors = { ...prevErrors };
+                delete newErrors.FirstName;
+                return newErrors;
+              });
+            }}
           />
-          <Text>
-            {" "}
-            <MaterialIcons
-              name={"calendar-today"}
-              size={"20"}
-              color={"black"}
+          <Text style={{ color: "red" }}>{errors.FirstName}</Text>
+
+          <Text>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="LastName"
+            value={LastName}
+            onChangeText={(value) => {
+              setLastname(value);
+              setErrors((prevErrors) => {
+                let newErrors = { ...prevErrors };
+                delete newErrors.LastName;
+                return newErrors;
+              });
+            }}
+          />
+          <Text style={{ color: "red" }}>{errors.LastName}</Text>
+
+          <Text>Email Id</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="email"
+            value={email}
+            onChangeText={(value) => {
+              setEmail(value);
+              setErrors((prevErrors) => {
+                let newErrors = { ...prevErrors };
+                delete newErrors.email;
+                return newErrors;
+              });
+            }}
+          />
+          <Text style={{ color: "red" }}>{errors.email}</Text>
+          <Text>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            value={phonenumber}
+            onChangeText={(value) => {
+              setPhonenumber(value);
+              setErrors((prevErrors) => {
+                let newErrors = { ...prevErrors };
+                delete newErrors.phonenumber;
+                return newErrors;
+              });
+            }}
+          />
+          <Text style={{ color: "red" }}>{errors.phonenumber}</Text>
+          <Text>Gender</Text>
+          <DropDownPicker
+            open={open}
+            setOpen={setOpen}
+            value={gender}
+            items={genders}
+            setValue={setgender}
+            setItems={setgenders}
+            style={{ borderColor: errors.gender ? "red" : "#000" }}
+          />
+          <Text style={{ color: "red" }}>{errors.gender}</Text>
+          <Text>Birthdate</Text>
+          <Pressable
+            onPress={() => setShowDatePicker(true)}
+            style={styles.dateInputContainer}
+          >
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="YYYY-MM-DD"
+              value={birthDate}
+              editable={false}
             />
-          </Text>
-        </Pressable>
-        <Text style={{ color: "red" }}>{errors.birthDate}</Text>
+            <Text>
+              {" "}
+              <MaterialIcons
+                name={"calendar-today"}
+                size={"20"}
+                color={"black"}
+              />
+            </Text>
+          </Pressable>
+          <Text style={{ color: "red" }}>{errors.birthDate}</Text>
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={birthDate ? new Date(birthDate) : new Date()}
-            mode="date"
-            is24Hour={true}
-            display="default"
-            onChange={onChangeBirthDate}
+          {showDatePicker && (
+            <DateTimePicker
+              value={birthDate ? new Date(birthDate) : new Date()}
+              mode="date"
+              is24Hour={true}
+              display="default"
+              onChange={onChangeBirthDate}
+            />
+          )}
+          <Text style={{ color: "red" }}>{errors.birthDate}</Text>
+
+          <Text>Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Address"
+            value={Address}
+            onChangeText={(value) => {
+              setAddress(value);
+            }}
           />
-        )}
-        <Text style={{ color: "red" }}>{errors.birthDate}</Text>
-
-        <Text>Address</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Address"
-          value={Address}
-          onChangeText={(value) => {
-            setAddress(value);
-          }}
-        />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Save" color="black" onPress={handleSave} />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Logout" color="black" onPress={handleLogout} />
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <Button  
-        title="Save"
-        color="black"
-        onPress={handleSave}
-        /></View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -276,16 +291,23 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    width: '40%',
-    marginBottom: 10,
-  },
-  logout: {
-    backgroundColor: 'black', 
+    backgroundColor: "black",
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10, 
-    width: '80%', 
-    alignItems: 'center', 
+    marginTop: 10,
+    width: "50%",
+  },
+  createText: {
+    color: "white",
+    textAlign: "center",
+  },
+  logout: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    width: "80%",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
