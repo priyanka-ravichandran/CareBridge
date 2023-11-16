@@ -12,7 +12,7 @@ const Verification = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState({});
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
   const [pairCode, setPairCode] = useState("");
 
   const handleSelect = (item) => {

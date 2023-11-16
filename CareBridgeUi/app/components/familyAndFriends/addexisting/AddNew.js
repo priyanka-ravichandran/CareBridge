@@ -103,7 +103,9 @@ const AddNew = ({navigation}) => {
           first_name: FirstName,
           last_name: LastName,
           birthdate: birthDate,
-          type: 0,
+          gender:gender,
+          address:Address,
+          type: 'senior',
           pairCode: '999999'
         };
       axios
@@ -228,7 +230,7 @@ const AddNew = ({navigation}) => {
             {" "}
             <MaterialIcons
               name={"calendar-today"}
-              size={"20"}
+              size={20}
               color={"black"}
             />
           </Text>

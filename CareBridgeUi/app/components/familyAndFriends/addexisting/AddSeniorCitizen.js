@@ -15,7 +15,7 @@ import UserDetailsContext from "../../shared/context/userDetailsContext";
 const AddSeniorCitizen = ({ navigation }) => {
   const [pairings, setPairing] = useState([]);
   const isFocused = useIsFocused();
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
 
   useEffect(() => {
     getPairings();
