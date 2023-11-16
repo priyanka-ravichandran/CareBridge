@@ -1,12 +1,13 @@
 package com.carebridge.backend.entity;
 
+import com.carebridge.backend.entity.id.ChecklistId;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Checklist")
-@IdClass(Checklist.class)
+@IdClass(ChecklistId.class)
 public class Checklist implements Serializable {
     @Id
     private int guardianID;
@@ -14,58 +15,47 @@ public class Checklist implements Serializable {
     private int elderlyID;
     @Id
     @Column(name = "ChecklistNumber")
-    private int checklistNum;
-    @Id
-    @Column(name = "Item")
-    private String itemName;
-    private int amount;
+    private String checklistNumber;
+
+    private String checklistName;
 
     public Checklist() {}
-    public Checklist(int guardianID, int elderlyID, int checklistNum, String itemName, int amount) {
+    public Checklist(int guardianID, int elderlyID, String checklistNum, String checklistName) {
         this.guardianID = guardianID;
         this.elderlyID = elderlyID;
-        this.checklistNum = checklistNum;
-        this.itemName = itemName;
-        this.amount = amount;
+        this.checklistNumber = checklistNum;
+        this.checklistName = checklistName;
     }
 
-    public int getGuardianID() {
+    public int getGuardian_id() {
         return guardianID;
     }
 
-    public int getElderlyID() {
+    public int getElderly_id() {
         return elderlyID;
     }
 
-    public int getChecklistNum() {
-        return checklistNum;
+    public String getChecklist_number() {
+        return checklistNumber;
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getChecklist_name() {
+        return checklistName;
     }
 
-    public int getAmount() {
-        return amount;
+    public void setChecklist_name(String checklistName) {
+        this.checklistName = checklistName;
     }
 
-    public void setGuardianID(int guardianID) {
+    public void setGuardian_id(int guardianID) {
         this.guardianID = guardianID;
     }
 
-    public void setElderlyID(int elderlyID) {
+    public void setElderly_id(int elderlyID) {
         this.elderlyID = elderlyID;
     }
 
-    public void setChecklistNum(int checklistNum) {
-        this.checklistNum = checklistNum;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setChecklist_number(String checklistNum) {
+        this.checklistNumber = checklistNum;
     }
 }
