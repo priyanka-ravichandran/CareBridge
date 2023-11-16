@@ -31,13 +31,13 @@ public class ChecklistController {
 
     @GetMapping("/checklist/{elderlyId}")
     @CrossOrigin(origins = "*")
-    List<Checklist> getChecklistForGuardianAndElderly(@PathVariable int elderlyId) {
+    List<Checklist> getChecklistForElderly(@PathVariable int elderlyId) {
         return checklistRepository.findChecklistByElderlyID(elderlyId);
     }
 
     @GetMapping("/checklist/q")
     @CrossOrigin(origins = "*")
-    List<Checklist> getChecklistForElderly(@RequestParam int guardianId, @RequestParam int elderlyId) {
+    List<Checklist> getChecklistForGuardianAndElderly(@RequestParam int guardianId, @RequestParam int elderlyId) {
         return checklistRepository.findChecklistByGuardianIDAndElderlyID(guardianId, elderlyId);
     }
 
