@@ -187,19 +187,46 @@ const UserTabs = ({ route }) => {
   const { userId } = route.params;
   const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
-    let userInfo = {};
+    let userInfo;
     const fetchUserDetails = async () => {
       try {
         const usersResponse = await axios.get(
           `http://csci5308vm20.research.cs.dal.ca:8080/users`
         );
-        const userPairinResponse = await axios.get(
-          `http://csci5308vm20.research.cs.dal.ca:8080/pairings/q?familyId=${userId}`
-        );
-        
         if (usersResponse && usersResponse.data) {
-          let filteredUser = usersResponse.data.filter((user) => user.userID === userId);
-          setUserDetails({ ...filteredUser[0] });
+          let filteredUser = usersResponse.data.filter(
+            (user) => user.userID === userId
+          );
+          if (filteredUser[0] !== "senior") {
+            const userPairingResponse = await axios.get(
+              `http://csci5308vm20.research.cs.dal.ca:8080/pairings/q?familyId=${userId}`
+            );
+            if (userPairingResponse && userPairingResponse.data) {
+              let pairingInfo = userPairingResponse.data.map((senior) => {
+                const user = usersResponse.data.find(
+                  (user) => user.userID === senior.seniorCitizenId
+                );
+                if (user) {
+                  return {
+                    ...senior,
+                    email: user.email,
+                    firstName: user.first_name,
+                    lastName: user.last_name,
+                  };
+                }
+                return senior;
+              });
+              userInfo = {
+                ...filteredUser[0],
+                pairings: pairingInfo,
+              };
+            }
+          } else
+            userInfo = {
+              ...filteredUser[0],
+              pairings: userPairingResponse.data,
+            };
+          setUserDetails(userInfo);
         }
       } catch (error) {
         console.error("There was an error fetching the user details", error);
