@@ -1,77 +1,102 @@
 package com.carebridge.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import com.carebridge.backend.entity.id.MedicineReminderId;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Objects;
+
 @Entity
-@Table(name="MedicineReminder")
-@IdClass(MedicineReminder.class)
-public class MedicineReminder implements Serializable {
+@Table(name="MedicineReminders")
+@IdClass(MedicineReminderId.class)
+public class MedicineReminder {
     @Id
-    private String medicineName;
-    @Id
-    private LocalDateTime time;
-    @Id
-    private boolean isRecurring;
-    @Id
+    @Column(name = "ElderlyID")
     private int elderlyId;
-    @Id
-    private int familyMemberId;
 
-    public MedicineReminder(String medicineName, LocalDateTime time, boolean isRecurring, int elderlyId,int familyMemberId) {
-        this.medicineName = medicineName;
+    @Id
+    @Column(name = "VolunteerID")
+    private int volunteerId;
+
+    @Id
+    @Column(name = "MedicineReminderNumber")
+    private String medicineReminderNumber;
+
+    @Column(name = "Time")
+    private String time;
+
+    @Column(name = "MedicineName")
+    private String medicineName;
+
+    @Column(name = "Day")
+    private String day;
+
+    public MedicineReminder(int elderlyId, int volunteerId, String medicineReminderNumber, String time, String medicineName, String day) {
+        this.elderlyId = elderlyId;
+        this.volunteerId = volunteerId;
+        this.medicineReminderNumber = medicineReminderNumber;
         this.time = time;
-        this.isRecurring = isRecurring;
-        this.elderlyId=elderlyId;
-        this.familyMemberId=familyMemberId;
+        this.medicineName = medicineName;
+        this.day = day;
     }
 
-    public MedicineReminder() {
+    public MedicineReminder() {}
 
+    public int getElderlyId() {
+        return elderlyId;
+    }
+
+    public int getVolunteerId() {
+        return volunteerId;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public String getMedicineName() {
         return medicineName;
     }
 
-    public void setMedicineName(String medicineName) {
-        this.medicineName = medicineName;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public boolean isRecurring() {
-        return isRecurring;
-    }
-
-    public void setRecurring(boolean recurring) {
-        isRecurring = recurring;
-    }
-
-    public int getElderlyId() {
-        return elderlyId;
+    public String getDay() {
+        return day;
     }
 
     public void setElderlyId(int elderlyId) {
         this.elderlyId = elderlyId;
     }
 
-    public int getFamilyMemberId() {
-        return familyMemberId;
+    public void setVolunteerId(int volunteerId) {
+        this.volunteerId = volunteerId;
     }
 
-    public void setFamilyMemberId(int familyMemberId) {
-        this.familyMemberId = familyMemberId;
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setMedicineName(String medicineName) {
+        this.medicineName = medicineName;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getMedicineReminderNumber() {
+        return medicineReminderNumber;
+    }
+
+    public void setMedicineReminderNumber(String medicineReminderNumber) {
+        this.medicineReminderNumber = medicineReminderNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.elderlyId, this.volunteerId, this.time, this.medicineName);
+    }
+
+    @Override
+    public String toString() {
+        return "MedicineReminder{" + "ElderlyId=" + this.elderlyId + ", volunteerId=" + this.volunteerId +
+                ", time='" + this.time + "', medicine='" + medicineName + "'}";
     }
 }
