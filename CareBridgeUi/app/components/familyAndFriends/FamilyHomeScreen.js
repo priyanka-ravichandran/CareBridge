@@ -13,7 +13,7 @@ const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const FamilyHomeScreen = ({ navigation }) => {
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };

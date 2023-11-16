@@ -31,7 +31,7 @@ const FamilyProfile = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [userId, setUserId] = useState();
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
   useEffect(() => {
     axios
       .get(
@@ -222,7 +222,7 @@ const FamilyProfile = ({ navigation }) => {
               {" "}
               <MaterialIcons
                 name={"calendar-today"}
-                size={"20"}
+                size={20}
                 color={"black"}
               />
             </Text>
