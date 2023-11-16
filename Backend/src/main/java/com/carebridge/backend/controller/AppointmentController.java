@@ -10,42 +10,51 @@ import java.util.Optional;
 
 @RestController
 public class AppointmentController {
-private final AppointmentRepository appointmentRepository;
-public  AppointmentController(AppointmentRepository appointmentRepository){
-    this.appointmentRepository=appointmentRepository;
-}
-@GetMapping( "/Appointment")
+    private final AppointmentRepository appointmentRepository;
+    public  AppointmentController(AppointmentRepository appointmentRepository){
+        this.appointmentRepository = appointmentRepository;
+    }
+
+    @GetMapping( "/appointment")
+    @CrossOrigin(origins = "*")
     List<Appointment> all(){
-    return appointmentRepository.findAll();
-}
-@GetMapping("/Appointment/elderly")
-    List<Appointment> seeAppointmentElderly(@RequestParam int elderlyID){
-    return appointmentRepository.findAppointmentByElderlyId(elderlyID);
-}
-@GetMapping("/Appointment/family")
-List<Appointment> seeAppointmentFamily(@RequestParam int familyMemberId){
-    return appointmentRepository.findAppointmentByFamilyMemberId(familyMemberId);
-}
-@PostMapping("/Appointment")
-    Appointment addAppointment(@RequestParam Appointment appointment){
-    return appointmentRepository.save(appointment);
+        return appointmentRepository.findAll();
+    }
 
-}
-    @PutMapping("/Appointment")
-    Optional<Appointment> editAppointment(@RequestParam Appointment newAppointment,@RequestParam int familyMemberId
-    ,@RequestParam int elderlyId){
-        return appointmentRepository.findAppointmentByFamilyMemberIdAndElderlyId(familyMemberId,elderlyId)
-                .map(
-                        appointment -> {
-                            appointment.setElderlyId(newAppointment.getElderlyId());
-                            appointment.setFamilyMemberId(newAppointment.getFamilyMemberId());
-                            appointment.setAddress(newAppointment.getAddress());
-                            appointment.setTime(newAppointment.getTime());
-                            appointment.setRecurring(newAppointment.isRecurring());
-                            appointment.setBufferTime(newAppointment.getBufferTime());
-                            return appointmentRepository.save(appointment);
-                        }
-                );
+    @GetMapping("/appointment/q")
+    @CrossOrigin(origins = "*")
+    List<Appointment> seeAppointmentElderly(@RequestParam Integer volunteerId, @RequestParam(required = false) Integer familyId) {
+        if (familyId == null) {
+            return appointmentRepository.findAppointmentsByVolunteerId(volunteerId);
+        } else {
+            return appointmentRepository.findAppointmentsByVolunteerIdAndFamilyId(volunteerId, familyId);
+        }
+    }
 
+    @PostMapping("/appointment")
+    @CrossOrigin(origins = "*")
+    Appointment addAppointment(@RequestParam Appointment appointment) {
+        return appointmentRepository.save(appointment);
+    }
+
+    @DeleteMapping("/appointment/q")
+    @CrossOrigin(origins = "*")
+    void deleteAppointment(@RequestParam int volunteerId, @RequestParam int familyId, @RequestParam String bookingDate,
+                           @RequestParam String bookingStartTime) {
+        appointmentRepository.deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(volunteerId, familyId, bookingDate, bookingStartTime);
+    }
+
+    @PutMapping("/appointment/q")
+    @CrossOrigin(origins = "*")
+    Optional<Appointment> editAppointment(@RequestParam Appointment newAppointment, @RequestParam int volunteerId,
+                                          @RequestParam int familyId, @RequestParam String bookingDate,
+                                          @RequestParam String bookingStartTime) {
+        return appointmentRepository.findAppointmentsByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
+                volunteerId, familyId, bookingDate, bookingStartTime)
+                .map(appointment -> {
+                    appointment.setBookingEndTime(newAppointment.getBookingEndTime());
+                    appointment.setAvailability(newAppointment.getAvailability());
+                    return appointmentRepository.save(appointment);
+                });
     }
 }

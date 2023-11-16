@@ -1,5 +1,6 @@
 package com.carebridge.backend.entity;
 
+import com.carebridge.backend.entity.id.AppointmentId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -9,78 +10,75 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 @Entity
 @Table(name="Appointment")
-@IdClass(Appointment.class)
+@IdClass(AppointmentId.class)
 public class Appointment implements Serializable {
     @Id
-    private String address;
+    private int volunteerId;
     @Id
-    private LocalDateTime time;
+    private int familyId;
     @Id
-    private boolean isRecurring;
+    private String bookingDate;
     @Id
-    private int elderlyId;
-    @Id
-    private int familyMemberId;
-    @Id
-    private int bufferTime;
-    public Appointment(String address, LocalDateTime time, boolean isRecurring, int elderlyId,int familyMemberId,int bufferTime) {
-        this.address = address;
-        this.time = time;
-        this.isRecurring = isRecurring;
-        this.elderlyId=elderlyId;
-        this.bufferTime=bufferTime;
-        this.familyMemberId=familyMemberId;
+    private String bookingStartTime;
+    private String bookingEndTime;
+    private int availability;
+
+    public Appointment(int volunteerId, int familyId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability) {
+        this.volunteerId = volunteerId;
+        this.familyId = familyId;
+        this.bookingDate = bookingDate;
+        this.bookingStartTime = bookingStartTime;
+        this.bookingEndTime = bookingEndTime;
+        this.availability = availability;
     }
 
-    public Appointment() {
+    public Appointment() {}
 
+    public int getVolunteerId() {
+        return volunteerId;
     }
 
-    public String getAddress() {
-        return address;
+    public void setVolunteerId(int volunteerId) {
+        this.volunteerId = volunteerId;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public int getFamilyId() {
+        return familyId;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public void setFamilyId(int familyId) {
+        this.familyId = familyId;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    public String getBookingDate() {
+        return bookingDate;
     }
 
-    public boolean isRecurring() {
-        return isRecurring;
+    public void setBookingDate(String bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
-    public void setRecurring(boolean recurring) {
-        isRecurring = recurring;
+    public String getBookingStartTime() {
+        return bookingStartTime;
     }
 
-    public int getBufferTime() {
-        return bufferTime;
+    public void setBookingStartTime(String bookingStartTime) {
+        this.bookingStartTime = bookingStartTime;
     }
 
-    public void setBufferTime(int bufferTime) {
-        this.bufferTime = bufferTime;
+    public String getBookingEndTime() {
+        return bookingEndTime;
     }
 
-    public int getElderlyId() {
-        return elderlyId;
+    public void setBookingEndTime(String bookingEndTime) {
+        this.bookingEndTime = bookingEndTime;
     }
 
-    public void setElderlyId(int elderlyId) {
-        this.elderlyId = elderlyId;
+    public int getAvailability() {
+        return availability;
     }
 
-    public int getFamilyMemberId() {
-        return familyMemberId;
-    }
-
-    public void setFamilyMemberId(int familyMemberId) {
-        this.familyMemberId = familyMemberId;
+    public void setAvailability(int availability) {
+        this.availability = availability;
     }
 }
