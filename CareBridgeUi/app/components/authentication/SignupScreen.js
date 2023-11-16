@@ -238,7 +238,7 @@ const SignupScreen = ({ navigation }) => {
         />
         <Text>
           {" "}
-          <MaterialIcons name={"calendar-today"} size={"20"} color={"black"} />
+          <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
         </Text>
       </Pressable>
       {birthDateError && <Text style={styles.errorText}>{birthDateError}</Text>}
