@@ -150,4 +150,8 @@ public class AppUser {
     public String toString() {
         return "User{" + "id=" + this.userID + ", name='" + this.first_name + " " + this.last_name + "'" + "}";
     }
+
+    public void setUserID(long l) {
+        userID = l;
+    }
 }

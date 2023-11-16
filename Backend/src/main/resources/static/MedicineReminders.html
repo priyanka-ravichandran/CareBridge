@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Medicine Reminders</title>
+</head>
+<body>
+<h1>Medicine Reminders</h1>
+
+<!-- Check if the medList is empty or null -->
+<th:block th:if="${medList == null or medList.reminders.isEmpty()}">
+    <p>No reminders</p>
+</th:block>
+
+<!-- If medList is not null and has reminders, display the table -->
+<th:block th:if="${medList != null and not medList.reminders.isEmpty()}">
+    <table>
+        <tr>
+            <th>Medicine Name</th>
+            <th>Date and Time</th>
+            <th>Recurring</th>
+            <th>Elderly Name</th>
+        </tr>
+        <tr th:each="medReminder : ${medList.reminders}">
+            <td th:text="${medReminder.medicineName}">Medicine Name</td>
+            <td th:text="${medReminder.time}">Date and Time</td>
+            <td th:text="${medReminder.isRecurring}">Recurring</td>
+            <td th:text="${medReminder.elderlyName}">Elderly Name</td>
+        </tr>
+    </table>
+</th:block>
+
+<form th:action="@{/api/v1/medicineReminder/seeMedReminders}" method="post">
+    <label for="UserID">User ID:</label>
+    <input type="text" id="UserID" name="UserID" required>
+    <button type="submit">Show Reminders</button>
+</form>
+
+</body>
+</html>
