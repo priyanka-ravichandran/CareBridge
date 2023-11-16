@@ -67,14 +67,17 @@ const LoginScreen = ({ navigation }) => {
     const isPasswordValid = validatePassword();
     setDbError(null);
     if (isEmailValid && isPasswordValid) {
+      let reqBody = {
+        email,
+        password,
+      };
       axios
-        .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+        .post("http://csci5308vm20.research.cs.dal.ca:8080/login", reqBody)
         .then((response) => {
-          const user = response.data.find((user) => user.email === email);
-          if (user && user.hashedPassword === password) {
-            const userId = user.userID;
+          if (response.data !== -1) {
+            const userId = response.data;
             console.log("Password matches for the given email ID.");
-            navigation.replace("UserTabs", {userId});
+            navigation.replace("UserTabs", { userId });
           } else {
             setDbError("Password does not match or user not found.");
           }
