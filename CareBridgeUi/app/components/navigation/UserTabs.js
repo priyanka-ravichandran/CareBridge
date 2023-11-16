@@ -187,13 +187,19 @@ const UserTabs = ({ route }) => {
   const { userId } = route.params;
   const [userDetails, setUserDetails] = useState(null);
   useEffect(() => {
+    let userInfo = {};
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://csci5308vm20.research.cs.dal.ca:8080/users/${userId}`
+        const usersResponse = await axios.get(
+          `http://csci5308vm20.research.cs.dal.ca:8080/users`
         );
-        if (response && response.data) {
-          setUserDetails(response.data);
+        const userPairinResponse = await axios.get(
+          `http://csci5308vm20.research.cs.dal.ca:8080/pairings/q?familyId=${userId}`
+        );
+        
+        if (usersResponse && usersResponse.data) {
+          let filteredUser = usersResponse.data.filter((user) => user.userID === userId);
+          setUserDetails({ ...filteredUser[0] });
         }
       } catch (error) {
         console.error("There was an error fetching the user details", error);
@@ -208,7 +214,7 @@ const UserTabs = ({ route }) => {
   }
 
   return (
-    <UserDetailsContext.Provider value={userDetails}>
+    <UserDetailsContext.Provider value={{ userDetails, setUserDetails }}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {

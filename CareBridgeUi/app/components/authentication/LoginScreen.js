@@ -67,11 +67,9 @@ const LoginScreen = ({ navigation }) => {
     const isPasswordValid = validatePassword();
     setDbError(null);
     if (isEmailValid && isPasswordValid) {
-      let userType = "seniorCitizen";
       axios
         .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
         .then((response) => {
-          console.log(response.data);
           const user = response.data.find((user) => user.email === email);
           if (user && user.hashedPassword === password) {
             const userId = user.userID;

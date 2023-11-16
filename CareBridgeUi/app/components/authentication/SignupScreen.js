@@ -27,11 +27,19 @@ const SignupScreen = ({ navigation }) => {
   const [lastNameError, setLastNameError] = useState(null);
   const [birthDateError, setBirthDateError] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [Address, setAddress] = useState("");
+  const [gender, setgender] = useState(null);
+  const [genders, setgenders] = useState([
+    { label: "Male", value: 1 },
+    { label: "Female", value: 2 },
+  ]);
+  const [openGender, setOpenGender] = useState(false);
+  const [openUserType, setOpenUserType] = useState(false);
+
   const [usertypes, setUserTypes] = useState([
-    { label: "Family/Friends", value: "family" },
-    { label: "Seniorcitizen", value: "senior" },
-    { label: "Volunteer", value: "volunteer" },
+    { label: "Family/Friends", value: 'family' },
+    { label: "Seniorcitizen", value: 'senior' },
+    { label: "Volunteer", value: 'volunteer' },
   ]);
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -156,8 +164,10 @@ const SignupScreen = ({ navigation }) => {
         first_name: firstName,
         last_name: lastName,
         birthdate: birthDate,
+        gender: gender,
+        address: Address,
         type: userType,
-        pairCode: '999999'
+        //pairCode: '999999'
       };
       axios
         .post("http://csci5308vm20.research.cs.dal.ca:8080/users", userData, {
@@ -190,6 +200,16 @@ const SignupScreen = ({ navigation }) => {
         onChangeText={setLastName}
       />
       {lastNameError && <Text style={styles.errorText}>{lastNameError}</Text>}
+      
+          <DropDownPicker
+            open={openGender}
+            setOpen={setOpenGender}
+            value={gender}
+            items={genders}
+            setValue={setgender}
+            setItems={setgenders}
+          />
+      
       <TextInput
         style={styles.input}
         placeholder="Phone Number"
@@ -218,7 +238,7 @@ const SignupScreen = ({ navigation }) => {
         />
         <Text>
           {" "}
-          <MaterialIcons name={"calendar-today"} size={"20"} color={"black"} />
+          <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
         </Text>
       </Pressable>
       {birthDateError && <Text style={styles.errorText}>{birthDateError}</Text>}
@@ -233,8 +253,8 @@ const SignupScreen = ({ navigation }) => {
         />
       )}
       <DropDownPicker
-        open={open}
-        setOpen={setOpen}
+        open={openUserType}
+        setOpen={setOpenUserType}
         value={userType}
         items={usertypes}
         style={styles.input}
@@ -243,6 +263,18 @@ const SignupScreen = ({ navigation }) => {
         dropDownContainerStyle={styles.dropDownContainerStyle}
         dropDownDirection="AUTO"
       />
+
+
+          <TextInput
+            style={styles.input}
+            placeholder="Address"
+            value={Address}
+            onChangeText={(value) => {
+              setAddress(value);
+            }}
+          />
+
+      
       <TextInput
         style={styles.input}
         placeholder="Email"
