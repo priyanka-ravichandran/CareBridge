@@ -34,12 +34,20 @@ public class AppUserController {
 
     @PostMapping("/login")
     @CrossOrigin(origins = "*")
-    boolean loginUser(@RequestBody Login login) {
+    int loginUser(@RequestBody Login login) {
         String email = login.getEmail();
         String password = login.hashPasswordMD5(login.getPassword());
 
         Optional<AppUser> appUser = appUserRepository.findAppUserByEmail(email);
-        return appUser.filter(user -> password.equals(user.getHashedPassword())).isPresent();
+        if (appUser.isEmpty()) {
+            return -1;
+        } else {
+            if (appUser.get().getHashedPassword().equals(password)) {
+                return appUser.get().getUserID();
+            }
+        }
+
+        return -1;
     }
 
     @GetMapping("/users")
