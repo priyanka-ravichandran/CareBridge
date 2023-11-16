@@ -29,7 +29,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Cleaning previous builds"
     - mvn clean
     - echo "Compiling the code..."
-    - mvn package
+    - mvn -q package -DskipTests
     - echo "Compile complete."
     - mkdir build/
     - echo "My application" > build/careBridge-executable-binary
