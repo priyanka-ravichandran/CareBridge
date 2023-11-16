@@ -34,7 +34,7 @@ class AppUserControllerTest {
     @Test
     void testCreateUser() {
         AppUser appUser = new AppUser();
-        appUser.setUserID(1L);
+        appUser.setUserID(1);
         Mockito.when(appUserRepository.save(appUser)).thenReturn(appUser);
 
         AppUser result = appUserController.appUser(appUser);
@@ -57,12 +57,12 @@ class AppUserControllerTest {
 
     @Test
     void testGetUserById() {
-        Long userId = 1L;
+        int userId = 1;
         AppUser appUser = new AppUser();
         appUser.setUserID(userId);
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(appUser));
+        Mockito.when(appUserRepository.findAppUserByUserID(userId)).thenReturn(Optional.of(appUser));
 
-        AppUser result = appUserController.one(userId);
+        AppUser result = appUserController.one((long) userId);
 
         assertEquals(appUser, result);
     }

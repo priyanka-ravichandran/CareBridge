@@ -31,7 +31,7 @@ class ChecklistControllerTest {
 
     @Test
     void testCreateChecklistItem() {
-        Checklist checklist = new Checklist(1, 2, 3, "Test Item", 5);
+        Checklist checklist = new Checklist(1, 2, "12", "Test Item");
         Mockito.when(checklistRepository.save(checklist)).thenReturn(checklist);
 
         Checklist result = checklistController.checklist(checklist);
@@ -42,8 +42,8 @@ class ChecklistControllerTest {
     @Test
     void testGetAllChecklistItems() {
         List<Checklist> checklistItems = new ArrayList<>();
-        checklistItems.add(new Checklist(1, 2, 3, "Item 1", 5));
-        checklistItems.add(new Checklist(1, 2, 3, "Item 2", 3));
+        checklistItems.add(new Checklist(1, 2, "31", "Item 1"));
+        checklistItems.add(new Checklist(1, 2, "31", "Item 2"));
 
         Mockito.when(checklistRepository.findAll()).thenReturn(checklistItems);
 
@@ -57,8 +57,8 @@ class ChecklistControllerTest {
         int guardianId = 1;
         int elderlyId = 2;
         List<Checklist> checklistItems = new ArrayList<>();
-        checklistItems.add(new Checklist(1, 2, 3, "Item 1", 5));
-        checklistItems.add(new Checklist(1, 2, 3, "Item 2", 3));
+        checklistItems.add(new Checklist(1, 2, "32", "Item 1"));
+        checklistItems.add(new Checklist(1, 2, "32", "Item 2"));
 
         Mockito.when(checklistRepository.findChecklistByGuardianIDAndElderlyID(guardianId, elderlyId)).thenReturn(checklistItems);
 
@@ -71,17 +71,17 @@ class ChecklistControllerTest {
     void testUpdateChecklistItem() {
         int guardianId = 1;
         int elderlyId = 2;
-        int checklistNum = 3;
+        String checklistNum = "33";
         String itemName = "Test Item";
 
-        Checklist existingChecklist = new Checklist(guardianId, elderlyId, checklistNum, itemName, 5);
-        Checklist updatedChecklist = new Checklist(guardianId, elderlyId, checklistNum, itemName, 10);
+        Checklist existingChecklist = new Checklist(guardianId, elderlyId, checklistNum, itemName);
+        Checklist updatedChecklist = new Checklist(guardianId, elderlyId, checklistNum, itemName);
 
-        Mockito.when(checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumAndItemName(guardianId, elderlyId, checklistNum, itemName))
+        Mockito.when(checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(guardianId, elderlyId, checklistNum))
                 .thenReturn(Optional.of(existingChecklist));
         Mockito.when(checklistRepository.save(existingChecklist)).thenReturn(updatedChecklist);
 
-        Optional<Checklist> result = checklistController.updateChecklistItem(updatedChecklist, guardianId, elderlyId, checklistNum, itemName);
+        Optional<Checklist> result = checklistController.updateChecklistForElderlyGuardianAndNumber(updatedChecklist, guardianId, elderlyId, checklistNum);
 
         assertNotNull(result);
         assertEquals(updatedChecklist, result.orElse(null));
