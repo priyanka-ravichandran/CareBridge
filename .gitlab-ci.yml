@@ -21,18 +21,15 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - deploy
 
-before_script:
-  - apt-get update -qy
-  - apt-get install -y maven
-
 build-job:       # This job runs in the build stage, which runs first.
+  image: maven:3-jdk-11
   stage: build
   script:
     - cd Backend
     - echo "Cleaning previous builds"
     - mvn clean
     - echo "Compiling the code..."
-    - mvn install
+    - mvn package
     - echo "Compile complete."
     - mkdir build/
     - echo "My application" > build/careBridge-executable-binary
