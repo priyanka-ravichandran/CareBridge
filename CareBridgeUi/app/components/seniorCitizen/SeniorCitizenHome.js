@@ -13,7 +13,8 @@ const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const SeniorCitizenHome = ({ navigation }) => {
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
+  console.log(userDetails)
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };

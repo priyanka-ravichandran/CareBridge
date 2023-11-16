@@ -14,7 +14,7 @@ import UserDetailsContext from "../context/userDetailsContext";
 const CheckLists = ({ route, navigation }) => {
   const [checklists, setChecklists] = useState([]);
   const [newChecklist, setNewChecklist] = useState("");
-  const userDetails =useContext(UserDetailsContext); 
+  const {userDetails} =useContext(UserDetailsContext); 
   const createChecklist = () => {
     if (newChecklist) {
       let checklistData = {

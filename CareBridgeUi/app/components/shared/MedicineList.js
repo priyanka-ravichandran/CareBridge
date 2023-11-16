@@ -16,7 +16,7 @@ import UserDetailsContext from "./context/userDetailsContext";
 
 // { id: "1", name: "Medicine 1", time: new Date() }
 const MedicineList = () => {
-  const [selectedDay, setSelectedDay] = useState("Monday");
+  const [selectedDay, setSelectedDay] = useState("");
   const [medicinesByDay, setMedicinesByDay] = useState({
     M: [],
     T: [],
@@ -29,7 +29,7 @@ const MedicineList = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newMedicineName, setNewMedicineName] = useState("");
   const [newMedicineTime, setNewMedicineTime] = useState(new Date());
-  const userDetails = useContext(UserDetailsContext);
+  const {userDetails} = useContext(UserDetailsContext);
 
   const days = ["M", "T", "W", "Th", "F", "S", "Su"];
   const keyMap = {
@@ -42,6 +42,9 @@ const MedicineList = () => {
     Sunday: "Su",
   };
   useEffect(() => {
+    let today = new Date();
+    let dayIndex = today.getDay();
+    let days = ["Su", "M", "T", "W", "Th", "F", "S"];
     axios
       .get(
         `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/${userDetails.userID}`
@@ -54,10 +57,10 @@ const MedicineList = () => {
             medicines[keyMap[medicine.day]].push(medicine);
           });
           setMedicinesByDay(medicines);
+          setSelectedDay(days[dayIndex]);
         }
       })
       .catch((error) => {
-        // Handle the error
         console.error(
           "There was an error fetching the medicine reminders:",
           error

@@ -126,7 +126,7 @@ const VolunteerProfile = () => {
             {" "}
             <MaterialIcons
               name={"calendar-today"}
-              size={"20"}
+              size={20}
               color={"black"}
             />
           </Text>
