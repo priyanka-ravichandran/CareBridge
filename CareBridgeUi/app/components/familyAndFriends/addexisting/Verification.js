@@ -12,7 +12,7 @@ const Verification = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [data, setData] = useState([]);
   const [errors, setErrors] = useState({});
-  const {userDetails} = useContext(UserDetailsContext);
+  const { userDetails, setUserDetails } = useContext(UserDetailsContext);
   const [pairCode, setPairCode] = useState("");
 
   const handleSelect = (item) => {
@@ -52,7 +52,6 @@ const Verification = ({ navigation }) => {
   }, [query]);
   const verifyCode = () => {
     let errorMessages = errors;
-    console.log(pairCode, verificationCode);
     if (pairCode === verificationCode) {
       let pairingData = {
         seniorCitizenId: selectedValue.userID,
@@ -70,13 +69,24 @@ const Verification = ({ navigation }) => {
         )
         .then((response) => {
           if (response.status === 200) {
+            setUserDetails((prevData) => ({
+              ...prevData,
+              pairings: [
+                ...prevData.pairings,
+                {
+                  ...pairingData,
+                  email: selectedValue.email,
+                  first_name: selectedValue.first_name,
+                  last_name: selectedValue.last_name,
+                },
+              ],
+            }));
             navigation.navigate("AddSeniorCitizen");
           } else {
             console.log(response);
           }
         });
     } else {
-      console.log("in");
       errorMessages.pairingCode = "Incorrect code";
       setErrors(errorMessages);
     }
@@ -129,7 +139,9 @@ const Verification = ({ navigation }) => {
             placeholder=""
             textAlign="center"
           />
-          <Text style={{ color: "red" }}>{errors.pairingCode}</Text>
+          {errors.pairingCode && (
+            <Text style={{ color: "red" }}>{errors.pairingCode}</Text>
+          )}
           <View style={styles.buttonContainer}>
             <Pressable style={styles.button} onPress={verifyCode}>
               <Text style={styles.buttonText}>Verify</Text>

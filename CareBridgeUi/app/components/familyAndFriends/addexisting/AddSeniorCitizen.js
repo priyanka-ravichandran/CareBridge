@@ -15,14 +15,14 @@ import UserDetailsContext from "../../shared/context/userDetailsContext";
 const AddSeniorCitizen = ({ navigation }) => {
   const [pairings, setPairing] = useState([]);
   const isFocused = useIsFocused();
-  const {userDetails} = useContext(UserDetailsContext);
+  const { userDetails } = useContext(UserDetailsContext);
 
   useEffect(() => {
-    getPairings();
+    setPairing(userDetails.pairings);
   }, []);
   useEffect(() => {
     if (isFocused) {
-      getPairings();
+      setPairing(userDetails.pairings);
     }
   }, [isFocused]);
   const getPairings = () => {
@@ -42,7 +42,7 @@ const AddSeniorCitizen = ({ navigation }) => {
             pairObj.lastName = seniorCitizen[0].last_name;
             fetchedList.push(pairObj);
           });
-          setPairing(fetchedList);
+          setPairing(userDetails.pairings);
         }
       });
   };
@@ -75,7 +75,7 @@ const AddSeniorCitizen = ({ navigation }) => {
       <TouchableOpacity onPress={() => handlePressItem(item.seniorCitizenId)}>
         <Text style={styles.itemText}>
           {console.log(item)}
-          {item.firstName + " " + item.lastName}
+          {item.email}
         </Text>
       </TouchableOpacity>
       <Pressable onPress={() => {}} style={styles.deleteButton}>

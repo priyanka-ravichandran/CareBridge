@@ -7,14 +7,33 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserDetailsContext from "../context/userDetailsContext";
+import DropDownPicker from "react-native-dropdown-picker";
+
+const ITEM_HEIGHT = 40;
+const MAX_ITEMS_VISIBLE = 4;
+const dropdownMaxHeight = ITEM_HEIGHT * MAX_ITEMS_VISIBLE;
 
 const CheckLists = ({ route, navigation }) => {
   const [checklists, setChecklists] = useState([]);
   const [newChecklist, setNewChecklist] = useState("");
-  const {userDetails} =useContext(UserDetailsContext); 
+  const { userDetails } = useContext(UserDetailsContext);
+  const [open, setOpen] = useState(false);
+  const initialSeniorCitizenId =
+    userDetails.pairings[0]?.seniorCitizenId || null;
+  const [value, setValue] = useState(initialSeniorCitizenId);
+  const [items, setItems] = useState([]);
+  const isFocused = useIsFocused();
+
+  const setDropDownValue = () => {
+    return userDetails.pairings.map((pairing) => ({
+      label: pairing.email,
+      value: pairing.seniorCitizenId,
+    }));
+  };
   const createChecklist = () => {
     if (newChecklist) {
       let checklistData = {
@@ -49,64 +68,106 @@ const CheckLists = ({ route, navigation }) => {
     }
   };
   useEffect(() => {
+    if (userDetails.type === "senior") {
+      getChecklists(userDetails.userID);
+    } else {
+      setItems(setDropDownValue());
+      if (userDetails.pairings.length > 0) {
+        getChecklists(userDetails.pairings[0].seniorCitizenId);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    getChecklists(value);
+  }, [value]);
+  // useEffect(() => {
+  //   if (isFocused && userDetails.type !== "senior") {
+  //     getChecklists(userDetails.pairings[0].seniorCitizenId);
+  //   }
+  // }, [isFocused]);
+  const getChecklists = (userId) => {
     axios
-      .get(
-        "http://csci5308vm20.research.cs.dal.ca:8080/checklist/" +
-          userDetails.userID
-      )
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/checklist/" + userId)
       .then((response) => {
         const fetchedList = response.data;
         if (response && response.data) {
           setChecklists(fetchedList);
         }
       });
-  }, []);
+  };
 
   const deleteChecklist = (checklistNum) => {
     axios
-    .delete(
-      "http://csci5308vm20.research.cs.dal.ca:8080/checklist/q?checklistNumber=" +
-      checklistNum
-    )
-    .then((response) => {
-    setChecklists(
-      checklists.filter(
-        (checklist) => checklist.checklist_number !== checklistNum
+      .delete(
+        "http://csci5308vm20.research.cs.dal.ca:8080/checklist/q?checklistNumber=" +
+          checklistNum
       )
-    )
-      })};
+      .then((response) => {
+        setChecklists(
+          checklists.filter(
+            (checklist) => checklist.checklist_number !== checklistNum
+          )
+        );
+      });
+  };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={newChecklist}
-        onChangeText={setNewChecklist}
-        placeholder="New Checklist"
-        />
-     
-      <Pressable style={styles.createButton} onPress={createChecklist}>
-        <Text style={styles.createText}>Create</Text>
-      </Pressable>
-        
-      <FlatList
-        data={checklists}
-        keyExtractor={(item) => item.checklist_number}
-        renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Pressable
-              onPress={() => navigation.navigate("ShoppingListItems", { item })}
-            >
-              <Text style={styles.text}>{item.checklist_name}</Text>
-            </Pressable>
-            <Pressable onPress={() => deleteChecklist(item.checklist_number)}>
-              <Text style={styles.text}>
-                <MaterialIcons name="delete" size={24} color="black" />
-              </Text>
-            </Pressable>
-          </View>
-        )}
-      />
+      {userDetails.type !== "senior" && userDetails.pairings.length === 0 ? (
+        <Text style={styles.noPairingsText}>
+          Pair with a senior citizen to view checklists.
+        </Text>
+      ) : (
+        <>
+          {userDetails.type !== "senior" && (
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder="Select Senior Citizen"
+              maxHeight={dropdownMaxHeight}
+              style={styles.dropdown}
+            />
+          )}
+          <TextInput
+            style={styles.input}
+            value={newChecklist}
+            onChangeText={setNewChecklist}
+            placeholder="New Checklist"
+          />
+
+          <Pressable style={styles.createButton} onPress={createChecklist}>
+            <Text style={styles.createText}>Create</Text>
+          </Pressable>
+
+          <FlatList
+            data={checklists}
+            keyExtractor={(item) => item.checklist_number}
+            renderItem={({ item }) => (
+              <View style={styles.listItem}>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate("ShoppingListItems", { item })
+                  }
+                >
+                  <Text style={styles.text}>{item.checklist_name}</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => deleteChecklist(item.checklist_number)}
+                >
+                  <Text style={styles.text}>
+                    <MaterialIcons name="delete" size={24} color="black" />
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+          />
+        </>
+      )}
     </View>
   );
 };
@@ -117,6 +178,7 @@ const styles = {
     backgroundColor: "white",
     padding: 20,
     paddingTop: 20,
+    paddingBottom: 200,
   },
   text: {
     color: "black",
@@ -147,7 +209,23 @@ const styles = {
     padding: 10,
     borderBottomWidth: 1,
     borderColor: "black",
-  }
+  },
+  noPairingsText: {
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: 16,
+    color: "grey",
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "black",
+    marginTop: 10,
+    marginBottom: 20,
+    zIndex: 1000,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+  },
 };
 
 export default CheckLists;
