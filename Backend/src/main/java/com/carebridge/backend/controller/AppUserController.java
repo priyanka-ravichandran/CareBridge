@@ -4,6 +4,7 @@ import com.carebridge.backend.entity.AppUser;
 import com.carebridge.backend.entity.Login;
 import com.carebridge.backend.exception.UserNotFoundException;
 import com.carebridge.backend.repo.AppUserRepository;
+import com.carebridge.backend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Random;
 public class AppUserController {
 
     private final AppUserRepository appUserRepository;
+
+    private final EmailService emailService = new EmailService();
 
     public AppUserController(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
@@ -46,7 +49,7 @@ public class AppUserController {
                 return appUser.get().getUserID();
             }
         }
-
+        emailService.sendEmail(email,"Login","You Have Successfully Logged in!");
         return -1;
     }
 
