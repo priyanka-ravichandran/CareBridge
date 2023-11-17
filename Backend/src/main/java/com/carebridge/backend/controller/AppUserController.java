@@ -69,6 +69,7 @@ public class AppUserController {
     @PutMapping("/users/{userId}")
     @CrossOrigin(origins = "*")
     Optional<AppUser> updateUser(@RequestBody AppUser updatedAppUser, @PathVariable int userId) {
+        emailService.sendEmail(updatedAppUser.getEmail(),"Update","You Have Successfully Updated Profile");
         return appUserRepository.findAppUserByUserID(userId)
                 .map(appUser -> {
                     appUser.setUserID(userId);
