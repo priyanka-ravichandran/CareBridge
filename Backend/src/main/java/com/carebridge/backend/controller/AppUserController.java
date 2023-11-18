@@ -14,6 +14,8 @@ import java.util.Random;
 public class AppUserController {
 
     private final AppUserRepository appUserRepository;
+    private final int BASE_FOR_ID_GENERATE=100000;
+    private final int UP_BOUNDARY_FOR_ID_GENERATE=900000;
 
     public AppUserController(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
@@ -24,7 +26,7 @@ public class AppUserController {
     AppUser appUser(@RequestBody AppUser appUser) {
         long seed = appUser.getEmail().hashCode();
         Random random = new Random(seed);
-        int code = 100000 + random.nextInt(900000);
+        int code = BASE_FOR_ID_GENERATE + random.nextInt(UP_BOUNDARY_FOR_ID_GENERATE);
         appUser.setPairCode(String.valueOf(code));
 
         Login login = new Login();
