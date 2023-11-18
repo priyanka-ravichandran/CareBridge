@@ -7,7 +7,7 @@ import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+
 @Entity
 @Table(name="Appointment")
 @IdClass(AppointmentId.class)
@@ -17,19 +17,24 @@ public class Appointment implements Serializable {
     @Id
     private int familyId;
     @Id
+    private int seniorCitizenId;
+    @Id
     private String bookingDate;
     @Id
     private String bookingStartTime;
     private String bookingEndTime;
     private int availability;
+    private String description;
 
-    public Appointment(int volunteerId, int familyId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability) {
+    public Appointment(int volunteerId, int familyId, int seniorCitizenId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability, String description) {
         this.volunteerId = volunteerId;
         this.familyId = familyId;
+        this.seniorCitizenId = seniorCitizenId;
         this.bookingDate = bookingDate;
         this.bookingStartTime = bookingStartTime;
         this.bookingEndTime = bookingEndTime;
         this.availability = availability;
+        this.description = description;
     }
 
     public Appointment() {}
@@ -80,5 +85,21 @@ public class Appointment implements Serializable {
 
     public void setAvailability(int availability) {
         this.availability = availability;
+    }
+
+    public int getSeniorCitizenId() {
+        return seniorCitizenId;
+    }
+
+    public void setSeniorCitizenId(int seniorCitizenId) {
+        this.seniorCitizenId = seniorCitizenId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

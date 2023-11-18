@@ -23,9 +23,11 @@ public class AppointmentController {
 
     @GetMapping("/appointment/q")
     @CrossOrigin(origins = "*")
-    List<Appointment> seeAppointmentElderly(@RequestParam Integer volunteerId, @RequestParam(required = false) Integer familyId) {
-        if (familyId == null) {
+    List<Appointment> seeAppointmentElderly(@RequestParam(required = false) Integer volunteerId, @RequestParam(required = false) Integer familyId) {
+        if (familyId == null & volunteerId != null) {
             return appointmentRepository.findAppointmentsByVolunteerId(volunteerId);
+        } else if (familyId != null & volunteerId == null) {
+            return appointmentRepository.findAppointmentsByFamilyId(familyId);
         } else {
             return appointmentRepository.findAppointmentsByVolunteerIdAndFamilyId(volunteerId, familyId);
         }
@@ -54,6 +56,7 @@ public class AppointmentController {
                 .map(appointment -> {
                     appointment.setBookingEndTime(newAppointment.getBookingEndTime());
                     appointment.setAvailability(newAppointment.getAvailability());
+                    appointment.setDescription(newAppointment.getDescription());
                     return appointmentRepository.save(appointment);
                 });
     }
