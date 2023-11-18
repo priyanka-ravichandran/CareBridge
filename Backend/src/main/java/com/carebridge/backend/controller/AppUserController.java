@@ -16,10 +16,11 @@ public class AppUserController {
 
     private final AppUserRepository appUserRepository;
 
-    private final EmailService emailService = new EmailService();
+    private final EmailService emailService;
 
-    public AppUserController(AppUserRepository appUserRepository) {
+    public AppUserController(AppUserRepository appUserRepository, EmailService emailService) {
         this.appUserRepository = appUserRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping("/users")
@@ -33,6 +34,13 @@ public class AppUserController {
         Login login = new Login();
         appUser.setHashedPassword(login.hashPasswordMD5(appUser.getHashedPassword()));
         return appUserRepository.save(appUser);
+    }
+
+    @PostMapping("/email")
+    @CrossOrigin(origins = "*")
+    int emailUser(@RequestBody String message) {
+        emailService.sendEmail("akshat64647@gmail.com","care",message);
+        return -1;
     }
 
     @PostMapping("/login")
@@ -55,9 +63,7 @@ public class AppUserController {
 
     @GetMapping("/users")
     @CrossOrigin(origins = "*")
-    List<AppUser> all() {
-        return appUserRepository.findAll();
-    }
+    List<AppUser> all() {return appUserRepository.findAll();}
 
     @GetMapping("/users/{userId}")
     @CrossOrigin(origins = "*")
