@@ -23,7 +23,7 @@ class SOSAlertsControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        sosAlertsController = new SOSAlertsController(sosAlertsRepository);
+        sosAlertsController = new SOSAlertsController(sosAlertsRepository, emailService);
     }
 
     @Test

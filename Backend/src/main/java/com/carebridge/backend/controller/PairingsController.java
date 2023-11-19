@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.Pairings;
 import com.carebridge.backend.repo.PairingsRepository;
+import com.carebridge.backend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,14 +10,17 @@ import java.util.List;
 @RestController
 public class PairingsController {
     private final PairingsRepository pairingsRepository;
+    private final EmailService emailService;
 
-    public PairingsController(PairingsRepository pairingsRepository) {
+    public PairingsController(PairingsRepository pairingsRepository, EmailService emailService) {
         this.pairingsRepository = pairingsRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping("/pairings")
     @CrossOrigin(origins = "*")
-    Pairings addPairing(@RequestBody Pairings pairings) {
+    Pairings addPairing(@RequestBody Pairings pairings,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Add","Adding pairing successful");
         return pairingsRepository.save(pairings);
     }
 

@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.MedicineReminder;
 import com.carebridge.backend.repo.MedicineReminderRepository;
+import com.carebridge.backend.service.EmailService;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,14 +12,17 @@ import java.util.Optional;
 @RestController
 public class MedicineReminderController {
     private final MedicineReminderRepository medicineReminderRepository;
+    private final EmailService emailService;
 
-    public MedicineReminderController(MedicineReminderRepository medicineReminderRepository) {
+    public MedicineReminderController(MedicineReminderRepository medicineReminderRepository, EmailService emailService) {
         this.medicineReminderRepository = medicineReminderRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping("/medicineReminder")
     @CrossOrigin(origins = "*")
-    MedicineReminder medicineReminder(@RequestBody MedicineReminder medicineReminder) {
+    MedicineReminder medicineReminder(@RequestBody MedicineReminder medicineReminder,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Add","Adding medicine reminder successful");
         return medicineReminderRepository.save(medicineReminder);
     }
 
@@ -44,7 +48,8 @@ public class MedicineReminderController {
     @CrossOrigin(origins = "*")
     Optional<MedicineReminder> updateChecklistItem(@RequestBody MedicineReminder newMedicineReminder,
                                                 @RequestParam int elderlyId, @RequestParam int volunteerId,
-                                                @RequestParam String medicineReminderNumber) {
+                                                @RequestParam String medicineReminderNumber,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Update","Updating medicine reminder successful");
         return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineReminderNumber(elderlyId, volunteerId, medicineReminderNumber)
                 .map(medicineReminder -> {
                     medicineReminder.setMedicineName(newMedicineReminder.getMedicineName());
@@ -57,7 +62,8 @@ public class MedicineReminderController {
     @Transactional
     @DeleteMapping("/medicineReminder/q")
     @CrossOrigin(origins = "*")
-    public void deleteReminder(@RequestParam String medicineReminderNumber) {
+    public void deleteReminder(@RequestParam String medicineReminderNumber,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Delete","Deleting medicine reminder successful");
         medicineReminderRepository.deleteMedicineReminderByMedicineReminderNumber(medicineReminderNumber);
     }
 
