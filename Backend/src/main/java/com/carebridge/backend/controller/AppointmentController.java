@@ -43,7 +43,7 @@ public class AppointmentController {
 
     @PostMapping("/appointment")
     @CrossOrigin(origins = "*")
-    Appointment addAppointment(@RequestParam Appointment appointment) {
+    Appointment addAppointment(@RequestBody Appointment appointment) {
         return appointmentRepository.save(appointment);
     }
 
@@ -56,7 +56,7 @@ public class AppointmentController {
 
     @PutMapping("/appointment/q")
     @CrossOrigin(origins = "*")
-    Optional<Appointment> editAppointment(@RequestParam Appointment newAppointment, @RequestParam int volunteerId,
+    Optional<Appointment> editAppointment(@RequestBody Appointment newAppointment, @RequestParam int volunteerId,
                                           @RequestParam int familyId, @RequestParam String bookingDate,
                                           @RequestParam String bookingStartTime) {
         return appointmentRepository.findAppointmentsByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
