@@ -57,7 +57,7 @@ public class ReminderController {
     @Transactional
     @DeleteMapping("/reminder/q")
     @CrossOrigin(origins = "*")
-    public void deleteReminder(@RequestParam String medicineReminderNumber) {
-        reminderRepository.deleteRemindersByReminderNumber(medicineReminderNumber);
+    public void deleteReminder(@RequestParam String reminderNumber) {
+        reminderRepository.deleteRemindersByReminderNumber(reminderNumber);
     }
 }
