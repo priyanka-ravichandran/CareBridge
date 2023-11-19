@@ -10,6 +10,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     List<Appointment> findAppointmentsByFamilyId(int familyId);
     List<Appointment> findAppointmentsByVolunteerId(int volunteerId);
     List<Appointment> findAppointmentsByVolunteerIdAndFamilyId(int volunteerId, int familyId);
+    List<Appointment> findAppointmentsByVolunteerIdAndBookingDate(int volunteerId, String bookingDate);
     Optional<Appointment> findAppointmentsByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(int volunteerId, int familyId, String bookingDate, String bookingStartTime);
     void deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(int volunteerId, int familyId, String bookingDate, String bookingStartTime);
 }
