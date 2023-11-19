@@ -45,6 +45,7 @@ unit-test-job:
   image: maven:3.8.3-openjdk-17
   stage: test
   script:
+    - cd Backend
     - echo "Running unit tests... This will take about 60 seconds."
     - mvn '-Dtest=com.carebridge.backend.*Test' test
 
