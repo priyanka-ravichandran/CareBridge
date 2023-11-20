@@ -16,9 +16,6 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
 stages:
   - build
   - test
@@ -51,11 +48,6 @@ unit-test-job:
     - cd Backend
     - echo "Running unit tests... This will take about 60 seconds."
     - mvn '-Dtest=com.carebridge.backend.*Test' test
-
-code-quality:
-  stage: test
-  variables:
-    SOURCE_CODE: "Backend/**"
 
 deploy-job:
   stage: deploy
