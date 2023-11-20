@@ -26,7 +26,7 @@ class ChecklistControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        checklistController = new ChecklistController(checklistRepository);
+        checklistController = new ChecklistController(checklistRepository, emailService);
     }
 
     @Test

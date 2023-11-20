@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.Checklist;
 import com.carebridge.backend.repo.ChecklistRepository;
+import com.carebridge.backend.service.EmailService;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +13,17 @@ import java.util.Optional;
 public class ChecklistController {
 
     private final ChecklistRepository checklistRepository;
+    private final EmailService emailService;
 
-    public ChecklistController(ChecklistRepository checklistRepository) {
+    public ChecklistController(ChecklistRepository checklistRepository, EmailService emailService) {
         this.checklistRepository = checklistRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping("/checklist")
     @CrossOrigin(origins = "*")
-    Checklist checklist(@RequestBody Checklist checklist) {
+    Checklist checklist(@RequestBody Checklist checklist ,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Add","Adding CheckList was successful");
         return checklistRepository.save(checklist);
     }
 
@@ -44,7 +48,8 @@ public class ChecklistController {
     @PutMapping("/checklist/q")
     @CrossOrigin(origins = "*")
     Optional<Checklist> updateChecklistForElderlyGuardianAndNumber(@RequestBody Checklist newChecklist
-            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam String checklistNumber) {
+            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam String checklistNumber,@RequestParam String guardianEmail) {
+        emailService.sendEmail(guardianEmail,"Update","Updating CheckList successful");
         return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(guardianId, elderlyId, checklistNumber)
                 .map(checklist -> {
                     checklist.setChecklist_name(newChecklist.getChecklist_name());
@@ -55,7 +60,9 @@ public class ChecklistController {
     @Transactional
     @DeleteMapping("/checklist/q")
     @CrossOrigin(origins = "*")
-    public void deleteChecklist(@RequestParam String checklistNumber) {
+    public void deleteChecklist(@RequestParam String checklistNumber,@RequestParam String userEmail) {
+        emailService.sendEmail(userEmail,"Delete","Deleting the CheckList successful");
         checklistRepository.deleteChecklistByChecklistNumber(checklistNumber);
+
     }
 }
