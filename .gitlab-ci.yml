@@ -50,6 +50,7 @@ unit-test-job:
     - mvn '-Dtest=com.carebridge.backend.*Test' test
 
 code-quality-job:
+  image: maven:3.8.3-openjdk-17
   stage: test
   script:
     - java -jar DesigniteJava.jar -i Backend/ -o code_quality_outputs/ -d
