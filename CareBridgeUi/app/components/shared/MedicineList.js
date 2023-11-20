@@ -10,14 +10,18 @@ import {
   Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import DropDownPicker from "react-native-dropdown-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import UserDetailsContext from "./context/userDetailsContext";
+import sharedStyle from "./styles/sharedStyle";
 
-// { id: "1", name: "Medicine 1", time: new Date() }
+const ITEM_HEIGHT = 40;
+const MAX_ITEMS_VISIBLE = 4;
+const dropdownMaxHeight = ITEM_HEIGHT * MAX_ITEMS_VISIBLE;
+
 const MedicineList = () => {
-  const [selectedDay, setSelectedDay] = useState("");
-  const [medicinesByDay, setMedicinesByDay] = useState({
+  let initialMedicineInfo = {
     M: [],
     T: [],
     W: [],
@@ -25,11 +29,25 @@ const MedicineList = () => {
     F: [],
     S: [],
     Su: [],
-  });
+  };
+  const [selectedDay, setSelectedDay] = useState("");
+  const [medicinesByDay, setMedicinesByDay] = useState(initialMedicineInfo);
   const [isModalVisible, setModalVisible] = useState(false);
   const [newMedicineName, setNewMedicineName] = useState("");
+
   const [newMedicineTime, setNewMedicineTime] = useState(new Date());
-  const {userDetails} = useContext(UserDetailsContext);
+  const { userDetails } = useContext(UserDetailsContext);
+  const [open, setOpen] = useState(false);
+  const initialSeniorCitizenId =
+    userDetails.pairings[0]?.seniorCitizenId || null;
+  const [value, setValue] = useState(initialSeniorCitizenId);
+  const [items, setItems] = useState([]);
+  const setDropDownValue = () => {
+    return userDetails.pairings.map((pairing) => ({
+      label: pairing.email,
+      value: pairing.seniorCitizenId,
+    }));
+  };
 
   const days = ["M", "T", "W", "Th", "F", "S", "Su"];
   const keyMap = {
@@ -41,17 +59,33 @@ const MedicineList = () => {
     Saturday: "S",
     Sunday: "Su",
   };
+
   useEffect(() => {
+    if (userDetails.type === "senior") {
+      getMedicineList(userDetails.userID);
+    } else {
+      setItems(setDropDownValue());
+      // if (userDetails.pairings.length > 0) {
+      //   getMedicineList(initialSeniorCitizenId);
+      // }
+    }
+  }, []);
+
+  useEffect(() => {
+    getMedicineList(value);
+  }, [value]);
+
+  const getMedicineList = (userId) => {
     let today = new Date();
     let dayIndex = today.getDay();
     let days = ["Su", "M", "T", "W", "Th", "F", "S"];
     axios
       .get(
-        `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/${userDetails.userID}`
+        `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/${userId}`
       )
       .then((response) => {
         if (response && response.data) {
-          let medicines = medicinesByDay;
+          let medicines = initialMedicineInfo;
 
           response.data.map((medicine) => {
             medicines[keyMap[medicine.day]].push(medicine);
@@ -66,7 +100,7 @@ const MedicineList = () => {
           error
         );
       });
-  }, []);
+  };
 
   const addMedicine = () => {
     let day = Object.keys(keyMap).find((key) => keyMap[key] === selectedDay);
@@ -136,9 +170,9 @@ const MedicineList = () => {
     const currentDate = new Date();
     currentDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0);
     return (
-      <View style={styles.medicineItem}>
-        <Text style={styles.medicineName}>{item.medicineName}</Text>
-        <View style={styles.medicineTimeDeleteContainer}>
+      <View style={sharedStyle.flatListItem}>
+        <Text style={sharedStyle.flatListItemLeft}>{item.medicineName}</Text>
+        <View style={sharedStyle.flatListItemRight}>
           <DateTimePicker
             value={currentDate}
             mode="time"
@@ -206,15 +240,44 @@ const MedicineList = () => {
           </Pressable>
         ))}
       </View>
+      {userDetails.type !== "senior" && userDetails.pairings.length === 0 ? (
+        <Text style={styles.noPairingsText}>
+          Pair with a senior citizen to view checklists.
+        </Text>
+      ) : (
+        <>
+          {userDetails.type !== "senior" && (
+            <DropDownPicker
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              placeholder="Select Senior Citizen"
+              maxHeight={dropdownMaxHeight}
+              style={styles.dropdown}
+            />
+          )}
+        </>
+      )}
       <FlatList
         data={medicinesByDay[selectedDay]}
         renderItem={renderMedicine}
         keyExtractor={(item) => item.medicineReminderNumber}
-        style={styles.medicineList}
+        style={sharedStyle.flatListStyle}
       />
-      <Pressable style={styles.addButton} onPress={() => setModalVisible(true)}>
-        <MaterialIcons name="add" size={24} color="white" />
-      </Pressable>
+      <View style={styles.row}>
+        <Pressable
+          style={styles.addButton}
+          onPress={() => {
+            console.log("in");
+            setModalVisible(true);
+          }}
+        >
+          <MaterialIcons name="add" size={24} color="white" />
+        </Pressable>
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -368,6 +431,36 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noPairingsText: {
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: 16,
+    color: "grey",
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "black",
+    marginTop: 10,
+    flexGrow: 1,
+    marginRight: 30,
+    marginBottom: 30,
+    marginLeft: 10,
+    zIndex: 1000,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
+    width: "95%",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });
 export default MedicineList;
