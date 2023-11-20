@@ -7,7 +7,7 @@ import UserDetailsContext from "../../shared/context/userDetailsContext";
 const Verification = ({ navigation }) => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedValue, setSelectedValue] = useState({});
+  const [selectedValue, setSelectedValue] = useState(null);
   const [disableAutoComplete, setDisableAutoComplete] = useState(true);
   const [verificationCode, setVerificationCode] = useState("");
   const [data, setData] = useState([]);
@@ -16,11 +16,10 @@ const Verification = ({ navigation }) => {
   const [pairCode, setPairCode] = useState("");
 
   const handleSelect = (item) => {
-    setQuery(item.first_name + " " + item.last_name);
     setPairCode(item.pairCode);
     setSelectedValue(item);
-    setFilteredData([]);
     setDisableAutoComplete(false);
+    setQuery(item.first_name + " " + item.last_name);
   };
   useEffect(() => {
     axios
@@ -39,7 +38,7 @@ const Verification = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (query) {
+    if (query && selectedValue === null) {
       const regex = new RegExp(`${query.trim()}`, "i");
       setFilteredData(
         data.filter(
@@ -104,7 +103,7 @@ const Verification = ({ navigation }) => {
           data={filteredData}
           value={query}
           onChangeText={(text) => setQuery(text)}
-          placeholder="Enter Item Name"
+          placeholder="Enter Name"
           flatListProps={{
             keyboardShouldPersistTaps: "always",
             keyExtractor: (item) => item.first_name + item.last_name,
@@ -113,7 +112,7 @@ const Verification = ({ navigation }) => {
                 style={styles.itemText}
                 onPress={() => handleSelect(item)}
               >
-                {item.first_name + " " + item.last_name}
+                <Text>{item.first_name + " " + item.last_name}</Text>
               </Pressable>
             ),
           }}
@@ -151,6 +150,7 @@ const Verification = ({ navigation }) => {
               style={styles.button}
               onPress={() => {
                 setQuery("");
+                setSelectedValue(null);
                 setDisableAutoComplete(true);
               }}
             >
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
-    paddingTop: 25,
+    padding: 20,
   },
   header: {
     fontSize: 20,
@@ -175,18 +175,22 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   autocompleteContainer: {
-    marginLeft: 10,
-    marginRight: 10,
+    backgroundColor: "white",
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 20,
   },
   itemText: {
-    fontSize: 15,
-    margin: 2,
+    padding: 10,
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 1,
   },
   input: {
     height: 40,
     margin: 12,
     borderWidth: 1,
-    padding: 10,
+    padding: 20,
     backgroundColor: "white",
     color: "black",
   },

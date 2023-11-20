@@ -3,7 +3,7 @@ import { useIsFocused } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
+
   Text,
   FlatList,
   Pressable,
@@ -72,12 +72,12 @@ const AddSeniorCitizen = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.listItem}>
-      <TouchableOpacity onPress={() => handlePressItem(item.seniorCitizenId)}>
+      <Pressable onPress={() => handlePressItem(item.seniorCitizenId)}>
         <Text style={styles.itemText}>
           {console.log(item)}
           {item.email}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       <Pressable onPress={() => {}} style={styles.deleteButton}>
         <MaterialIcons name="delete" size={24} color="black" />
       </Pressable>
@@ -87,13 +87,13 @@ const AddSeniorCitizen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleAddNew}>
+        <Pressable style={styles.button} onPress={handleAddNew}>
           <Text style={styles.buttonText}>Add New</Text>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity style={styles.button} onPress={handleAddExisting}>
+        <Pressable style={styles.button} onPress={handleAddExisting}>
           <Text style={styles.buttonText}>Add Existing</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <Text style={styles.heading}>Linked Accounts</Text>
