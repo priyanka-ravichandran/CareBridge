@@ -1,32 +1,27 @@
 package com.carebridge.backend.entity;
 
-import com.carebridge.backend.entity.id.AppointmentId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name="Appointment")
-@IdClass(AppointmentId.class)
 public class Appointment implements Serializable {
     @Id
+    private String id;
     private int volunteerId;
-    @Id
     private int familyId;
-    @Id
     private int seniorCitizenId;
-    @Id
     private String bookingDate;
-    @Id
     private String bookingStartTime;
     private String bookingEndTime;
     private int availability;
     private String description;
 
     public Appointment(int volunteerId, int familyId, int seniorCitizenId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability, String description) {
+        this.id = String.valueOf(volunteerId) + System.currentTimeMillis();
         this.volunteerId = volunteerId;
         this.familyId = familyId;
         this.seniorCitizenId = seniorCitizenId;
@@ -38,6 +33,14 @@ public class Appointment implements Serializable {
     }
 
     public Appointment() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public int getVolunteerId() {
         return volunteerId;

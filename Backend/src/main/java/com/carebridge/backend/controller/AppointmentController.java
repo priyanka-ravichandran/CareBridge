@@ -44,6 +44,8 @@ public class AppointmentController {
     @PostMapping("/appointment")
     @CrossOrigin(origins = "*")
     Appointment addAppointment(@RequestBody Appointment appointment) {
+        long unixTime = System.currentTimeMillis() / 1000L;
+        appointment.setId(String.valueOf(appointment.getVolunteerId()).concat(String.valueOf(unixTime)));
         return appointmentRepository.save(appointment);
     }
 
@@ -56,12 +58,12 @@ public class AppointmentController {
 
     @PutMapping("/appointment/q")
     @CrossOrigin(origins = "*")
-    Optional<Appointment> editAppointment(@RequestBody Appointment newAppointment, @RequestParam int volunteerId,
-                                          @RequestParam int familyId, @RequestParam String bookingDate,
-                                          @RequestParam String bookingStartTime) {
-        return appointmentRepository.findAppointmentsByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
-                volunteerId, familyId, bookingDate, bookingStartTime)
+    Optional<Appointment> editAppointment(@RequestBody Appointment newAppointment, @RequestParam String id) {
+        return appointmentRepository.findAppointmentById(id)
                 .map(appointment -> {
+                    appointment.setFamilyId(newAppointment.getFamilyId());
+                    appointment.setBookingDate(newAppointment.getBookingDate());
+                    appointment.setBookingStartTime(newAppointment.getBookingStartTime());
                     appointment.setBookingEndTime(newAppointment.getBookingEndTime());
                     appointment.setAvailability(newAppointment.getAvailability());
                     appointment.setDescription(newAppointment.getDescription());
