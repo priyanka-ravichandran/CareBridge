@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView,Pressable } from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable, ScrollView } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -36,7 +36,6 @@ const VolunteerProfile = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Volunteer Profile</Text>
       <View style={styles.innerContainer}>
       <Text>First Name</Text>
         <TextInput
@@ -163,26 +162,26 @@ const VolunteerProfile = () => {
         />
 
         <View style={styles.buttonGroup}>
-          <TouchableOpacity
+          <Pressable
             style={styles.button}
             onPress={() => { /* Logic for adding certifications */ }}
           >
             <Text style={styles.buttonText}>+ Add Certifications</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             style={styles.button}
             onPress={() => { /* Logic for adding government ID */ }}
           >
             <Text style={styles.buttonText}>+ Add Government ID</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
-        <TouchableOpacity
+        <Pressable
           style={styles.logoutButton}
           onPress={handleSave}
         >
           <Text style={styles.buttonText}>LOGOUT</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </ScrollView>
   );
