@@ -43,12 +43,22 @@ public class PairingsController {
 
     @GetMapping("/getPairedEmails/q")
     @CrossOrigin(origins = "*")
-    List<String> getEmailsForPairedGuardians(@RequestParam int seniorCitizenId) {
+    List<String> getEmailsOfPairedUsers(@RequestParam int appUserId) {
+        String userType = appUserRepository.findAppUserByUserID(appUserId).get().getType();
         List<String> retList = new ArrayList<>();
-        List<Pairings> pairings = pairingsRepository.getPairingsBySeniorCitizenId(seniorCitizenId);
+        List<Pairings> pairings = new ArrayList<>();
+        if (userType.equals("senior")) {
+            pairings = pairingsRepository.getPairingsBySeniorCitizenId(appUserId);
+        } else if (userType.equals("family")) {
+            pairings = pairingsRepository.getPairingsByFamilyId(appUserId);
+        }
 
         for (Pairings pairing : pairings) {
-            retList.add(appUserRepository.findAppUserByUserID(pairing.getFamilyId()).get().getEmail());
+            if (userType.equals("senior")) {
+                retList.add(appUserRepository.findAppUserByUserID(pairing.getFamilyId()).get().getEmail());
+            } else {
+                retList.add(appUserRepository.findAppUserByUserID(pairing.getSeniorCitizenId()).get().getEmail());
+            }
         }
 
         return retList;
