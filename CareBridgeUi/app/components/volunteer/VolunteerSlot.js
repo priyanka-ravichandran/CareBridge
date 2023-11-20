@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Pressable } from 'react-native';
 
-export default function App() {
+const VolunteerSlot = () => {
   // Add state and functions as needed for your logic
 
   return (
@@ -13,21 +13,21 @@ export default function App() {
       
       {/* Action buttons */}
       <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.button}>
+        <Pressable style={styles.button}>
           <Text style={styles.buttonText}>SELECT DATE</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        </Pressable>
+        <Pressable style={styles.button}>
           <Text style={styles.buttonText}>SELECT TIME</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        </Pressable>
+        <Pressable style={styles.button}>
           <Text style={styles.buttonText}>CUSTOMIZE</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Confirm button */}
-      <TouchableOpacity style={styles.confirmButton}>
+      <Pressable style={styles.confirmButton}>
         <Text style={styles.confirmButtonText}>CONFIRM</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       {/* Bottom navigation bar placeholders */}
       <View style={styles.bottomNavBar}>
@@ -94,3 +94,4 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
 });
+export default VolunteerSlot;
