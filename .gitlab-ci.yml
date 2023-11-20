@@ -56,7 +56,7 @@ code-quality-job:
     - java -jar DesigniteJava.jar -i Backend/ -o code_quality_outputs/ -d
   artifacts:
     paths:
-      - Backend/code_quality_outputs/*.csv
+      - code_quality_outputs/*.csv
 
 deploy-job:
   stage: deploy
