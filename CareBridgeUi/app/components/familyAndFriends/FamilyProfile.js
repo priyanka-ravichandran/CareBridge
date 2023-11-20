@@ -5,14 +5,15 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   Pressable,
+  ScrollView,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserDetailsContext from "../shared/context/userDetailsContext";
-import { ScrollView } from "react-native-gesture-handler";
+
+import sharedStyle from "../shared/styles/sharedStyle";
 
 const FamilyProfile = ({ navigation }) => {
   const [FirstName, setFirstname] = useState("");
@@ -31,7 +32,7 @@ const FamilyProfile = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [userId, setUserId] = useState();
-  const {userDetails} = useContext(UserDetailsContext);
+  const { userDetails } = useContext(UserDetailsContext);
   useEffect(() => {
     axios
       .get(
@@ -131,8 +132,7 @@ const FamilyProfile = ({ navigation }) => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.header}>Profile</Text>
+      <View style={sharedStyle.container}>
         <View style={styles.innerContainer}>
           <Text>First Name</Text>
           <TextInput
@@ -250,12 +250,12 @@ const FamilyProfile = ({ navigation }) => {
             }}
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Save" color="black" onPress={handleSave} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Logout" color="black" onPress={handleLogout} />
-        </View>
+        <Pressable style={sharedStyle.pressableStyle} onPress={handleSave}>
+          <Text style={sharedStyle.pressableText}>Save</Text>
+        </Pressable>
+        <Pressable style={sharedStyle.pressableStyle} onPress={handleLogout}>
+          <Text style={sharedStyle.pressableText}>Logout</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );
@@ -271,43 +271,26 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     width: "80%",
+    alignItems: "stretch",
+    flexGrow: 1,
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    alignSelf: "center",
   },
   input: {
     height: 40,
     backgroundColor: "#E6E6E6",
     marginVertical: 10,
     paddingHorizontal: 10,
-  },
-  addressinput: {
-    height: 90,
-    backgroundColor: "#E6E6E6",
-    marginVertical: 10,
-    paddingHorizontal: 10,
-  },
-
-  buttonContainer: {
-    backgroundColor: "black",
-    padding: 10,
     borderRadius: 5,
-    marginTop: 10,
-    width: "50%",
+    fontSize: 16,
   },
   createText: {
     color: "white",
     textAlign: "center",
-  },
-  logout: {
-    backgroundColor: "black",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    width: "80%",
-    alignItems: "center",
   },
   row: {
     flexDirection: "row",
@@ -317,9 +300,6 @@ const styles = StyleSheet.create({
   forgotPassword: {
     color: "black",
     textDecorationLine: "underline",
-  },
-  login: {
-    color: "black",
   },
   picker: {
     width: 10,
