@@ -11,12 +11,13 @@ import {
 import axios from "axios";
 import Checkbox from "expo-checkbox";
 import { MaterialIcons } from "@expo/vector-icons";
+import sharedStyle from "../styles/sharedStyle";
 
 const CheckListItems = ({ route }) => {
   const [items, setItems] = useState([]);
   const [newItemName, setNewItemName] = useState("");
   const [newItemAmount, setNewItemAmount] = useState(1);
-  const { checklist_name, checklist_number } = route.params.item;  
+  const { checklist_name, checklist_number } = route.params.item;
   useEffect(() => {
     axios
       .get(
@@ -37,7 +38,7 @@ const CheckListItems = ({ route }) => {
   };
   const addItem = () => {
     let checklistItemData = {
-      checklistNumber:checklist_number,
+      checklistNumber: checklist_number,
       itemName: newItemName,
       amount: newItemAmount,
       status: 0,
@@ -112,7 +113,7 @@ const CheckListItems = ({ route }) => {
         `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=${items[index].checklistNumber}&itemName=${items[index].itemName}`
       )
       .then((response) => {
-        if(response){
+        if (response) {
           const newItems = items.filter((_, i) => i !== index);
           setItems(newItems);
         }
@@ -122,7 +123,7 @@ const CheckListItems = ({ route }) => {
     try {
       const response = await axios.put(
         "http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=" +
-        updateObj.checklistNumber +
+          updateObj.checklistNumber +
           "&itemName=" +
           updateObj.itemName,
         {
@@ -139,8 +140,8 @@ const CheckListItems = ({ route }) => {
   };
   const renderItem = ({ item, index }) => (
     <View>
-      <View style={styles.listItem}>
-        <View style={styles.itemLeft}>
+      <View style={sharedStyle.flatListItem}>
+        <View style={sharedStyle.flatListItemLeft}>
           <Checkbox
             value={item.status == 1 ? true : false}
             color={item.checked ? "black" : undefined}
@@ -156,7 +157,7 @@ const CheckListItems = ({ route }) => {
             {item.itemName}
           </Text>
         </View>
-        <View style={styles.itemRight}>
+        <View style={sharedStyle.flatListItemRight}>
           <Pressable
             onPress={() => decrementAmount(index)}
             style={styles.counterButton}
@@ -169,7 +170,7 @@ const CheckListItems = ({ route }) => {
               item.checked ? styles.strikeText : null,
             ]}
             onChangeText={(text) => updateAmount(text, index)}
-            value={item.amount}
+            value={String(item.amount)}
             keyboardType="numeric"
           />
           <Pressable
@@ -193,12 +194,15 @@ const CheckListItems = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.addItemContainer}>
         <View style={styles.addItemRow}>
-          <TextInput
-            style={(styles.input, styles.itemNameInput)}
-            value={newItemName}
-            onChangeText={setNewItemName}
-            placeholder="Item Name"
-          />
+          <View style={styles.itemInput}>
+            <Text style={styles.text}>Checklist Name</Text>
+            <TextInput
+              style={sharedStyle.input}
+              value={newItemName}
+              onChangeText={setNewItemName}
+              placeholder="Item Name"
+            />
+          </View>
           <View style={styles.amountControl}>
             <Pressable
               onPress={() =>
@@ -222,10 +226,13 @@ const CheckListItems = ({ route }) => {
             </Pressable>
           </View>
         </View>
-        <Button color="black" title="Create Item" onPress={addItem} />
+        <Pressable style={sharedStyle.pressableStyle} onPress={addItem}>
+          <Text style={sharedStyle.pressableText}>Create Item</Text>
+        </Pressable>
       </View>
       <FlatList
         data={items}
+        style={sharedStyle.flatListStyle}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -235,10 +242,11 @@ const CheckListItems = ({ route }) => {
 
 const styles = StyleSheet.create({
   addItemRow: {
+    
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   itemNameInput: {
     flex: 1,
@@ -247,13 +255,21 @@ const styles = StyleSheet.create({
   addItemContainer: {
     marginBottom: 20,
   },
+  text: {
+    color: "black",
+    fontWeight: "bold",
+  },
+  itemInput: {
+    width:"65%",
+    flexDirection: "column",
+  },
   input: {
-    width: "80%",
-    height: 40,
-    backgroundColor: "#E6E6E6",
-    marginVertical: 10,
-    paddingHorizontal: 10,
-    zIndex: -1,
+    borderWidth: 1,
+    borderColor: "black",
+    padding: 10,
+    marginTop: 10,
+    color: "black",
+    marginBottom: 20,
   },
   amountControl: {
     flexDirection: "row",
@@ -275,6 +291,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   itemLeft: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
   },

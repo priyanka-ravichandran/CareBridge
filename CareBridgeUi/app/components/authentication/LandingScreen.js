@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import sharedStyle from "../shared/styles/sharedStyle";
 
 const LandingScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
+    <View style={sharedStyle.container}>
       <Image source={require("../../assets/appLogo.jpeg")} style={styles.logo} />
       <Pressable
         style={styles.pressableStyle}

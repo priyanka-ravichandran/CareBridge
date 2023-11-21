@@ -119,7 +119,6 @@ const SeniorProfile = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Profile</Text>
       <View style={styles.innerContainer}>
         <Text>First Name</Text>
         <TextInput
