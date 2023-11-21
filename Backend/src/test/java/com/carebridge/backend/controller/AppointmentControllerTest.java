@@ -1,6 +1,5 @@
 package com.carebridge.backend.controller;
 
-import com.carebridge.backend.controller.AppointmentController;
 import com.carebridge.backend.entity.Appointment;
 import com.carebridge.backend.repo.AppointmentRepository;
 import org.junit.jupiter.api.Test;
@@ -8,13 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,76 +38,60 @@ public class AppointmentControllerTest {
 
     @Test
     public void testAddAppointment() {
-        Appointment newAppointment = new Appointment("Address", LocalDateTime.now(), true, 1, 2, 10);
+        Appointment newAppointment = new Appointment(1001, 1004, 1008, "2023-11-20", "8:00 AM", "8:30 AM", 2, "testDesc");
 
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(newAppointment);
-
         Appointment result = appointmentController.addAppointment(newAppointment);
 
-        assertEquals(newAppointment.getAddress(), result.getAddress());
+        assertEquals(newAppointment.getDescription(), result.getDescription());
     }
 
     @Test
     public void testEditAppointment() {
-        Appointment existingAppointment = new Appointment("Old Address", LocalDateTime.now(), false, 1, 2, 5);
-        int familyMemberId = 2;
-        int elderlyId = 1;
+        Appointment existingAppointment = new Appointment(1001, 1004, 1008, "2023-11-20", "8:00 AM", "8:30 AM", 2, "testDesc");
+        String id = "1023121";
 
-        Appointment updatedAppointment = new Appointment("New Address", LocalDateTime.now().plusHours(1), true, 3, 4, 15);
+        Appointment updatedAppointment = new Appointment(1001, 1004, 1008, "2023-11-20", "8:30 AM", "8:45 AM", 2, "New Description");
 
-        when(appointmentRepository.findAppointmentByFamilyMemberIdAndElderlyId(familyMemberId, elderlyId))
+        when(appointmentRepository.findAppointmentById(id))
                 .thenReturn(Optional.of(existingAppointment));
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(updatedAppointment);
 
-        Optional<Appointment> result = appointmentController.editAppointment(updatedAppointment, familyMemberId, elderlyId);
+        Optional<Appointment> result = appointmentController.editAppointment(updatedAppointment, id);
 
         assertTrue(result.isPresent());
-        assertEquals(updatedAppointment.getAddress(), result.get().getAddress());
+        assertEquals(updatedAppointment.getDescription(), result.get().getDescription());
     }
 
     @Test
-    public void testSeeAppointmentElderly() {
-        int elderlyId = 1;
+    public void testSeeAppointmentForVolunteerAndFamily() {
+        int volunteerId = 1;
+        int familyId = 1;
         List<Appointment> appointments = new ArrayList<>();
-        // TODO: Add mock appointments for the elderly ID
 
-        when(appointmentRepository.findAppointmentByElderlyId(elderlyId)).thenReturn(appointments);
+        when(appointmentRepository.findAppointmentsByFamilyId(familyId)).thenReturn(appointments);
 
-        List<Appointment> result = appointmentController.seeAppointmentElderly(elderlyId);
-
-        assertEquals(appointments.size(), result.size());
-    }
-
-    @Test
-    public void testSeeAppointmentFamily() {
-        int familyMemberId = 2;
-        List<Appointment> appointments = new ArrayList<>();
-        // TODO: Add mock appointments for the family member ID
-
-        when(appointmentRepository.findAppointmentByFamilyMemberId(familyMemberId)).thenReturn(appointments);
-
-        List<Appointment> result = appointmentController.seeAppointmentFamily(familyMemberId);
+        List<Appointment> result = appointmentController.seeAppointmentForVolunteerAndFamily(volunteerId, familyId);
 
         assertEquals(appointments.size(), result.size());
     }
 
     @Test
     public void testEditAppointment_NotFound() {
-        int familyMemberId = 2;
-        int elderlyId = 1;
-        Appointment updatedAppointment = new Appointment("New Address", LocalDateTime.now().plusHours(1), true, 3, 4, 15);
+        String id = "12312312412";
+        Appointment updatedAppointment = new Appointment(1001, 1004, 1008, "2023-11-20", "8:00 AM", "8:30 AM", 2, "testDesc");
 
-        when(appointmentRepository.findAppointmentByFamilyMemberIdAndElderlyId(familyMemberId, elderlyId))
+        when(appointmentRepository.findAppointmentById(id))
                 .thenReturn(Optional.empty());
 
-        Optional<Appointment> result = appointmentController.editAppointment(updatedAppointment, familyMemberId, elderlyId);
+        Optional<Appointment> result = appointmentController.editAppointment(updatedAppointment, id);
 
         assertFalse(result.isPresent());
     }
 
     @Test
     public void testAddAppointment_Exception() {
-        Appointment newAppointment = new Appointment("Address", LocalDateTime.now(), true, 1, 2, 10);
+        Appointment newAppointment = new Appointment(1001, 1004, 1008, "2023-11-20", "8:00 AM", "8:30 AM", 2, "testDesc");
 
         when(appointmentRepository.save(any(Appointment.class))).thenThrow(RuntimeException.class);
 

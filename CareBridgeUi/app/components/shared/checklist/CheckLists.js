@@ -26,7 +26,7 @@ const CheckLists = ({ route, navigation }) => {
     userDetails.pairings[0]?.seniorCitizenId || null;
   const [value, setValue] = useState(initialSeniorCitizenId);
   const [items, setItems] = useState([]);
-  const isFocused = useIsFocused();
+ 
 
   const setDropDownValue = () => {
     return userDetails.pairings.map((pairing) => ({
@@ -73,7 +73,7 @@ const CheckLists = ({ route, navigation }) => {
     } else {
       setItems(setDropDownValue());
       if (userDetails.pairings.length > 0) {
-        getChecklists(userDetails.pairings[0].seniorCitizenId);
+        getChecklists(initialSeniorCitizenId);
       }
     }
   }, []);
@@ -121,6 +121,8 @@ const CheckLists = ({ route, navigation }) => {
       ) : (
         <>
           {userDetails.type !== "senior" && (
+            <>
+            <Text style={styles.text}>Select Senior Citizen</Text>
             <DropDownPicker
               open={open}
               value={value}
@@ -132,7 +134,9 @@ const CheckLists = ({ route, navigation }) => {
               maxHeight={dropdownMaxHeight}
               style={styles.dropdown}
             />
+            </>
           )}
+           <Text style={styles.text}>Checklist Name</Text>
           <TextInput
             style={styles.input}
             value={newChecklist}

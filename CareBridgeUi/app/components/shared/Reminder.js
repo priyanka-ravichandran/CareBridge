@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, Button, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, Switch, Button, Pressable, StyleSheet, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function Reminder() {
@@ -23,9 +23,9 @@ export default function Reminder() {
       {/* Date Picker */}
       <View style={styles.dateContainer}>
         <Text>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</Text>
-        <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <Pressable onPress={() => setShowDatePicker(true)}>
           <Text style={styles.calendarIcon}>📅</Text>
-        </TouchableOpacity>
+        </Pressable>
         {showDatePicker && (
           <DateTimePicker
             testID="datePicker"

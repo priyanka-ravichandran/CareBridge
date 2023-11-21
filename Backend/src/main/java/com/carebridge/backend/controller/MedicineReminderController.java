@@ -66,5 +66,4 @@ public class MedicineReminderController {
         emailService.sendEmail(userEmail,"Delete","Deleting medicine reminder successful");
         medicineReminderRepository.deleteMedicineReminderByMedicineReminderNumber(medicineReminderNumber);
     }
-
 }

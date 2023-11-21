@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
+  Pressable,
   Text,
   Dimensions,
   Image,
@@ -13,8 +13,8 @@ const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const SeniorCitizenHome = ({ navigation }) => {
-  const {userDetails} = useContext(UserDetailsContext);
-  console.log(userDetails)
+  const { userDetails } = useContext(UserDetailsContext);
+  console.log(userDetails);
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };
@@ -27,45 +27,56 @@ const SeniorCitizenHome = ({ navigation }) => {
         </Text>
       </View>
       <View style={styles.boxRow}>
-        <TouchableOpacity
+        <Pressable
           style={[styles.imageBox, styles.leftBox]}
-          //onPress={() => navigateToPage("SOS")}
+          onPress={() => navigateToPage("sosButton")}
         >
           <Image
             source={require("../../assets/sos.png")}
-            style={{ width: boxSize - 35, height: boxSize - 35 }}
+            style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
           <Text style={styles.boxText}>SOS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           style={[styles.imageBox, , styles.rightBox]}
-          onPress={() => navigateToPage("ShoppingList")}
+          onPress={() => navigateToPage("ShoppingListDashboard")}
         >
           <Image
             source={require("../../assets/shopping.jpg")}
-            style={{ width: boxSize - 35, height: boxSize - 35 }}
+            style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <View style={styles.boxRow}>
-        <TouchableOpacity
+        <Pressable
           style={[styles.imageBox, styles.leftBox]}
           onPress={() => navigateToPage("Reminders")}
         >
           <Image
             source={require("../../assets/alarm.png")}
-            style={{ width: boxSize - 35, height: boxSize - 35 }}
+            style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </Pressable>
+        <Pressable
           style={[styles.imageBox, styles.rightBox]}
           onPress={() => navigateToPage("Medicine")}
         >
           <Image
             source={require("../../assets/pills.jpg")}
-            style={{ width: boxSize - 35, height: boxSize - 35 }}
+            style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-        </TouchableOpacity>
+        </Pressable>
+      </View>
+      <View style={styles.boxRow}>
+        <Pressable
+          style={[styles.imageBox, styles.rightBox]}
+          onPress={() => navigateToPage("EmergencyContacts")}
+        >
+          <Image
+            source={require("../../assets/emergency.png")}
+            style={{ width: boxSize - 55, height: boxSize - 55 }}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -108,28 +119,22 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   leftBox: {
-    marginRight: 5,
+    marginRight: 10,
     backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8, // Only has effect on Android
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 8,
     borderRadius: 10,
   },
   rightBox: {
-    marginLeft: 5,
+    marginLeft: 10,
     backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
     elevation: 8,
     borderRadius: 10,
   },

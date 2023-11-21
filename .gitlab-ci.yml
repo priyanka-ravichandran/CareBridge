@@ -16,38 +16,57 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
-stages:          # List of stages for jobs, and their order of execution
+stages:
   - build
   - test
   - deploy
+  
+variables:
+  DOCKER_IMAGE_NAME: "carebridge-backend"
+  VM_SSH_USER: $SERVER_USER
+  VM_SSH_HOST: $SERVER_IP
+  VM_SSH_PORT: "22"
 
-build-job:       # This job runs in the build stage, which runs first.
+build-backend-job:
+  image: maven:3.8.3-openjdk-17
   stage: build
   script:
+    - cd Backend
+    - echo "Cleaning previous builds"
+    - mvn -q clean
     - echo "Compiling the code..."
-    - echo "Compile complete."
-    - mkdir build/
-    - echo "My application" > build/careBridge-executable-binary
+    - mvn -q package -DskipTests
+    - echo "Compile complete. Artifacts created in Backend/target/"
   artifacts:
     paths:
-      - build/careBridge-executable-binary
+      - Backend/target/Backend-0.0.1-SNAPSHOT.jar
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+unit-test-job:
+  image: maven:3.8.3-openjdk-17
+  stage: test
   script:
+    - cd Backend
     - echo "Running unit tests... This will take about 60 seconds."
-    - echo "Code coverage is 90%"
-    - cat $CI_PROJECT_DIR/build/careBridge-executable-binary
+    - mvn '-Dtest=com.carebridge.backend.*Test' test
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+code-quality-job:
+  image: maven:3.8.3-openjdk-17
+  stage: test
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - echo "No lint issues found."
+    - java -jar DesigniteJava.jar -i Backend/ -o code_quality_outputs/ -d
+  artifacts:
+    paths:
+      - code_quality_outputs/*.csv
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
+deploy-job:
+  stage: deploy
+  only:
+    - main
+    - dev
   script:
     - echo "Deploying application..."
+    - scp -P $VM_SSH_PORT Backend/target/Backend-0.0.1-SNAPSHOT.jar $VM_SSH_USER@$VM_SSH_HOST:home/student/Carebridge/
+    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "cd /home/student/CareBridge && docker build -t $DOCKER_IMAGE_NAME ."
+    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."

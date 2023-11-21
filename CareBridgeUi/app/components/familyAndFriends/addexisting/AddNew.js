@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ScrollView } from "react-native-gesture-handler";
 
 const AddNew = ({navigation}) => {
   const [FirstName, setFirstname] = useState("");
@@ -122,8 +123,9 @@ const AddNew = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Add New Senior Citizen</Text>
+    <ScrollView>
+      <View style={styles.container}>
+     
       <View style={styles.innerContainer}>
         <Text>First Name</Text>
         <TextInput
@@ -262,6 +264,8 @@ const AddNew = ({navigation}) => {
         <Text style={styles.saveText}>ADD</Text>
       </Pressable>
     </View>
+     
+    </ScrollView>
   );
 };
 
@@ -276,11 +280,7 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: "80%",
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
+  
   input: {
     height: 40,
     backgroundColor: "#E6E6E6",
