@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class AppUserControllerTest {
 
@@ -32,14 +33,15 @@ class AppUserControllerTest {
     }
 
     @Test
-    void testCreateUser() {
+    public void testCreateUser() {
         AppUser appUser = new AppUser();
-        appUser.setUserID(1L);
-        Mockito.when(appUserRepository.save(appUser)).thenReturn(appUser);
+        appUser.setUserID(1);
+        when(appUserRepository.save(appUser)).thenReturn(appUser);
 
         AppUser result = appUserController.appUser(appUser);
 
         assertEquals(appUser, result);
+        verify(appUserRepository, times(1)).save(appUser);
     }
 
     @Test
@@ -48,7 +50,7 @@ class AppUserControllerTest {
         userList.add(new AppUser());
         userList.add(new AppUser());
 
-        Mockito.when(appUserRepository.findAll()).thenReturn(userList);
+        when(appUserRepository.findAll()).thenReturn(userList);
 
         List<AppUser> result = appUserController.all();
 
@@ -59,8 +61,8 @@ class AppUserControllerTest {
     void testGetUserById() {
         Long userId = 1L;
         AppUser appUser = new AppUser();
-        appUser.setUserID(userId);
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(appUser));
+        appUser.setUserID(Math.toIntExact(userId));
+        when(appUserRepository.findById(userId)).thenReturn(Optional.of(appUser));
 
         AppUser result = appUserController.one(userId);
 
@@ -71,7 +73,7 @@ class AppUserControllerTest {
     void testGetUserByIdUserNotFoundException() {
         Long userId = 1L;
 
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.empty());
+        when(appUserRepository.findById(userId)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> {
             appUserController.one(userId);
