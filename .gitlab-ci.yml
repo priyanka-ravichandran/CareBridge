@@ -49,7 +49,7 @@ build-frontend-job:
     - echo "Creating an apk"
     - npm install expo
     - npm install -g eas-cli
-    - eas login --non-interactive --username $EXPO_USER --password $EXPO_PASS
+    - eas-cli-authenticate --username $EXPO_USER --password $EXPO_PASS
     - eas build --platform android --local --output build/
   artifacts:
     paths:
