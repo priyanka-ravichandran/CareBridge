@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import UserDetailsContext from "../shared/context/userDetailsContext";
 
-
 const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const VolunteerHomeScreen = ({ navigation }) => {
-  const {userDetails} = useContext(UserDetailsContext);
+  const { userDetails } = useContext(UserDetailsContext);
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };
@@ -56,7 +55,7 @@ const VolunteerHomeScreen = ({ navigation }) => {
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
         </Pressable>
-        
+
         <Pressable
           style={[styles.imageBox, styles.rightBox]}
           onPress={() => navigateToPage("Medicine")}
@@ -65,73 +64,64 @@ const VolunteerHomeScreen = ({ navigation }) => {
             source={require("../../assets/pills.jpg")}
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-        </Pressable></View>
-        <View style={styles.boxRow}>
-        <Pressable
-          style={[styles.imageBox, styles.rightBox]}
-          onPress={() => navigateToPage("VolunteerBooking")}
-        >
-          <Image
-            source={require("../../assets/volunteerr.png")}
-            style={{ width: boxSize - 55, height: boxSize - 55 }}
-          />
         </Pressable>
       </View>
     </View>
   );
-  }
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 20,
-      backgroundColor: "white",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    welcomeContainer: {
-      width: "100%",
-      alignItems: "flex-start",
-      marginTop: 10,
-      paddingHorizontal: 20,
-    },
-    welcomeText: {
-      fontSize: 20,
-      fontWeight: "bold",
-      color: "#333",
-    },
-    boxRow: {
-      flexDirection: "row",
-      marginBottom: 10,
-      justifyContent: "space-around",
-      width: "100%",
-    },
-  
-    imageBox: {
-      padding: 10,
-    },
-    leftBox: {
-      marginRight: 10,
-      backgroundColor: "#fff",
-      shadowColor: '#171717',
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.2,
-      shadowRadius: 3, 
-      elevation: 8, 
-      borderRadius: 10,
-    },
-    rightBox: {
-      marginLeft: 10,
-      backgroundColor: "#fff",
-      shadowColor: '#171717',
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.2,
-      shadowRadius: 3, 
-      elevation: 8, 
-      borderRadius: 10,
-    },
-    boxText: {
-      color: "white",
-      fontSize: 16,
-      textAlign: "center",
-    }});
+};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  welcomeContainer: {
+    width: "100%",
+    alignItems: "flex-start",
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  boxRow: {
+    flexDirection: "row",
+    marginBottom: 10,
+    justifyContent: "space-around",
+    width: "100%",
+  },
+
+  imageBox: {
+    padding: 10,
+  },
+  leftBox: {
+    marginRight: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 8,
+    borderRadius: 10,
+  },
+  rightBox: {
+    marginLeft: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 8,
+    borderRadius: 10,
+  },
+  boxText: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "center",
+  },
+});
 export default VolunteerHomeScreen;
