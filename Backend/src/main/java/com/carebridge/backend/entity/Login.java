@@ -30,15 +30,16 @@ public class Login {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    private static final int MD5_HEX_LENGTH = 32;
+    private static final int HEX_RADIX = 16;
     public String hashPasswordMD5(String password) {
         StringBuilder returnValue;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(password.getBytes());
             BigInteger no = new BigInteger(1, messageDigest);
-            returnValue = new StringBuilder(no.toString(16));
-            while (returnValue.length() < 32) {
+            returnValue = new StringBuilder(no.toString(HEX_RADIX));
+            while (returnValue.length() < MD5_HEX_LENGTH) {
                 returnValue.insert(0, "0");
             }
         } catch (NoSuchAlgorithmException e) {
