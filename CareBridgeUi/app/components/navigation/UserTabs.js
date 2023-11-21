@@ -93,11 +93,19 @@ const renderTabsBasedOnUserType = (userDetails) => {
         name="Medicine"
         component={MedicineList}
         key="medicine"
-        options={{
-          headerShown: false,
+        options={({ navigation, route }) => ({
           tabBarIcon: () => null,
           tabBarButton: (props) => null,
-        }}
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
+        })}
       />,
       <Tab.Screen
         name="ShoppingListDashboard"
@@ -123,6 +131,10 @@ const renderTabsBasedOnUserType = (userDetails) => {
         name="EmergencyContacts"
         component={EmergencyContacts}
         key="emergencyContacts"
+        options={({ navigation, route }) => ({
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        })}
       />,
       <Tab.Screen name="Profile" component={SeniorProfile} key="profile" />
     );
@@ -215,7 +227,15 @@ const renderTabsBasedOnUserType = (userDetails) => {
         options={({ navigation, route }) => ({
           tabBarIcon: () => null,
           tabBarButton: (props) => null,
-          headerShown: false,
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
         })}
         key="volunteerbooking"
       />,
