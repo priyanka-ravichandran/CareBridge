@@ -42,7 +42,7 @@ build-backend-job:
       - Backend/target/Backend-0.0.1-SNAPSHOT.jar
 
 build-frontend-job:
-  image: dokken/ubuntu-22.04
+  image: node:21-alpine3.18
   stage: build
   script:
     - cd CareBridgeUi
