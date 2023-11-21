@@ -106,7 +106,7 @@ const Booking = ({ navigation }) => {
               <View style={styles.itemContainer}>
                 <View style={styles.detailsContainer}>
                   <Text style={styles.text}>
-                    Volunteer Name: {foundVolunteer.first_name +" "+ foundVolunteer.last_name}
+                    Volunteer Name: {foundVolunteer ? foundVolunteer.first_name +" "+ foundVolunteer.last_name : ""}
                   </Text>
                   <Text style={styles.text}>
                     Description: {item.description || "N/A"}

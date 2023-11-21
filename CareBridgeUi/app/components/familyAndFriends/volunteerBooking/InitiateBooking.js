@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   autocompleteContainer: {
-    backgroundColor: "white",
+    backgroundColor: "#E6E6E6",
     borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 4,
@@ -192,12 +192,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   input: {
-    height:20,
-    backgroundColor: "#E6E6E6",
-    marginVertical: 10,
+    height: 40,
+    marginVertical: 20,
     paddingHorizontal: 10,
-    borderRadius: 5,
-    fontSize: 16,
+    backgroundColor: "#E6E6E6",
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 4,
   },
 });
 export default InitiateBooking;
