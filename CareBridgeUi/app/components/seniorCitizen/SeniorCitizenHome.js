@@ -13,8 +13,8 @@ const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const SeniorCitizenHome = ({ navigation }) => {
-  const {userDetails} = useContext(UserDetailsContext);
-  console.log(userDetails)
+  const { userDetails } = useContext(UserDetailsContext);
+  console.log(userDetails);
   const navigateToPage = (page) => {
     navigation.navigate(page);
   };
@@ -39,7 +39,7 @@ const SeniorCitizenHome = ({ navigation }) => {
         </Pressable>
         <Pressable
           style={[styles.imageBox, , styles.rightBox]}
-          onPress={() => navigateToPage("ShoppingList")}
+          onPress={() => navigateToPage("ShoppingListDashboard")}
         >
           <Image
             source={require("../../assets/shopping.jpg")}
@@ -66,12 +66,14 @@ const SeniorCitizenHome = ({ navigation }) => {
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
         </Pressable>
+      </View>
+      <View style={styles.boxRow}>
         <Pressable
           style={[styles.imageBox, styles.rightBox]}
           onPress={() => navigateToPage("EmergencyContacts")}
         >
           <Image
-            source={require("../../assets/pills.jpg")}
+            source={require("../../assets/emergency.png")}
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
         </Pressable>
@@ -113,27 +115,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     marginHorizontal: 5,
   },
-   imageBox: {
+  imageBox: {
     padding: 10,
   },
   leftBox: {
     marginRight: 10,
     backgroundColor: "#fff",
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
-    shadowRadius: 3, 
-    elevation: 8, 
+    shadowRadius: 3,
+    elevation: 8,
     borderRadius: 10,
   },
   rightBox: {
     marginLeft: 10,
     backgroundColor: "#fff",
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
-    shadowRadius: 3, 
-    elevation: 8, 
+    shadowRadius: 3,
+    elevation: 8,
     borderRadius: 10,
   },
   boxText: {
