@@ -27,7 +27,7 @@ variables:
   VM_SSH_HOST: $SERVER_IP
   VM_SSH_PORT: "22"
 
-build-job:
+build-backend-job:
   image: maven:3.8.3-openjdk-17
   stage: build
   script:
@@ -40,6 +40,20 @@ build-job:
   artifacts:
     paths:
       - Backend/target/Backend-0.0.1-SNAPSHOT.jar
+
+build-frontend-job:
+  image: ubuntu-22.04-jdk-17-ndk-r21e
+  stage: build
+  script:
+    - cd CareBridgeUi
+    - echo "Creating an apk"
+    - npm install expo
+    - npm install -g eas-cli
+    - eas login --non-interactive --username $EXPO_USER --password $EXPO_PASS
+    - eas build --platform android --local --output build/
+  artifacts:
+    paths:
+      - CareBridgeUi/build/*.apk
 
 unit-test-job:
   image: maven:3.8.3-openjdk-17
