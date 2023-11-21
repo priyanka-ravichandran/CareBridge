@@ -3,6 +3,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.Appointment;
 import com.carebridge.backend.repo.AppointmentRepository;
+import com.carebridge.backend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,8 +12,10 @@ import java.util.Optional;
 @RestController
 public class AppointmentController {
     private final AppointmentRepository appointmentRepository;
-    public  AppointmentController(AppointmentRepository appointmentRepository){
+private final EmailService emailService;
+    public  AppointmentController(AppointmentRepository appointmentRepository, EmailService emailService){
         this.appointmentRepository = appointmentRepository;
+    this.emailService = emailService;
     }
 
     @GetMapping( "/appointment")

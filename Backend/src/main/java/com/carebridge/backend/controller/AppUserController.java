@@ -4,6 +4,7 @@ import com.carebridge.backend.entity.AppUser;
 import com.carebridge.backend.entity.Login;
 import com.carebridge.backend.exception.UserNotFoundException;
 import com.carebridge.backend.repo.AppUserRepository;
+import com.carebridge.backend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,11 @@ public class AppUserController {
     private final int BASE_FOR_ID_GENERATE=100000;
     private final int UP_BOUNDARY_FOR_ID_GENERATE=900000;
 
-    public AppUserController(AppUserRepository appUserRepository) {
+    private final EmailService emailService;
+
+    public AppUserController(AppUserRepository appUserRepository, EmailService emailService) {
         this.appUserRepository = appUserRepository;
+        this.emailService = emailService;
     }
 
     @PostMapping("/users")
@@ -32,6 +36,13 @@ public class AppUserController {
         Login login = new Login();
         appUser.setHashedPassword(login.hashPasswordMD5(appUser.getHashedPassword()));
         return appUserRepository.save(appUser);
+    }
+
+    @PostMapping("")
+    @CrossOrigin(origins = "*")
+    int emailUser(@RequestBody String message) {
+        emailService.sendEmail("akshat64647@gmail.com","care",message);
+        return -1;
     }
 
     @PostMapping("/login")
@@ -48,15 +59,13 @@ public class AppUserController {
                 return appUser.get().getUserID();
             }
         }
-
+        emailService.sendEmail(email,"Login","You Have Successfully Logged in!");
         return -1;
     }
 
     @GetMapping("/users")
     @CrossOrigin(origins = "*")
-    List<AppUser> all() {
-        return appUserRepository.findAll();
-    }
+    List<AppUser> all() {return appUserRepository.findAll();}
 
     @GetMapping("/users/{userId}")
     @CrossOrigin(origins = "*")
@@ -68,6 +77,7 @@ public class AppUserController {
     @PutMapping("/users/{userId}")
     @CrossOrigin(origins = "*")
     Optional<AppUser> updateUser(@RequestBody AppUser updatedAppUser, @PathVariable int userId) {
+        emailService.sendEmail(updatedAppUser.getEmail(),"Update","You Have Successfully Updated Profile");
         return appUserRepository.findAppUserByUserID(userId)
                 .map(appUser -> {
                     appUser.setUserID(userId);

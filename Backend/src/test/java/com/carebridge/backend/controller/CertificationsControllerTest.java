@@ -23,7 +23,7 @@ class CertificationsControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        certificationController = new CertificationController(certificationRepository);
+        certificationController = new CertificationController(certificationRepository, emailService);
     }
 
     @Test

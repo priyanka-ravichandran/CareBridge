@@ -9,4 +9,5 @@ import java.util.List;
 public interface FallDetectionRepository extends JpaRepository<FallReminder,Long> {
     List<FallReminder>  findFallReminderByElderlyId(int elderlyId);
     List<FallReminder> findFallReminderByGuardianId(int guardianId);
+    void deleteFallReminderByElderlyId(int elderlyId);
 }
