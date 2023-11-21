@@ -60,5 +60,4 @@ public class MedicineReminderController {
     public void deleteReminder(@RequestParam String medicineReminderNumber) {
         medicineReminderRepository.deleteMedicineReminderByMedicineReminderNumber(medicineReminderNumber);
     }
-
 }

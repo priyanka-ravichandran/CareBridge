@@ -2,85 +2,107 @@ package com.carebridge.backend.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+
 @Entity
 @Table(name="Appointment")
-@IdClass(Appointment.class)
 public class Appointment implements Serializable {
     @Id
-    private String address;
-    @Id
-    private LocalDateTime time;
-    @Id
-    private boolean isRecurring;
-    @Id
-    private int elderlyId;
-    @Id
-    private int familyMemberId;
-    @Id
-    private int bufferTime;
-    public Appointment(String address, LocalDateTime time, boolean isRecurring, int elderlyId,int familyMemberId,int bufferTime) {
-        this.address = address;
-        this.time = time;
-        this.isRecurring = isRecurring;
-        this.elderlyId=elderlyId;
-        this.bufferTime=bufferTime;
-        this.familyMemberId=familyMemberId;
+    private String id;
+    private int volunteerId;
+    private int familyId;
+    private int seniorCitizenId;
+    private String bookingDate;
+    private String bookingStartTime;
+    private String bookingEndTime;
+    private int availability;
+    private String description;
+
+    public Appointment(int volunteerId, int familyId, int seniorCitizenId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability, String description) {
+        this.id = String.valueOf(volunteerId) + System.currentTimeMillis();
+        this.volunteerId = volunteerId;
+        this.familyId = familyId;
+        this.seniorCitizenId = seniorCitizenId;
+        this.bookingDate = bookingDate;
+        this.bookingStartTime = bookingStartTime;
+        this.bookingEndTime = bookingEndTime;
+        this.availability = availability;
+        this.description = description;
     }
 
-    public Appointment() {
+    public Appointment() {}
 
+    public String getId() {
+        return id;
     }
 
-    public String getAddress() {
-        return address;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public int getVolunteerId() {
+        return volunteerId;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public void setVolunteerId(int volunteerId) {
+        this.volunteerId = volunteerId;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    public int getFamilyId() {
+        return familyId;
     }
 
-    public boolean isRecurring() {
-        return isRecurring;
+    public void setFamilyId(int familyId) {
+        this.familyId = familyId;
     }
 
-    public void setRecurring(boolean recurring) {
-        isRecurring = recurring;
+    public String getBookingDate() {
+        return bookingDate;
     }
 
-    public int getBufferTime() {
-        return bufferTime;
+    public void setBookingDate(String bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
-    public void setBufferTime(int bufferTime) {
-        this.bufferTime = bufferTime;
+    public String getBookingStartTime() {
+        return bookingStartTime;
     }
 
-    public int getElderlyId() {
-        return elderlyId;
+    public void setBookingStartTime(String bookingStartTime) {
+        this.bookingStartTime = bookingStartTime;
     }
 
-    public void setElderlyId(int elderlyId) {
-        this.elderlyId = elderlyId;
+    public String getBookingEndTime() {
+        return bookingEndTime;
     }
 
-    public int getFamilyMemberId() {
-        return familyMemberId;
+    public void setBookingEndTime(String bookingEndTime) {
+        this.bookingEndTime = bookingEndTime;
     }
 
-    public void setFamilyMemberId(int familyMemberId) {
-        this.familyMemberId = familyMemberId;
+    public int getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(int availability) {
+        this.availability = availability;
+    }
+
+    public int getSeniorCitizenId() {
+        return seniorCitizenId;
+    }
+
+    public void setSeniorCitizenId(int seniorCitizenId) {
+        this.seniorCitizenId = seniorCitizenId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
