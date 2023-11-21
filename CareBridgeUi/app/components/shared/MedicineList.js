@@ -72,7 +72,9 @@ const MedicineList = () => {
   }, []);
 
   useEffect(() => {
-    getMedicineList(value);
+    if (userDetails.type !== "senior") {
+      getMedicineList(value);
+    }
   }, [value]);
 
   const getMedicineList = (userId) => {
@@ -88,6 +90,7 @@ const MedicineList = () => {
           let medicines = initialMedicineInfo;
 
           response.data.map((medicine) => {
+            console.log(medicine);
             medicines[keyMap[medicine.day]].push(medicine);
           });
           setMedicinesByDay(medicines);
