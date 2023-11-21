@@ -5,7 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const VolunteerProfile = () => {
+const VolunteerProfile = ({ navigation }) => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -31,13 +31,18 @@ const VolunteerProfile = () => {
   // Validation functions...
 
   const handleSave = () => {
+    //TODO
     // Handle the saving of the profile...
+  };
+
+  const handleLogout = () => {
+    navigation.navigate("LandingScreen");
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.innerContainer}>
-      <Text>First Name</Text>
+        <Text>First Name</Text>
         <TextInput
           style={styles.input}
           placeholder="FirstName"
@@ -123,11 +128,7 @@ const VolunteerProfile = () => {
           />
           <Text>
             {" "}
-            <MaterialIcons
-              name={"calendar-today"}
-              size={20}
-              color={"black"}
-            />
+            <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
           </Text>
         </Pressable>
         <Text style={{ color: "red" }}>{errors.birthDate}</Text>
@@ -152,7 +153,8 @@ const VolunteerProfile = () => {
             setAddress(value);
           }}
         />
-
+        {/*  
+        TODO
         <Text style={styles.label}>Volunteer Experience</Text>
         <TextInput
           style={styles.input}
@@ -164,23 +166,20 @@ const VolunteerProfile = () => {
         <View style={styles.buttonGroup}>
           <Pressable
             style={styles.button}
-            onPress={() => { /* Logic for adding certifications */ }}
+            onPress={() => 
           >
             <Text style={styles.buttonText}>+ Add Certifications</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => { /* Logic for adding government ID */ }}
+            onPress={() => 
           >
             <Text style={styles.buttonText}>+ Add Government ID</Text>
           </Pressable>
         </View>
-
-        <Pressable
-          style={styles.logoutButton}
-          onPress={handleSave}
-        >
-          <Text style={styles.buttonText}>LOGOUT</Text>
+        */}
+        <Pressable style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.createText}>Logout</Text>
         </Pressable>
       </View>
     </ScrollView>
@@ -190,7 +189,7 @@ const VolunteerProfile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingTop: 50,
   },
   innerContainer: {
@@ -198,9 +197,9 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   label: {
     fontSize: 16,
@@ -213,28 +212,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: "black",
   },
   buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 20,
   },
+  createText: {
+    color: "white",
+    textAlign: "center",
+  },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
   logoutButton: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     paddingVertical: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
 });

@@ -33,8 +33,8 @@ const VolunteerHomeScreen = ({ navigation }) => {
             source={require("../../assets/booking.png")}
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-          <Text style={styles.boxText}>SOS</Text>
         </Pressable>
+        {/* TODO
         <Pressable
           style={[styles.imageBox, , styles.rightBox]}
           onPress={() => navigateToPage("ShoppingListDashboard")}
@@ -64,7 +64,7 @@ const VolunteerHomeScreen = ({ navigation }) => {
             source={require("../../assets/pills.jpg")}
             style={{ width: boxSize - 55, height: boxSize - 55 }}
           />
-        </Pressable>
+        </Pressable> */}
       </View>
     </View>
   );
