@@ -114,15 +114,15 @@ const LoginScreen = ({ navigation }) => {
 
       {dbError && <Text style={styles.errorText}>{dbError}</Text>}
 
-      <Pressable style={styles.googleButton} onPress={() => promptAsync()}>
+      {/* <Pressable style={styles.googleButton} onPress={() => promptAsync()}>
         <Text style={styles.googleButtonText}>Login with Google</Text>
-      </Pressable>
+      </Pressable> */}
 
       <View style={styles.row}>
-        <Pressable onPress={() => console.log("Forgot Password")}>
+        {/* <Pressable onPress={() => console.log("Forgot Password")}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </Pressable>
-        <Text style={styles.separator}>|</Text>
+        <Text style={styles.separator}>|</Text> */}
         <Pressable onPress={() => navigation.navigate("LandingScreen")}>
           <Text style={styles.landingPage}>Go Back</Text>
         </Pressable>

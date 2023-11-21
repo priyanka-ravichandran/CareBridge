@@ -195,12 +195,12 @@ const CheckListItems = ({ route }) => {
       <View style={styles.addItemContainer}>
         <View style={styles.addItemRow}>
           <View style={styles.itemInput}>
-            <Text style={styles.text}>Checklist Name</Text>
+            <Text style={styles.text}>Item Name</Text>
             <TextInput
               style={sharedStyle.input}
               value={newItemName}
               onChangeText={setNewItemName}
-              placeholder="Item Name"
+              placeholder="New Item"
             />
           </View>
           <View style={styles.amountControl}>

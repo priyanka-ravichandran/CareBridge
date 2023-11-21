@@ -238,7 +238,7 @@ const SeniorProfile = ({navigation}) => {
       </View>
       
     
-    <Pressable style={styles.buttonContainer} onPress={handleLogout}>
+    <Pressable style={styles.buttonContainer} onPress={handleSave}>
         <Text style={styles.createText}>Save</Text>
       </Pressable>
       <Pressable style={styles.buttonContainer} onPress={handleLogout}>

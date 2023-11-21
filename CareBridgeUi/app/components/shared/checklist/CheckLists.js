@@ -136,12 +136,12 @@ const CheckLists = ({ route, navigation }) => {
             />
             </>
           )}
-           <Text style={styles.text}>Checklist Name</Text>
+           <Text style={styles.text}>ShoppingList Name</Text>
           <TextInput
             style={styles.input}
             value={newChecklist}
             onChangeText={setNewChecklist}
-            placeholder="New Checklist"
+            placeholder="New Shpping List"
           />
 
           <Pressable style={styles.createButton} onPress={createChecklist}>
