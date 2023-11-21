@@ -41,20 +41,6 @@ build-backend-job:
     paths:
       - Backend/target/Backend-0.0.1-SNAPSHOT.jar
 
-build-frontend-job:
-  image: node:21-alpine3.18
-  stage: build
-  script:
-    - cd CareBridgeUi
-    - echo "Creating an apk"
-    - npm install expo
-    - npm install -g eas-cli
-    - echo -e "$EXPO_USER\n$EXPO_PASS\n" | eas login
-    - eas build --platform android --local --output build/
-  artifacts:
-    paths:
-      - CareBridgeUi/build/*.apk
-
 unit-test-job:
   image: maven:3.8.3-openjdk-17
   stage: test
