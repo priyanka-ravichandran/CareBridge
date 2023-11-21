@@ -47,6 +47,7 @@ build-frontend-job:
   script:
     - cd CareBridgeUi
     - echo "Creating an apk"
+    - sudo apt install nodejs npm
     - npm install expo
     - npm install -g eas-cli
     - eas login --non-interactive --username $EXPO_USER --password $EXPO_PASS
