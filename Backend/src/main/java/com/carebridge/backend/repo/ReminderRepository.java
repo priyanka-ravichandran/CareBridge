@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
     List<Reminder> getRemindersByElderlyId(int elderlyId);
-    List<Reminder> getRemindersByElderlyIdAndDay(int elderlyId, String day);
+    List<Reminder> getRemindersByElderlyIdAndDate(int elderlyId, String day);
     Optional<Reminder> getRemindersByElderlyIdAndVolunteerIdAndReminderNumber(int elderlyId, int volunteerId, String reminderNumber);
     void deleteRemindersByReminderNumber(String reminderNumber);
 }
