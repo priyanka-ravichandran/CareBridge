@@ -67,6 +67,7 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
+    - mkdir -p /root/.ssh
     - echo "$ID_RSA_STUDENT" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H $VM_SSH_HOST >> ~/.ssh/known_hosts
