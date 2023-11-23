@@ -26,7 +26,11 @@ public class ChecklistItemControllerTest {
 
     @Test
     public void testAddChecklistItem() {
-        ChecklistItem newItem = new ChecklistItem("123", "Item1", 5, 0);
+        int amount=5;
+        int status=0;
+        String checkListNumber="123";
+        String itemName = "Item1";
+        ChecklistItem newItem = new ChecklistItem(checkListNumber, itemName, amount, status);
 
         when(checklistItemRepository.save(any(ChecklistItem.class))).thenReturn(newItem);
 
@@ -56,7 +60,9 @@ public class ChecklistItemControllerTest {
     public void testUpdateChecklistItem() {
         String checklistNumber = "123";
         String itemName = "Item1";
-        ChecklistItem updatedItem = new ChecklistItem(checklistNumber, itemName, 10, 1);
+        int amount=10;
+        int status=1;
+        ChecklistItem updatedItem = new ChecklistItem(checklistNumber, itemName, amount, status);
 
         when(checklistItemRepository.findChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName))
                 .thenReturn(Optional.of(new ChecklistItem(checklistNumber, itemName, 5, 0)));
@@ -83,7 +89,9 @@ public class ChecklistItemControllerTest {
     }
     @Test
     public void testAddChecklistItem_Exception() {
-        ChecklistItem newItem = new ChecklistItem("123", "Item1", 5, 0);
+        int amount=5;
+        int status=0;
+        ChecklistItem newItem = new ChecklistItem("123", "Item1", amount, status);
 
         when(checklistItemRepository.save(any(ChecklistItem.class))).thenThrow(RuntimeException.class);
 
@@ -106,7 +114,9 @@ public class ChecklistItemControllerTest {
     public void testUpdateChecklistItem_NotFound() {
         String checklistNumber = "123";
         String itemName = "Item1";
-        ChecklistItem updatedItem = new ChecklistItem(checklistNumber, itemName, 10, 1);
+        int amount=10;
+        int status=1;
+        ChecklistItem updatedItem = new ChecklistItem(checklistNumber, itemName, amount, status);
 
         when(checklistItemRepository.findChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName))
                 .thenReturn(Optional.empty());

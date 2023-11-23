@@ -28,7 +28,9 @@ class CertificationsControllerTest {
 
     @Test
     void testCreateCertification() {
-        Certification certification = new Certification(1, 123, "Java Developer");
+        int volunteerId=1;
+        int certificateNumber=123;
+        Certification certification = new Certification(volunteerId, certificateNumber, "Java Developer");
         Mockito.when(certificationRepository.save(certification)).thenReturn(certification);
 
         Certification result = certificationController.certification(certification);
@@ -39,9 +41,11 @@ class CertificationsControllerTest {
     @Test
     void testGetCertificationsForVolunteer() {
         int volunteerId = 1;
+        int certificateNumber1=123;
+        int certificateNumber2=124;
         List<Certification> certificationsList = new ArrayList<>();
-        certificationsList.add(new Certification(1, 123, "Java Developer"));
-        certificationsList.add(new Certification(1, 124, "Web Designer"));
+        certificationsList.add(new Certification(volunteerId, certificateNumber1, "Java Developer"));
+        certificationsList.add(new Certification(volunteerId, certificateNumber2, "Web Designer"));
 
         Mockito.when(certificationRepository.findCertificationByVolunteerID(volunteerId)).thenReturn(certificationsList);
 

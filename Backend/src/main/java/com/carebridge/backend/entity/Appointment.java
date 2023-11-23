@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="Appointment")
@@ -14,20 +15,18 @@ public class Appointment implements Serializable {
     private int volunteerId;
     private int familyId;
     private int seniorCitizenId;
-    private String bookingDate;
-    private String bookingStartTime;
-    private String bookingEndTime;
+    private LocalDateTime bookingDate;
+    private int timeLengthOfMeeting;
     private int availability;
     private String description;
 
-    public Appointment(int volunteerId, int familyId, int seniorCitizenId, String bookingDate, String bookingStartTime, String bookingEndTime, int availability, String description) {
+    public Appointment(int volunteerId, int familyId, int seniorCitizenId, LocalDateTime bookingDate,int timeLengthOfMeeting , int availability, String description) {
         this.id = String.valueOf(volunteerId) + System.currentTimeMillis();
         this.volunteerId = volunteerId;
         this.familyId = familyId;
         this.seniorCitizenId = seniorCitizenId;
         this.bookingDate = bookingDate;
-        this.bookingStartTime = bookingStartTime;
-        this.bookingEndTime = bookingEndTime;
+        this.timeLengthOfMeeting=timeLengthOfMeeting;
         this.availability = availability;
         this.description = description;
     }
@@ -58,29 +57,22 @@ public class Appointment implements Serializable {
         this.familyId = familyId;
     }
 
-    public String getBookingDate() {
+    public LocalDateTime getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(String bookingDate) {
+    public int getTimeLengthOfMeeting() {
+        return timeLengthOfMeeting;
+    }
+
+    public void setTimeLengthOfMeeting(int timeLengthOfMeeting) {
+        this.timeLengthOfMeeting = timeLengthOfMeeting;
+    }
+
+    public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
 
-    public String getBookingStartTime() {
-        return bookingStartTime;
-    }
-
-    public void setBookingStartTime(String bookingStartTime) {
-        this.bookingStartTime = bookingStartTime;
-    }
-
-    public String getBookingEndTime() {
-        return bookingEndTime;
-    }
-
-    public void setBookingEndTime(String bookingEndTime) {
-        this.bookingEndTime = bookingEndTime;
-    }
 
     public int getAvailability() {
         return availability;
