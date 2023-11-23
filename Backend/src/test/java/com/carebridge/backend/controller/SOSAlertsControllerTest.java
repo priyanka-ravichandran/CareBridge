@@ -28,9 +28,7 @@ class SOSAlertsControllerTest {
 
     @Test
     void testCreateSOSAlert() {
-        int elderlyId=1;
-        int volunteerId=2;
-        SOSAlerts sosAlert = new SOSAlerts(elderlyId, volunteerId, "2023-10-30 14:30:00", "Emergency");
+        SOSAlerts sosAlert = new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency");
         Mockito.when(sosAlertsRepository.save(sosAlert)).thenReturn(sosAlert);
 
         // TODO: Add emailService here
@@ -41,13 +39,9 @@ class SOSAlertsControllerTest {
 
     @Test
     void testGetAllSOSAlerts() {
-        int elderlyId1=1;
-        int volunteerId1=2;
-        int elderlyId2=3;
-        int volunteerId2=4;
         List<SOSAlerts> sosAlertsList = new ArrayList<>();
-        sosAlertsList.add(new SOSAlerts(elderlyId1, volunteerId1, "2023-10-30 14:30:00", "Emergency"));
-        sosAlertsList.add(new SOSAlerts(elderlyId2, volunteerId2, "2023-10-30 15:00:00", "Medical"));
+        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency"));
+        sosAlertsList.add(new SOSAlerts(3, 4, "2023-10-30 15:00:00", "Medical"));
 
         Mockito.when(sosAlertsRepository.findAll()).thenReturn(sosAlertsList);
 
@@ -61,8 +55,8 @@ class SOSAlertsControllerTest {
         int elderlyId = 1;
         int volunteerId = 2;
         List<SOSAlerts> sosAlertsList = new ArrayList<>();
-        sosAlertsList.add(new SOSAlerts(elderlyId, volunteerId, "2023-10-30 14:30:00", "Emergency"));
-        sosAlertsList.add(new SOSAlerts(elderlyId, volunteerId, "2023-10-30 15:00:00", "Medical"));
+        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency"));
+        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 15:00:00", "Medical"));
 
         Mockito.when(sosAlertsRepository.findSOSAlertsByElderlyIDAndVolunteerID(elderlyId, volunteerId)).thenReturn(sosAlertsList);
 
