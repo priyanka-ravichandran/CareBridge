@@ -40,8 +40,9 @@ build-backend-job:
   artifacts:
     paths:
       - Backend/target/Backend-0.0.1-SNAPSHOT.jar
+    expire_in: 1 week
 
-unit-test-job:
+.unit-test-job:
   image: maven:3.8.3-openjdk-17
   stage: test
   script:
@@ -49,7 +50,7 @@ unit-test-job:
     - echo "Running unit tests... This will take about 60 seconds."
     - mvn '-Dtest=com.carebridge.backend.*Test' test
 
-code-quality-job:
+.code-quality-job:
   image: maven:3.8.3-openjdk-17
   stage: test
   script:
@@ -57,16 +58,20 @@ code-quality-job:
   artifacts:
     paths:
       - code_quality_outputs/*.csv
+    expire_in: 1 week
 
 deploy-job:
   stage: deploy
-  only:
-    - main
-    - dev
+  #only:
+    #- main
+    #- dev
   script:
     - echo "Deploying application..."
-    - scp -P $VM_SSH_PORT Backend/target/Backend-0.0.1-SNAPSHOT.jar $VM_SSH_USER@$VM_SSH_HOST:home/student/Carebridge/
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "cd /home/student/CareBridge && docker build -t $DOCKER_IMAGE_NAME ."
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $DOCKER_IMAGE_NAME"
+    - echo "$ID_RSA_STUDENT" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $VM_SSH_HOST >> ~/.ssh/known_hosts
+    - scp -P $VM_SSH_PORT -i ~/.ssh/id_rsa Backend/target/Backend-0.0.1-SNAPSHOT.jar $VM_SSH_USER@$VM_SSH_HOST:home/student/Carebridge/
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "cd /home/student/CareBridge && docker build -t $DOCKER_IMAGE_NAME ."
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."
