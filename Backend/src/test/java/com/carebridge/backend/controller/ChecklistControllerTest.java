@@ -31,9 +31,7 @@ class ChecklistControllerTest {
     @Test
     public void testCreateChecklistItem() {
         // Mocking a new checklist item
-        int guardianId=1;
-        int elderlyId=2;
-        Checklist checklistToCreate = new Checklist(guardianId, elderlyId, "1", "New Checklist");
+        Checklist checklistToCreate = new Checklist(1, 2, "1", "New Checklist");
         when(checklistRepository.save(checklistToCreate)).thenReturn(checklistToCreate);
 //        Checklist result = checklistController.checklist(checklistToCreate);
 //        assertEquals(checklistToCreate.getChecklist_name(), result.getChecklist_name());
@@ -43,12 +41,8 @@ class ChecklistControllerTest {
     @Test
     public void testGetAllChecklistItems() {
         List<Checklist> mockChecklists = new ArrayList<>();
-        int guardianId1=1;
-        int elderlyId1=1;
-        int guardianId2=2;
-        int elderlyId2=2;
-        mockChecklists.add(new Checklist(guardianId1, elderlyId1, "1", "Checklist 1"));
-        mockChecklists.add(new Checklist(guardianId2, elderlyId2, "2", "Checklist 2"));
+        mockChecklists.add(new Checklist(1, 1, "1", "Checklist 1"));
+        mockChecklists.add(new Checklist(2, 2, "2", "Checklist 2"));
         when(checklistRepository.findAll()).thenReturn(mockChecklists);
 
         List<Checklist> result = checklistController.all();

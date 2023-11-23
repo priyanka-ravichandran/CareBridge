@@ -6,7 +6,6 @@ import com.carebridge.backend.repo.AppointmentRepository;
 import com.carebridge.backend.service.EmailService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ private final EmailService emailService;
     @GetMapping("/appointment/{volunteerId}/q")
     @CrossOrigin(origins = "*")
     List<Appointment> checkAppointmentForVolunteerAndDate(@PathVariable Integer volunteerId,
-                                                          @RequestParam LocalDateTime date) {
+                                                          @RequestParam String date) {
         return appointmentRepository.findAppointmentsByVolunteerIdAndBookingDate(volunteerId, date);
     }
 
@@ -55,8 +54,9 @@ private final EmailService emailService;
 
     @DeleteMapping("/appointment/q")
     @CrossOrigin(origins = "*")
-    void deleteAppointment(@RequestParam int volunteerId, @RequestParam int familyId, @RequestParam LocalDateTime bookingDate) {
-        appointmentRepository.deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDate(volunteerId, familyId, bookingDate);
+    void deleteAppointment(@RequestParam int volunteerId, @RequestParam int familyId, @RequestParam String bookingDate,
+                           @RequestParam String bookingStartTime) {
+        appointmentRepository.deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(volunteerId, familyId, bookingDate, bookingStartTime);
     }
 
     @PutMapping("/appointment/q")
@@ -66,7 +66,8 @@ private final EmailService emailService;
                 .map(appointment -> {
                     appointment.setFamilyId(newAppointment.getFamilyId());
                     appointment.setBookingDate(newAppointment.getBookingDate());
-                    appointment.setTimeLengthOfMeeting(newAppointment.getTimeLengthOfMeeting());
+                    appointment.setBookingStartTime(newAppointment.getBookingStartTime());
+                    appointment.setBookingEndTime(newAppointment.getBookingEndTime());
                     appointment.setAvailability(newAppointment.getAvailability());
                     appointment.setDescription(newAppointment.getDescription());
                     return appointmentRepository.save(appointment);
