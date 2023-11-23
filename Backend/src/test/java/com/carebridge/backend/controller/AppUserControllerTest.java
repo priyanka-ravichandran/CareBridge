@@ -29,7 +29,8 @@ class AppUserControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        appUserController = new AppUserController(appUserRepository);
+        // TODO: Add email service in appUserRepository
+        // appUserController = new AppUserController(appUserRepository);
     }
 
     @Test

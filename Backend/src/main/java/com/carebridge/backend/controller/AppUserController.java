@@ -74,6 +74,13 @@ public class AppUserController {
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
+
+    @GetMapping("/users/q")
+    @CrossOrigin(origins = "*")
+    AppUser getUserByEmail(@RequestParam String email) {
+        return appUserRepository.findAppUserByEmail(email).get();
+    }
+
     @PutMapping("/users/{userId}")
     @CrossOrigin(origins = "*")
     Optional<AppUser> updateUser(@RequestBody AppUser updatedAppUser, @PathVariable int userId) {

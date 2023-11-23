@@ -34,10 +34,10 @@ public class ReminderController {
         return reminderRepository.getRemindersByElderlyId(elderlyId);
     }
 
-    @GetMapping("/reminder/{elderlyId}/{day}")
+    @GetMapping("/reminder/{elderlyId}/{date}")
     @CrossOrigin(origins = "*")
-    List<Reminder> getRemindersForElderly(@PathVariable int elderlyId, @PathVariable String day) {
-        return reminderRepository.getRemindersByElderlyIdAndDay(elderlyId, day);
+    List<Reminder> getRemindersForElderly(@PathVariable int elderlyId, @PathVariable String date) {
+        return reminderRepository.getRemindersByElderlyIdAndDate(elderlyId, date);
     }
 
     @PutMapping("/reminder/q")
@@ -48,7 +48,7 @@ public class ReminderController {
         return reminderRepository.getRemindersByElderlyIdAndVolunteerIdAndReminderNumber(elderlyId, volunteerId, reminderNumber)
                 .map(reminder -> {
                     reminder.setDescription(newReminder.getDescription());
-                    reminder.setDay(newReminder.getDay());
+                    reminder.setDate(newReminder.getDate());
                     reminder.setTime(newReminder.getTime());
                     return reminderRepository.save(reminder);
                 });
