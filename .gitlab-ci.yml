@@ -89,9 +89,10 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
-    - chmod 777 $ID_RSA
+    - echo "$ID_RSA" > ssh_key
+    - chmod 777 ssh_key
     - apk update && apk add openssh-client
-    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i ssh_key $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i ssh_key $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i ssh_key $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."
