@@ -75,9 +75,9 @@ backend-publish-job:
     - pwd
     - docker --version
     - docker login -u ad943407@dal.ca -p group20@123 docker.io
-    - docker build -t carebridge-backend:$CI_COMMIT_SHORT_SHA Backend
+    - docker build -t group20/carebridge-backend:latest Backend
     - docker images
-    - docker push group20/carebridge-backend:$CI_COMMIT_SHORT_SHA
+    - docker push group20/carebridge-backend:latest
 
 deploy-job:
   stage: deploy
