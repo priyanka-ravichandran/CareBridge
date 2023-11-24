@@ -23,6 +23,7 @@ stages:
   - deploy
   
 variables:
+  GROUP: "group20"
   DOCKER_IMAGE_NAME: "carebridge-backend"
   VM_SSH_USER: $SERVER_USER
   VM_SSH_HOST: $SERVER_IP
@@ -75,9 +76,9 @@ backend-publish-job:
     - pwd
     - docker --version
     - docker login -u ad943407@dal.ca -p group20@123 docker.io
-    - docker build -t group20/carebridge-backend:latest Backend
+    - docker build -t $GROUP/$DOCKER_IMAGE_NAME:latest Backend
     - docker images
-    - docker push group20/carebridge-backend:latest
+    - docker push $GROUP/$DOCKER_IMAGE_NAME:latest
 
 deploy-job:
   stage: deploy
@@ -86,8 +87,7 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
-    - scp -P $VM_SSH_PORT -i ~/.ssh/id_rsa Backend/target/Backend-0.0.1-SNAPSHOT.jar $VM_SSH_USER@$VM_SSH_HOST:home/student/Carebridge/
-    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "cd /home/student/CareBridge && docker build -t $DOCKER_IMAGE_NAME ."
-    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."
