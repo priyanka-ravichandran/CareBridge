@@ -90,18 +90,9 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
-    - echo "$RSA_KEY"
-    - echo "$RSA_KEY" > ssh_key
-    - env  # Print environment variables
-    - ls -al  # List files for debugging
-    - cat ssh_key  # Print the content of the SSH key file
-    - docker --version
-    - docker images
-    - docker ps -a
-    - cat ssh_key
-    - chmod 600 ssh_key
+    - chmod 600 $RSA_KEY
     - apk update && apk add openssh-client
-    - ssh -i ssh_key -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -i ssh_key -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -i ssh_key -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."
