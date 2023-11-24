@@ -28,6 +28,7 @@ variables:
   VM_SSH_USER: $SERVER_USER
   VM_SSH_HOST: $SERVER_IP
   VM_SSH_PORT: "22"
+  RSA_KEY: $ID_RSA
 
 build-backend-job:
   image: maven:3.8.3-openjdk-17
@@ -89,8 +90,8 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
-    - echo "$ID_RSA"
-    - echo "$ID_RSA" > ssh_key
+    - echo "$RSA_KEY"
+    - echo "$RSA_KEY" > ssh_key
     - env  # Print environment variables
     - ls -al  # List files for debugging
     - cat ssh_key  # Print the content of the SSH key file
