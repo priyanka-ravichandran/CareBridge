@@ -87,11 +87,11 @@ deploy-job:
   #only:
     #- main
     #- dev
-  before_script:
-    - apk --update add openssh-client
   script:
     - echo "Deploying application..."
-    - ssh -p $VM_SSH_PORT -i $ID_RSA_STUDENT $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT -i $ID_RSA_STUDENT $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT -i $ID_RSA_STUDENT $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -p $VM_SSH_PORT StrictHostKeyChecking=no -i $ID_RSA $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."
