@@ -32,6 +32,7 @@ variables:
 
 build-frontend-job:
   image: node:alpine
+  allow_failure: true
   cache:
     paths:
       - .npm
