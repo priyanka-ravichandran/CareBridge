@@ -65,7 +65,6 @@ build-backend-job:
 backend-publish-job:
   image: docker:latest
   stage: publish
-  dependencies: build-backend-job
   tags:
     - backend-deployment
   variables:
