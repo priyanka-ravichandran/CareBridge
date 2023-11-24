@@ -81,6 +81,7 @@ backend-publish-job:
     - docker push $GROUP/$DOCKER_IMAGE_NAME:latest
 
 deploy-job:
+  image: alpine:latest
   stage: deploy
   #only:
     #- main
