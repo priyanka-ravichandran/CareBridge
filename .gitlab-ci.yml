@@ -89,6 +89,7 @@ deploy-job:
     #- dev
   script:
     - echo "Deploying application..."
+    - echo "$ID_RSA"
     - echo "$ID_RSA" > ssh_key
     - env  # Print environment variables
     - ls -al  # List files for debugging
