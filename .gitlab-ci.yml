@@ -37,6 +37,7 @@ build-frontend-job:
       - .npm
   stage: build
   before_script:
+    - apk add git
     - git --help
     - npm ci --cache .npm
   script:
