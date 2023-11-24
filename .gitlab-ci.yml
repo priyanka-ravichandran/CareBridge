@@ -38,6 +38,7 @@ build-frontend-job:
   stage: build
   before_script:
     - apk add git
+    - apk add openjdk11
     - npm ci --cache .npm
   script:
     - apk add --no-cache bash
