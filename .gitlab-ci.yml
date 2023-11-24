@@ -43,7 +43,6 @@ build-frontend-job:
   script:
     - apk add --no-cache bash
     - cd CareBridgeUi
-    - npx expo prebuild --platform android
     - npx eas-cli build --platform android --non-interactive --local
   artifacts:
     paths:
