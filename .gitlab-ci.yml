@@ -19,6 +19,7 @@
 stages:
   - build
   - test
+  - publish
   - deploy
   
 variables:
@@ -59,6 +60,23 @@ build-backend-job:
     paths:
       - code_quality_outputs/*.csv
     expire_in: 1 week
+
+backend-publish-job:
+  image: docker:latest
+  stage: publish
+  tags:
+    - deployment
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: "tcp://docker:2375"
+  services:
+    - docker:dind
+  script:
+    - pwd
+    - docker --version
+    - docker login -u ad943407@dal.ca -p group20@123 docker.io
+    - docker build -t carebridge-backend:latest Backend
+    - docker push carebridge-backend:latest
 
 deploy-job:
   stage: deploy
