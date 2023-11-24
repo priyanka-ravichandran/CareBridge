@@ -1,17 +1,5 @@
 {
   "expo": {
-    "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "compileSdkVersion": 31,
-            "targetSdkVersion": 31,
-            "buildToolsVersion": "31.0.0"
-          }
-        }
-      ]
-    ],
     "name": "CareBridgeUi",
     "slug": "CareBridgeUi",
     "version": "1.0.0",
