@@ -90,6 +90,12 @@ deploy-job:
   script:
     - echo "Deploying application..."
     - echo "$ID_RSA" > ssh_key
+    - env  # Print environment variables
+    - ls -al  # List files for debugging
+    - cat ssh_key  # Print the content of the SSH key file
+    - docker --version
+    - docker images
+    - docker ps -a
     - cat ssh_key
     - chmod 600 ssh_key
     - apk update && apk add openssh-client
