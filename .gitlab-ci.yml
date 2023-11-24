@@ -30,6 +30,21 @@ variables:
   VM_SSH_PORT: "22"
   RSA_KEY: $ID_RSA
 
+build-frontend-job:
+  image: node:alpine
+  cache:
+    paths:
+      - .npm
+  stage: build
+  before_script:
+    - npm ci --cache .npm
+  script:
+    - apk add --no-cache bash
+    - npx eas-cli build --android --non-interactive
+  artifacts:
+    paths:
+      - /*.apk
+
 build-backend-job:
   image: maven:3.8.3-openjdk-17
   stage: build
@@ -85,9 +100,9 @@ backend-publish-job:
 deploy-job:
   image: alpine:latest
   stage: deploy
-  #only:
-    #- main
-    #- dev
+  only:
+    - main
+    - dev
   script:
     - echo "Deploying application..."
     - chmod 600 $RSA_KEY
