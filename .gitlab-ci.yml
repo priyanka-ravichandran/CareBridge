@@ -65,7 +65,7 @@ backend-publish-job:
   image: docker:latest
   stage: publish
   tags:
-    - deployment
+    - backend-deployment
   variables:
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: "tcp://docker:2375"
