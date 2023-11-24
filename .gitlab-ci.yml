@@ -77,7 +77,6 @@ backend-publish-job:
     - docker --version
     - docker login -u ad943407@dal.ca -p group20@123 docker.io
     - docker build -t $GROUP/$DOCKER_IMAGE_NAME:latest Backend
-    - docker images
     - docker push $GROUP/$DOCKER_IMAGE_NAME:latest
 
 deploy-job:
@@ -86,6 +85,8 @@ deploy-job:
   #only:
     #- main
     #- dev
+  before_script:
+    - apk --update add openssh-client
   script:
     - echo "Deploying application..."
     - ssh -p $VM_SSH_PORT -i ~/.ssh/id_rsa $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
