@@ -19,6 +19,8 @@ const SeniorCitizenHome = ({ navigation }) => {
     navigation.navigate(page);
   };
 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.welcomeContainer}>

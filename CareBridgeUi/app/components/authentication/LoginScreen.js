@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import * as AuthSession from "expo-auth-session";
 import axios from "axios";
+import { sendIndi } from "../shared/pushnotifications";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

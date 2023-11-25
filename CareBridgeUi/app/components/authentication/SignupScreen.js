@@ -11,6 +11,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import axios from "axios";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -183,7 +184,7 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.header}>Signup</Text>
 
       <TextInput
@@ -310,7 +311,7 @@ const SignupScreen = ({ navigation }) => {
           <Text style={styles.landingPage}>Go Back</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

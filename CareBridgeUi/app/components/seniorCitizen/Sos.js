@@ -1,17 +1,44 @@
-import React from 'react';
+import React,{ useContext } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import UserDetailsContext from "../shared/context/userDetailsContext";
+import { sendGroup } from '../shared/pushnotifications';
+import axios from 'axios';
+
+const getUserID = (email) => {
+  axios.get("http://csci5308vm20.research.cs.dal.ca:8080/users/q?email="+email)
+  .then((response)=>{
+    return response.data?.userID;
+  });
+}
+
 
 const Sos = () => {
-  const handlePress = () => {
+    const { userDetails } = useContext(UserDetailsContext);
+    console.log(userDetails.email);
+    const handlePress = () => {
     // Handle the SOS button press here
     Alert.alert(
       'Emergency',
       'Contacting the nearest hospital, police station to your current location.',
       [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
     );
+    //const message = getUserDetails().email + "is in danger!"
+    console.log(getGroupEmails(getUserID(userDetails.email)));
+    sendGroup(getGroupEmails,'SOS',userDetails.email+ " is in Danger!")
     // Here you would typically integrate the actual emergency contact functionality
   };
+
+    const getGroupEmails = (userid) => {
+      axios
+        .get(
+          "http://csci5308vm20.research.cs.dal.ca:8080/getPairedEmails/q?appUserId=",
+          userid
+        )
+        .then((response) => {
+          return response.data;
+        });
+    };
 
   return (
     <View style={styles.container}>
