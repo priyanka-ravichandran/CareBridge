@@ -1,4 +1,5 @@
 # CareBridge
+![Logo](carebridgelogo.jpeg)
 ## Overview
 CareBridge is a mobile application designed to provide a one-stop solution to senior citizens, family members, and volunteers. Use cases for the application are as mentioned below:
  - Senior Citizens:
@@ -21,12 +22,17 @@ Other miscellaneous features include:
 To read more about the dependencies, refer to the `readme.md` mentioned in the respective folders.
 ## How to use it
 ### Front End
-Set the file to the CareBridgeUi folder
-```
-cd .\CareBridgeUi\
-```
-Install npm
+Install expo - To render the app.
 ``` bash
+npm install --global expo-cli
+```
+Install eas - To build the app.
+``` bash
+npm install -g eas-cli
+```
+Install all dependencies
+``` bash
+cd .\CareBridgeUi\
 npm i
 ```
 Install the expo globally and run
