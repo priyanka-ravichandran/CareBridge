@@ -23,8 +23,8 @@ public class PairingsController {
 
     @PostMapping("/pairings")
     @CrossOrigin(origins = "*")
-    Pairings addPairing(@RequestBody Pairings pairings,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding pairing successful");
+    Pairings addPairing(@RequestBody Pairings pairings) {
+        // emailService.sendEmail(userEmail,"Add","Adding pairing successful");
         return pairingsRepository.save(pairings);
     }
 
