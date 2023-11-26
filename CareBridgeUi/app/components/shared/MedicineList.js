@@ -90,7 +90,6 @@ const MedicineList = () => {
           let medicines = initialMedicineInfo;
 
           response.data.map((medicine) => {
-            console.log(medicine);
             medicines[keyMap[medicine.day]].push(medicine);
           });
           setMedicinesByDay(medicines);
@@ -160,14 +159,7 @@ const MedicineList = () => {
         }
       });
   };
-  // /q?elderlyId=${
-  //   item.elderlyId
-  // }&volunteerId=${item.volunteerId}&medicineReminderNumber=${
-  //   item.medicineReminderNumber
-  // }&day=${selectedDay}&time=${selectedTime.toLocaleTimeString(
-  //   "en-US",
-  //   { hour: "2-digit", minute: "2-digit", hour12: false }
-  // )}
+ 
   const renderMedicine = ({ item }) => {
     const [hours, minutes] = item.time.split(":");
     const currentDate = new Date();

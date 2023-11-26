@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Modal,
+  Alert,
 } from "react-native";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -148,7 +149,32 @@ const VolunteerBooking = ({ route, navigation }) => {
 
     fetchData();
   }, [selectedSlot]);
-
+  const deleteAppoinment = (bookingObj) => {
+    Alert.alert(
+      "Delete Appoinment",
+      "Are you sure you want to delete this Appoinment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            axios
+              .delete(
+                `http://csci5308vm20.research.cs.dal.ca:8080/appoinment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`
+              )
+              .then((response) => {
+                if (response) {
+                  setSelectedSlot(null);
+                }
+              });
+          },
+        },
+      ]
+    );
+  };
   const BookingDetailsModal = () => {
     if (!selectedSlot || !seniorCitizenInfo) return null;
     return (
@@ -171,6 +197,12 @@ const VolunteerBooking = ({ route, navigation }) => {
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={closeModal}
+            >
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => deleteAppoinment(selectedSlot)}
             >
               <Text style={styles.textStyle}>Close</Text>
             </Pressable>
@@ -312,7 +344,8 @@ const VolunteerBooking = ({ route, navigation }) => {
           slotIndex !== -1 &&
           calledFrom === "toggleSlotAvailability"
         ) {
-          updatedSlots[slot.bookingDate][slotIndex].availability = reqBody.availability;
+          updatedSlots[slot.bookingDate][slotIndex].availability =
+            reqBody.availability;
         }
 
         return updatedSlots;

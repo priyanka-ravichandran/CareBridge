@@ -5,7 +5,7 @@ import {
   Text,
   Pressable,
   FlatList,
-  ScrollView,
+  Alert
 } from "react-native";
 import axios from "axios";
 import UserDetailsContext from "../../shared/context/userDetailsContext";
@@ -22,7 +22,7 @@ const Booking = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
   const [allBookings, setAllBookings] = useState([]);
   const [open, setOpen] = useState(false);
-  const [volunteers,setVolunteers]= useState([]);
+  const [volunteers, setVolunteers] = useState([]);
   const initialSeniorCitizenId =
     userDetails.pairings[0]?.seniorCitizenId || null;
   const [value, setValue] = useState(initialSeniorCitizenId);
@@ -39,7 +39,6 @@ const Booking = ({ navigation }) => {
       const filteredBookings = allBookings.filter(
         (booking) => booking.seniorCitizenId === value
       );
-      console.log(filteredBookings);
       setBookings(filteredBookings);
     }
   }, [value]);
@@ -48,18 +47,18 @@ const Booking = ({ navigation }) => {
     setItems(setDropDownValue());
     getBookings();
     axios
-    .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
-    .then((response) => {
-      if (response.data) {
-        let volunteer = [];
-        response.data.map((user) => {
-          if (user.type === "volunteer") {
-            volunteer.push(user);
-          }
-        });
-        setVolunteers(volunteer);
-      }
-    });
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+      .then((response) => {
+        if (response.data) {
+          let volunteer = [];
+          response.data.map((user) => {
+            if (user.type === "volunteer") {
+              volunteer.push(user);
+            }
+          });
+          setVolunteers(volunteer);
+        }
+      });
   }, []);
 
   const getBookings = () => {
@@ -78,6 +77,35 @@ const Booking = ({ navigation }) => {
         }
       });
   };
+
+  const deleteAppoinment = (index, bookingObj) => {
+    Alert.alert(
+      "Delete Appoinment",
+      "Are you sure you want to delete this Appoinment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            console.log(`http://csci5308vm20.research.cs.dal.ca:8080/appoinment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`)
+            axios
+              .delete(
+                `http://csci5308vm20.research.cs.dal.ca:8080/appoinment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`
+              )
+              .then((response) => {
+                if (response) {
+                  getBookings();
+                }
+              });
+          },
+        },
+      ]
+    );
+  };
+
   const handleNewBooking = () => {
     navigation.navigate("InitiateBooking");
   };
@@ -98,43 +126,47 @@ const Booking = ({ navigation }) => {
         maxHeight={dropdownMaxHeight}
         style={styles.dropdown}
       />
-        <FlatList
-          data={bookings}
-          renderItem={({ item }) => {
-            let foundVolunteer = volunteers.find(object => object.userID === item.volunteerId);
-            return (
-              <View style={styles.itemContainer}>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.text}>
-                    Volunteer Name: {foundVolunteer ? foundVolunteer.first_name +" "+ foundVolunteer.last_name : ""}
-                  </Text>
-                  <Text style={styles.text}>
-                    Description: {item.description || "N/A"}
-                  </Text>
-                  <Text style={styles.text}>
-                    Booking Date: {item.bookingDate}
-                  </Text>
-                  <Text style={styles.text}>
-                    Start Time: {item.bookingStartTime}
-                  </Text>
-                  <Text style={styles.text}>
-                    End Time: {item.bookingEndTime}
-                  </Text>
-                </View>
-                <Pressable style={styles.deleteButton} onPress={() => {
-
-                }}>
-                  <MaterialIcons name="delete" size={24} color="black" />
-                </Pressable>
+      <FlatList
+        data={bookings}
+        renderItem={({ item, index }) => {
+          let foundVolunteer = volunteers.find(
+            (object) => object.userID === item.volunteerId
+          );
+          return (
+            <View style={styles.itemContainer}>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.text}>
+                  Volunteer Name:{" "}
+                  {foundVolunteer
+                    ? foundVolunteer.first_name + " " + foundVolunteer.last_name
+                    : ""}
+                </Text>
+                <Text style={styles.text}>
+                  Description: {item.description || "N/A"}
+                </Text>
+                <Text style={styles.text}>
+                  Booking Date: {item.bookingDate}
+                </Text>
+                <Text style={styles.text}>
+                  Start Time: {item.bookingStartTime}
+                </Text>
+                <Text style={styles.text}>End Time: {item.bookingEndTime}</Text>
               </View>
-            );
-          }}
-          keyExtractor={(item) => item.id}
-          style={sharedStyle.flatListStyle}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No bookings yet</Text>
-          }
-        />
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => deleteAppoinment(index, item)}
+              >
+                <MaterialIcons name="delete" size={24} color="black" />
+              </Pressable>
+            </View>
+          );
+        }}
+        keyExtractor={(item) => item.id}
+        style={sharedStyle.flatListStyle}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No bookings yet</Text>
+        }
+      />
     </View>
   );
 };
