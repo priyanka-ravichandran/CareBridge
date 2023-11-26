@@ -17,6 +17,7 @@ import VolunteerProfile from "../volunteer/VolunteerProfile";
 import VolunteerHomeScreen from "../volunteer/VolunteerHomeScreen";
 import Booking from "../familyAndFriends/volunteerBooking/Booking";
 import InitiateBooking from "../familyAndFriends/volunteerBooking/InitiateBooking";
+
 import VolunteerBooking from "../shared/VolunteerBooking";
 
 import FamilyProfile from "../familyAndFriends/FamilyProfile";
@@ -29,6 +30,7 @@ import Verification from "../familyAndFriends/addexisting/Verification";
 import { Pressable } from "react-native";
 import Sos from "../seniorCitizen/Sos";
 import EmergencyContacts from "../seniorCitizen/EmergencyContacts";
+import Reminder from "../shared/Reminder";
 
 const Tab = createBottomTabNavigator();
 const ChecklistStack = createStackNavigator();
@@ -118,6 +120,17 @@ const renderTabsBasedOnUserType = (userDetails) => {
         key="checklist"
       />,
       <Tab.Screen
+        name="Reminders"
+        component={Reminder}
+        key="reminder"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        }}
+      />,
+
+      <Tab.Screen
         name="sosButton"
         component={Sos}
         options={({ navigation, route }) => ({
@@ -163,6 +176,24 @@ const renderTabsBasedOnUserType = (userDetails) => {
             </Pressable>
           ),
         })}
+      />,
+      <Tab.Screen
+        name="Reminders"
+        component={Reminder}
+        key="reminder"
+        options={{
+          headerLeft: () => (
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            >
+              <MaterialIcons name={"arrow-back"} size={24} color="black" />
+            </Pressable>
+          ),
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        }}
       />,
       <Tab.Screen
         name="ShoppingListDashboard"
