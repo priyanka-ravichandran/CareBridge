@@ -23,7 +23,9 @@
     "expo-checkbox": "~2.4.0",
     "expo-dev-client": "~2.4.12",
     "expo-random": "~13.2.0",
+    "expo-sensors": "~12.3.0",
     "expo-status-bar": "~1.6.0",
+    "expo-task-manager": "~11.3.0",
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -38,11 +40,10 @@
     "react-native-safe-area-context": "^4.7.2",
     "react-native-screens": "^3.25.0",
     "react-native-timeline-flatlist": "^0.8.0",
+    "react-native-toast-message": "^2.1.7",
     "react-native-vector-icons": "^10.0.1",
     "react-native-web": "~0.19.6",
-    "react-native-webview": "13.2.2",
-    "expo-task-manager": "~11.3.0",
-    "expo-sensors": "~12.3.0"
+    "react-native-webview": "13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

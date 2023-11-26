@@ -7,11 +7,12 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserDetailsContext from "../context/userDetailsContext";
 import DropDownPicker from "react-native-dropdown-picker";
+import sharedStyle from "../styles/sharedStyle";
 
 const ITEM_HEIGHT = 40;
 const MAX_ITEMS_VISIBLE = 4;
@@ -26,7 +27,6 @@ const CheckLists = ({ route, navigation }) => {
     userDetails.pairings[0]?.seniorCitizenId || null;
   const [value, setValue] = useState(initialSeniorCitizenId);
   const [items, setItems] = useState([]);
- 
 
   const setDropDownValue = () => {
     return userDetails.pairings.map((pairing) => ({
@@ -53,17 +53,30 @@ const CheckLists = ({ route, navigation }) => {
           }
         )
         .then((response) => {
-          console.log(response);
-          setChecklists([
-            ...checklists,
-            {
-              checklist_name: checklistData.checklist_name,
-              checklist_number: checklistData.checklist_number,
-              elderly_id: checklistData.elderly_id,
-              guardian_id: checklistData.guardian_id,
-            },
-          ]);
-          setNewChecklist("");
+          if (response.status === 200) {
+            Toast.show({
+              type: "success",
+              text1: "Added checklist " + checklistData.checklist_name,
+              text2: "API call was successful!",
+            });
+            setChecklists([
+              ...checklists,
+              {
+                checklist_name: checklistData.checklist_name,
+                checklist_number: checklistData.checklist_number,
+                elderly_id: checklistData.elderly_id,
+                guardian_id: checklistData.guardian_id,
+              },
+            ]);
+            setNewChecklist("");
+          } else {
+            Toast.show({
+              type: "error",
+              text1:
+                "Unable to add new checklist" + checklistData.checklist_name,
+              text2: "API call failed",
+            });
+          }
         });
     }
   };
@@ -81,89 +94,109 @@ const CheckLists = ({ route, navigation }) => {
   useEffect(() => {
     getChecklists(value);
   }, [value]);
-  // useEffect(() => {
-  //   if (isFocused && userDetails.type !== "senior") {
-  //     getChecklists(userDetails.pairings[0].seniorCitizenId);
-  //   }
-  // }, [isFocused]);
+
   const getChecklists = (userId) => {
     axios
       .get("http://csci5308vm20.research.cs.dal.ca:8080/checklist/" + userId)
       .then((response) => {
         const fetchedList = response.data;
-        if (response && response.data) {
+        if (response.status === 200) {
           setChecklists(fetchedList);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to fetch checklist info.",
+            text2: "API call failed",
+          });
         }
       });
   };
 
-  const deleteChecklist = (checklistNum) => {
+  const deleteChecklist = (checklistData) => {
     axios
       .delete(
         "http://csci5308vm20.research.cs.dal.ca:8080/checklist/q?checklistNumber=" +
-          checklistNum
+          checklistData.checklist_number
       )
       .then((response) => {
-        setChecklists(
-          checklists.filter(
-            (checklist) => checklist.checklist_number !== checklistNum
-          )
-        );
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            text1: "Deleted checklist " + checklistData.checklist_name,
+            text2: "API call was successful!",
+          });
+          setChecklists(
+            checklists.filter(
+              (checklist) =>
+                checklist.checklist_number !== checklistData.checklist_number
+            )
+          );
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to fetch checklist info.",
+            text2: "API call failed",
+          });
+        }
       });
   };
 
   return (
-    <View style={styles.container}>
+    <View style={sharedStyle.container}>
       {userDetails.type !== "senior" && userDetails.pairings.length === 0 ? (
-        <Text style={styles.noPairingsText}>
+        <Text style={sharedStyle.emptyTextt}>
           Pair with a senior citizen to view checklists.
         </Text>
       ) : (
         <>
           {userDetails.type !== "senior" && (
             <>
-            <Text style={styles.text}>Select Senior Citizen</Text>
-            <DropDownPicker
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-              placeholder="Select Senior Citizen"
-              maxHeight={dropdownMaxHeight}
-              style={styles.dropdown}
-            />
+              <Text style={sharedStyle.inputText}>Select Senior Citizen</Text>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                placeholder="Select Senior Citizen"
+                maxHeight={dropdownMaxHeight}
+                style={sharedStyle.dropdown}
+              />
             </>
           )}
-           <Text style={styles.text}>ShoppingList Name</Text>
+          <Text style={sharedStyle.inputText}>ShoppingList Name</Text>
           <TextInput
-            style={styles.input}
+            style={sharedStyle.input}
             value={newChecklist}
             onChangeText={setNewChecklist}
-            placeholder="New Shpping List"
+            placeholder="New Shopping List"
           />
 
-          <Pressable style={styles.createButton} onPress={createChecklist}>
-            <Text style={styles.createText}>Create</Text>
+          <Pressable
+            style={sharedStyle.pressableStyle}
+            onPress={createChecklist}
+          >
+            <Text style={sharedStyle.pressableText}>Create</Text>
           </Pressable>
 
           <FlatList
             data={checklists}
             keyExtractor={(item) => item.checklist_number}
+            style={sharedStyle.flatListStyle}
             renderItem={({ item }) => (
-              <View style={styles.listItem}>
+              <View style={sharedStyle.flatListItem}>
                 <Pressable
                   onPress={() =>
                     navigation.navigate("ShoppingListItems", { item })
                   }
                 >
-                  <Text style={styles.text}>{item.checklist_name}</Text>
+                  <Text style={sharedStyle.inputText}>
+                    {item.checklist_name}
+                  </Text>
                 </Pressable>
-                <Pressable
-                  onPress={() => deleteChecklist(item.checklist_number)}
-                >
-                  <Text style={styles.text}>
+                <Pressable onPress={() => deleteChecklist(item)}>
+                  <Text>
                     <MaterialIcons name="delete" size={24} color="black" />
                   </Text>
                 </Pressable>
@@ -174,62 +207,6 @@ const CheckLists = ({ route, navigation }) => {
       )}
     </View>
   );
-};
-
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 20,
-    paddingTop: 20,
-    paddingBottom: 200,
-  },
-  text: {
-    color: "black",
-    fontWeight: "bold",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "black",
-    padding: 10,
-    marginTop: 10,
-    color: "black",
-    marginBottom: 20,
-  },
-  createButton: {
-    backgroundColor: "black",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    width: "100%",
-  },
-  createText: {
-    color: "white",
-    textAlign: "center",
-  },
-  listItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "black",
-  },
-  noPairingsText: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 16,
-    color: "grey",
-  },
-  dropdown: {
-    borderWidth: 1,
-    borderColor: "black",
-    marginTop: 10,
-    marginBottom: 20,
-    zIndex: 1000,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 5,
-  },
 };
 
 export default CheckLists;

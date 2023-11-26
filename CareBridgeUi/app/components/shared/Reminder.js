@@ -20,6 +20,7 @@ import sharedStyle from "./styles/sharedStyle";
 import axios from "axios";
 import UserDetailsContext from "./context/userDetailsContext";
 import DropDownPicker from "react-native-dropdown-picker";
+import Toast from "react-native-toast-message";
 const ITEM_HEIGHT = 40;
 const MAX_ITEMS_VISIBLE = 4;
 const dropdownMaxHeight = ITEM_HEIGHT * MAX_ITEMS_VISIBLE;
@@ -50,12 +51,14 @@ const ReminderApp = () => {
       minute: "2-digit",
       hour12: false,
     });
+    const selectedUserId =
+      userDetails.type === "senior" ? userDetails.userID : value;
     const newReminderObj = {
-      elderlyId: userDetails.userID,
+      elderlyId: selectedUserId,
       time: modifiedTime,
       description: newReminder.description,
-      volunteerId: 1002,
-      reminderNumber: userDetails.userID + String(Date.now()),
+      volunteerId: Number(1002),
+      reminderNumber: selectedUserId + String(Date.now()),
       date: selectedDate,
     };
     axios
@@ -69,9 +72,21 @@ const ReminderApp = () => {
         }
       )
       .then((response) => {
-        setReminders([...reminders, newReminderObj]);
-        setModalVisible(false);
-        setNewReminder({ description: "", time: new Date() });
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            text1: "Added Reminder Successfully ",
+            text2: "API call was successful!",
+          });
+          setReminders([...reminders, newReminderObj]);
+          setModalVisible(false);
+          setNewReminder({ description: "", time: new Date() });
+        } else
+          Toast.show({
+            type: "error",
+            text1: "unable to add Reminder.",
+            text2: "API call failed",
+          });
       });
   };
   const deleteReminder = (index, reminderObj) => {
@@ -92,9 +107,20 @@ const ReminderApp = () => {
               )
               .then((response) => {
                 if (response) {
+                  Toast.show({
+                    type: "success",
+                    text1: "Deleted Reminder Successfully ",
+                    text2: "API call was successful!",
+                  });
                   setReminders((reminders) =>
                     reminders.filter((_, i) => i !== index)
                   );
+                } else {
+                  Toast.show({
+                    type: "error",
+                    text1: "unable to delete Reminder.",
+                    text2: "API call failed",
+                  });
                 }
               });
           },
@@ -111,16 +137,19 @@ const ReminderApp = () => {
       );
       if (response && response.data) {
         setReminders(response.data);
-        console.log(response.data)
       }
     } catch (error) {
-      console.error("Error fetching slots:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error fetching slots:",
+        text2: error,
+      });
     }
   };
   useEffect(() => {
     if (selectedDate) {
       getReminder(selectedDate);
-    } 
+    }
   }, [selectedDate, value]);
   useEffect(() => {
     if (userDetails.type !== "senior") {
@@ -152,7 +181,6 @@ const ReminderApp = () => {
                 description: item.description,
                 date: selectedDate,
               };
-              console.log(updatedReminderObj)
               axios
                 .put(
                   `http://csci5308vm20.research.cs.dal.ca:8080/reminder/q?elderlyId=${item.elderlyId}&volunteerId=${item.volunteerId}&reminderNumber=${item.reminderNumber}`,
@@ -164,7 +192,18 @@ const ReminderApp = () => {
                   }
                 )
                 .then((response) => {
-                  console.log(response);
+                  if (response.status === 200) {
+                    Toast.show({
+                      type: "success",
+                      text1: "Updated Reminder Details Successfully ",
+                      text2: "API call was successful!",
+                    });
+                  } else
+                    Toast.show({
+                      type: "error",
+                      text1: "unable to update Reminder details.",
+                      text2: "API call failed",
+                    });
                 });
             }}
             style={styles.timePicker}
@@ -209,31 +248,37 @@ const ReminderApp = () => {
 
   return (
     <View style={styles.container}>
-      <Calendar
-        monthFormat={"yyyy MMMM"}
-        onDayPress={(day) => {
-          const today = moment().startOf("day");
-          const selectedDay = moment(day.dateString);
+      <View
+        style={{
+          width: "100%",
+        }}
+      >
+        <Calendar
+          monthFormat={"yyyy MMMM"}
+          onDayPress={(day) => {
+            const today = moment().startOf("day");
+            const selectedDay = moment(day.dateString);
 
-          if (selectedDay.isBefore(today)) {
-            console.log("Cannot select a date in the past");
-          } else {
-            setSelectedDate(day.dateString);
-          }
-        }}
-        markedDates={markedDates}
-        hideExtraDays={true}
-        firstDay={1}
-        onMonthChange={(month) => {
-          console.log("month changed", month);
-        }}
-        hideArrows={false}
-        renderArrow={(direction) => <Arrow direction={direction} />}
-        disableAllTouchEventsForDisabledDays={true}
-        enableSwipeMonths={true}
-      />
+            if (selectedDay.isBefore(today)) {
+              console.log("Cannot select a date in the past");
+            } else {
+              setSelectedDate(day.dateString);
+            }
+          }}
+          markedDates={markedDates}
+          hideExtraDays={true}
+          firstDay={1}
+          onMonthChange={(month) => {
+            console.log("month changed", month);
+          }}
+          hideArrows={false}
+          renderArrow={(direction) => <Arrow direction={direction} />}
+          disableAllTouchEventsForDisabledDays={true}
+          enableSwipeMonths={true}
+        />
+      </View>
       {userDetails.type !== "senior" && userDetails.pairings.length === 0 ? (
-        <Text style={styles.noPairingsText}>
+        <Text style={sharedStyle.emptyText}>
           Pair with a senior citizen to view checklists.
         </Text>
       ) : (
@@ -271,7 +316,7 @@ const ReminderApp = () => {
         transparent={true}
         animationType="slide"
       >
-        <View style={styles.modalContainer}>
+        <View style={sharedStyle.modalContainer}>
           <View style={styles.modalView}>
             <Pressable
               style={styles.closeButton}
@@ -281,7 +326,7 @@ const ReminderApp = () => {
             </Pressable>
             <TextInput
               style={styles.input}
-              placeholder="Medicine Name"
+              placeholder="Reminder Name"
               value={newReminder.description}
               onChangeText={(text) =>
                 setNewReminder({ ...newReminder, description: text })
@@ -294,7 +339,9 @@ const ReminderApp = () => {
               onChange={onTimeSelected}
               is24Hour={true}
             />
-            <Button title="Add Medicine" onPress={addReminder} />
+            <Pressable style={sharedStyle.modalButton} onPress={addReminder}>
+              <Text style={sharedStyle.modalButtonText}>Add Reminder</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -318,12 +365,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     elevation: 8,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
     margin: 20,
@@ -399,12 +440,6 @@ const styles = StyleSheet.create({
   timePicker: {
     width: 100,
     marginRight: 10,
-  },
-  noPairingsText: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 16,
-    color: "grey",
   },
 });
 
