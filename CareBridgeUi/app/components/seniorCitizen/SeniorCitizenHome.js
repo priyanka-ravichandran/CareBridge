@@ -8,12 +8,23 @@ import {
   Image,
 } from "react-native";
 import UserDetailsContext from "../shared/context/userDetailsContext";
+import { useEffect } from "react";
+import { startFallDetection } from "../fallDetection/FallDetectionService";
 
 const { width } = Dimensions.get("window");
 const boxSize = width / 2;
 
 const SeniorCitizenHome = ({ navigation }) => {
   const { userDetails } = useContext(UserDetailsContext);
+
+  useEffect(() => {
+    const cleanup = startFallDetection();
+
+    return () => {
+      cleanup && cleanup();
+    }
+  }, []);
+
   console.log(userDetails);
   const navigateToPage = (page) => {
     navigation.navigate(page);
