@@ -27,6 +27,10 @@ public class Elderly implements Serializable {
         this.emergencyContact = emergencyContact;
     }
 
+    public Elderly() {
+
+    }
+
     public int getElderlyId() {
         return elderlyId;
     }

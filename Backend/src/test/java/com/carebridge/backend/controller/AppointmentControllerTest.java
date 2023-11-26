@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +26,7 @@ public class AppointmentControllerTest {
 
     @Test
     public void testGetAllAppointments() {
-        // Mock data
         List<Appointment> appointments = new ArrayList<>();
-        // TODO: Add mock appointments to the list
 
         when(appointmentRepository.findAll()).thenReturn(appointments);
 
@@ -64,16 +63,25 @@ public class AppointmentControllerTest {
     }
 
     @Test
-    public void testSeeAppointmentForVolunteerAndFamily() {
-        int volunteerId = 1;
-        int familyId = 1;
-        List<Appointment> appointments = new ArrayList<>();
+    void testSeeAppointmentForVolunteerAndFamily() {
+        Appointment appointment = new Appointment(1, 2, 3, "2023-12-01", "09:00", "10:00", 1, "Test description");
 
-        when(appointmentRepository.findAppointmentsByFamilyId(familyId)).thenReturn(appointments);
+        when(appointmentRepository.findAppointmentsByVolunteerIdAndFamilyId(1, 2)).thenReturn(Collections.singletonList(appointment));
 
-        List<Appointment> result = appointmentController.seeAppointmentForVolunteerAndFamily(volunteerId, familyId);
+        List<Appointment> result = appointmentController.seeAppointmentForVolunteerAndFamily(1, 2);
 
-        assertEquals(appointments.size(), result.size());
+        assertEquals(1, result.size());
+        Appointment retrievedAppointment = result.get(0);
+        assertEquals(1, retrievedAppointment.getVolunteerId());
+        assertEquals(2, retrievedAppointment.getFamilyId());
+        assertEquals(3, retrievedAppointment.getSeniorCitizenId());
+        assertEquals("2023-12-01", retrievedAppointment.getBookingDate());
+        assertEquals("09:00", retrievedAppointment.getBookingStartTime());
+        assertEquals("10:00", retrievedAppointment.getBookingEndTime());
+        assertEquals(1, retrievedAppointment.getAvailability());
+        assertEquals("Test description", retrievedAppointment.getDescription());
+
+        verify(appointmentRepository, times(1)).findAppointmentsByVolunteerIdAndFamilyId(1, 2);
     }
 
     @Test
