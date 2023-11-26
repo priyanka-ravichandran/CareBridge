@@ -7,6 +7,7 @@ export default StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "white",
+    width: "100%",
   },
 
   // flat list styles
@@ -46,16 +47,27 @@ export default StyleSheet.create({
 
   //text input
   input: {
-    flex: 1,
-    height: 40,
-    marginTop: 10,
-    marginBottom: 10,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: "white",
-    borderColor: "black",
-    borderRadius: 5,
     width: "100%",
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: "black",
+    padding: 10,
+    marginTop: 10,
+    color: "black",
+    marginBottom: 20,
+  },
+  inputText: {
+    color: "black",
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+  },
+
+  autocompleteContainer: {
+    backgroundColor: "#E6E6E6",
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 20,
   },
   emptyText: {
     textAlign: "center",
@@ -67,13 +79,47 @@ export default StyleSheet.create({
     borderColor: "black",
     marginTop: 10,
     flexGrow: 1,
-    marginRight: 30,
-    marginBottom: 30,
-    marginLeft: 10,
+    marginBottom: 20,
     zIndex: 1000,
-    paddingLeft: 10,
-    paddingRight: 10,
     borderRadius: 5,
-    width: "95%",
+    width: "100%",
+  },
+
+  // errors
+
+  errorText: {
+    color: "red",
+    textAlign: "left",
+    width: "100%",
+  },
+
+  // modal
+  modalButton: {
+    backgroundColor: "black",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop : 5
+  },
+  modalButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalClose:{
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
 });

@@ -250,10 +250,10 @@ const FamilyProfile = ({ navigation }) => {
             }}
           />
         </View>
-        <Pressable style={sharedStyle.pressableStyle} onPress={handleSave}>
+        <Pressable style={styles.buttonContainer} onPress={handleSave}>
           <Text style={sharedStyle.pressableText}>Save</Text>
         </Pressable>
-        <Pressable style={sharedStyle.pressableStyle} onPress={handleLogout}>
+        <Pressable style={styles.buttonContainer} onPress={handleLogout}>
           <Text style={sharedStyle.pressableText}>Logout</Text>
         </Pressable>
       </View>
@@ -316,6 +316,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#E6E6E6",
     marginVertical: 10,
     paddingHorizontal: 10,
+  },
+  buttonContainer: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: "50%",
   },
 });
 
