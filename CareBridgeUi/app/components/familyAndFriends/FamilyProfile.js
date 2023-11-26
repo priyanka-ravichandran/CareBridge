@@ -40,11 +40,12 @@ const FamilyProfile = ({ navigation }) => {
           userDetails.userID
       )
       .then((response) => {
+        let date = new Date(response.data.birthdate);
         setFirstname(response.data.first_name);
         setLastname(response.data.last_name);
         setEmail(response.data.email);
         setPhonenumber(response.data.phone_number);
-        setBirthDate("1955-05-21");
+        setBirthDate(date.getUTCFullYear() + '-' + String(date.getUTCMonth() + 1).padStart(2, '0') + '-' + String(date.getUTCDate()).padStart(2, '0'));
         setAddress(response.data.address);
         setgender(response.data.gender);
       });
@@ -53,7 +54,7 @@ const FamilyProfile = ({ navigation }) => {
   const onChangeBirthDate = (event, selectedDate) => {
     const currentDate = selectedDate || birthDate;
     setShowDatePicker(false);
-    setBirthDate(currentDate.toISOString().split("T")[0]);
+    setBirthDate(currentDate.getUTCFullYear() + '-' + String(currentDate.getUTCMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getUTCDate()).padStart(2, '0'));
     setErrors((prevErrors) => {
       let newErrors = { ...prevErrors };
       delete newErrors.birthDate;
