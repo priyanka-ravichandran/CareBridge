@@ -1,9 +1,6 @@
 package com.carebridge.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,10 +10,12 @@ import java.util.Objects;
 @IdClass(FallReminder.class)
 public class FallReminder implements Serializable {
     @Id
+    @Column(name = "RECEIVERID")
     private int guardianId;
-    @Id
+    @Column(name = "REMINDERMESSAGE")
     private String reminderMessage;
     @Id
+    @Column(name = "SENDERID")
     private int elderlyId;
     public FallReminder(){}
     public FallReminder(int guardianId,String reminderMessage, int elderlyId){
