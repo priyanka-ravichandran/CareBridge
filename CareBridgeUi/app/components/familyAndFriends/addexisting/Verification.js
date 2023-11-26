@@ -3,6 +3,7 @@ import { View, TextInput, Text, StyleSheet, Pressable } from "react-native";
 import Autocomplete from "react-native-autocomplete-input";
 import axios from "axios";
 import UserDetailsContext from "../../shared/context/userDetailsContext";
+import sharedStyle from "../../shared/styles/sharedStyle";
 
 const Verification = ({ navigation }) => {
   const [query, setQuery] = useState("");
@@ -99,7 +100,7 @@ const Verification = ({ navigation }) => {
           autoCapitalize="none"
           editable={disableAutoComplete}
           autoCorrect={false}
-          containerStyle={styles.autocompleteContainer}
+          containerStyle={sharedStyle.autocompleteContainer}
           data={filteredData}
           value={query}
           onChangeText={(text) => setQuery(text)}

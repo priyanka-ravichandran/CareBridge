@@ -12,6 +12,7 @@ import axios from "axios";
 import Checkbox from "expo-checkbox";
 import { MaterialIcons } from "@expo/vector-icons";
 import sharedStyle from "../styles/sharedStyle";
+import Toast from "react-native-toast-message";
 
 const CheckListItems = ({ route }) => {
   const [items, setItems] = useState([]);
@@ -24,8 +25,14 @@ const CheckListItems = ({ route }) => {
         `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=${checklist_number}`
       )
       .then((response) => {
-        if (response && response.data) {
+        if (response.status === 200 && response.data) {
           setItems(response.data);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to fetch checklist items",
+            text2: "API call failed",
+          });
         }
       });
   }, []);
@@ -54,8 +61,12 @@ const CheckListItems = ({ route }) => {
         }
       )
       .then((response) => {
-        console.log(response);
-        if (newItemName.trim() && newItemAmount > 0) {
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            text1: "Added shopping list Item " + newItemName,
+            text2: "API call was successful!",
+          });
           const newItem = {
             itemName: newItemName,
             amount: newItemAmount.toString(),
@@ -64,6 +75,12 @@ const CheckListItems = ({ route }) => {
           setItems([...items, newItem]);
           setNewItemName("");
           setNewItemAmount(1);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to add shopping list item ",
+            text2: "API call failed",
+          });
         }
       });
   };
@@ -100,10 +117,9 @@ const CheckListItems = ({ route }) => {
     if (currentAmount > 0) {
       newItems[index].amount = String(currentAmount - 1);
       let response = await updateTable(newItems[index]);
-      if (response == null) {
+      if (response) {
         setItems(newItems);
       }
-      setItems(newItems);
     }
   };
 
@@ -113,9 +129,20 @@ const CheckListItems = ({ route }) => {
         `http://csci5308vm20.research.cs.dal.ca:8080/checklistItem/q?checklistNumber=${items[index].checklistNumber}&itemName=${items[index].itemName}`
       )
       .then((response) => {
-        if (response) {
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            text1: "Deleted shopping list Item",
+            text2: "API call was successful!",
+          });
           const newItems = items.filter((_, i) => i !== index);
           setItems(newItems);
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to delete shopping list item ",
+            text2: "API call failed",
+          });
         }
       });
   };
@@ -133,8 +160,26 @@ const CheckListItems = ({ route }) => {
           amount: updateObj.amount,
         }
       );
+      if (response.status === 200) {
+        Toast.show({
+          type: "success",
+          text1: "Updated shopping list Item " + updateObj.itemName,
+          text2: "API call was successful!",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Unable to update shopping list item " + updateObj.itemName,
+          text2: "API call failed",
+        });
+      }
       return response.data;
     } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Unable to update shopping list item " + updateObj.itemName,
+        text2: "API call failed",
+      });
       throw error;
     }
   };
@@ -191,7 +236,7 @@ const CheckListItems = ({ route }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={sharedStyle.container}>
       <View style={styles.addItemContainer}>
         <View style={styles.addItemRow}>
           <View style={styles.itemInput}>
@@ -242,7 +287,6 @@ const CheckListItems = ({ route }) => {
 
 const styles = StyleSheet.create({
   addItemRow: {
-    
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -254,13 +298,14 @@ const styles = StyleSheet.create({
   },
   addItemContainer: {
     marginBottom: 20,
+    width: "100%",
   },
   text: {
     color: "black",
     fontWeight: "bold",
   },
   itemInput: {
-    width:"65%",
+    width: "65%",
     flexDirection: "column",
   },
   input: {
@@ -275,29 +320,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    marginBottom: 10,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 10,
-  },
-  listItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "black",
-  },
-  itemLeft: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  itemRight: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   itemText: {
     flex: 1,
