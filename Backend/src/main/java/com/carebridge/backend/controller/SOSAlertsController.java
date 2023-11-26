@@ -19,8 +19,8 @@ public class SOSAlertsController {
 
     @PostMapping("/sosAlerts")
     @CrossOrigin(origins = "*")
-    SOSAlerts sosAlerts(@RequestBody SOSAlerts sosAlerts,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding sosAlerts successful");
+    SOSAlerts sosAlerts(@RequestBody SOSAlerts sosAlerts) {
+        // emailService.sendEmail(userEmail,"Add","Adding sosAlerts successful");
         return sosAlertsRepository.save(sosAlerts);
     }
 

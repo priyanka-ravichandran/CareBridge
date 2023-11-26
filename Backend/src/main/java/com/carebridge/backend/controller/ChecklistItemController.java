@@ -22,8 +22,8 @@ public class ChecklistItemController {
 
     @PostMapping("/checklistItem")
     @CrossOrigin(origins = "*")
-    ChecklistItem addChecklistItem(@RequestBody ChecklistItem checklistItem,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding item successful");
+    ChecklistItem addChecklistItem(@RequestBody ChecklistItem checklistItem) {
+        // emailService.sendEmail(userEmail,"Add","Adding item successful");
         return checklistItemRepository.save(checklistItem);
     }
 
@@ -36,8 +36,8 @@ public class ChecklistItemController {
     @PutMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
     Optional<ChecklistItem> updateChecklistItem(@RequestBody ChecklistItem newChecklistItem,
-                                            @RequestParam String checklistNumber, @RequestParam String itemName,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Update","Updating item successful");
+                                            @RequestParam String checklistNumber, @RequestParam String itemName) {
+        // emailService.sendEmail(userEmail,"Update","Updating item successful");
         return checklistItemRepository.findChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName)
                 .map(checklistItem -> {
                     checklistItem.setItemName(newChecklistItem.getItemName());
@@ -51,8 +51,8 @@ public class ChecklistItemController {
     @Transactional
     @DeleteMapping("/checklistItem/q")
     @CrossOrigin(origins = "*")
-    public long deleteChecklistItem(@RequestParam String checklistNumber, @RequestParam String itemName,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Delete","Deleting item successful");
+    public long deleteChecklistItem(@RequestParam String checklistNumber, @RequestParam String itemName) {
+        // emailService.sendEmail(userEmail,"Delete","Deleting item successful");
         return checklistItemRepository.deleteChecklistItemByChecklistNumberAndItemName(checklistNumber, itemName);
     }
 }
