@@ -35,13 +35,27 @@ Install all dependencies
 cd .\CareBridgeUi\
 npm i
 ```
-Install the expo globally and run
-``` bash
-expo start --tunnel
+To Run the app you need [DaLVPN](https://www.dal.ca/dept/its/new.html#:~:text=Learn%20more%20about%20VPN)
+#### Step 1
+Create your own expo account @ [Link.](https://expo.dev/signup)
+Install [Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US&pli=1) app on your phone.
+#### Step 2
+Login to your expo account in terminal inside carebridgeui.
 ```
-Then enter "w" in the terminal it will start a web server.
+cd .\CareBridgeUi\
+npx expo login
+```
+Enter the email and password after you signed up your expo account.
+#### Step 3
+Run the expo app
+```
+npm start
+```
+Press s to switch to switch to expo go.
+#### Step 4
+Scan the code and open in ExpoGo
+Make sure you are connected to the DalVPN.
 
-Additionally, you can also run our front end application using Expo Go once the Metro builder has initialized. Press "s" to run using Expo Go, after which you can scan the generated QR code using the [Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US&pli=1) app on your phone.
 
 ### Back End
 The entire backend folder can be utilized as a separate maven project. Steps to run the project on your local machine:
