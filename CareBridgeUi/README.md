@@ -1,0 +1,34 @@
+# CareBridge Frontend
+The frontend is a React Native application utilizing Expo. The dependencies required to run this application are mentioned below.
+## Dependencies
+- `"@expo/vector-icons": "^13.0.0"`
+- `"@expo/webpack-config": "^19.0.0"`
+- `"@react-native-community/datetimepicker": "7.2.0"`
+- `"@react-native-community/viewpager": "^5.0.11"`
+- `"@react-native-picker/picker": "^2.5.1"`
+- `"@react-navigation/bottom-tabs": "^6.5.9"`
+- `"@react-navigation/native": "^6.1.8"`
+- `"@react-navigation/stack": "^6.3.18"`
+- `"axios": "^1.6.0"`
+- `"expo": "~49.0.13"`
+- `"expo-dev-client": "~2.4.12"`
+- `"expo-auth-session": "~5.0.2"`
+- `"expo-checkbox": "~2.4.0"`
+- `"expo-random": "~13.2.0"`
+- `"expo-status-bar": "~1.6.0"`
+- `"react": "18.2.0"`
+- `"react-dom": "18.2.0"`
+- `"react-native": "0.72.5"`
+- `"react-native-autocomplete-input": "^5.4.0"`
+- `"react-native-calendars": "^1.1302.0"`
+- `"react-native-dropdown-picker": "^5.4.6"`
+- `"react-native-elements": "^3.4.3"`
+- `"react-native-gesture-handler": "^2.13.2"`
+- `"react-native-modal-datetime-picker": "^17.1.0"`
+- `"react-native-reanimated": "^3.5.4"`
+- `"react-native-safe-area-context": "^4.7.2"`
+- `"react-native-screens": "^3.25.0"`
+- `"react-native-timeline-flatlist": "^0.8.0"`
+- `"react-native-vector-icons": "^10.0.1"`
+- `"react-native-web": "~0.19.6"`
+- `"react-native-webview": "13.2.2"`
