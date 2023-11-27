@@ -38,7 +38,7 @@ const InitiateBooking = ({ navigation }) => {
       selectedSeniorCitizen: userDetails.pairings.filter(
         (val) => val.seniorCitizenId === value
       )[0],
-      description
+      description,
     });
   };
   const calculateAge = (birthdate) => {
@@ -96,17 +96,17 @@ const InitiateBooking = ({ navigation }) => {
         setItems={setItems}
         placeholder="Select Senior Citizen"
         maxHeight={dropdownMaxHeight}
-        style={styles.dropdown}
+        style={sharedStyle.dropdown}
       />
       <Autocomplete
         autoCapitalize="none"
         autoCorrect={false}
-        containerStyle={styles.autocompleteContainer}
+        containerStyle={sharedStyle.autocompleteContainer}
         data={filteredData}
         value={query}
         onChangeText={(text) => {
-          setQuery(text)
-          if(selectedVolunteer !== null){
+          setQuery(text);
+          if (selectedVolunteer !== null) {
             setSelectedVolunteer(null);
           }
         }}
@@ -133,13 +133,13 @@ const InitiateBooking = ({ navigation }) => {
         </View>
       )}
       <TextInput
-        style={styles.input}
+        style={sharedStyle.input}
         placeholder="Description"
         value={description}
         onChangeText={(text) => setDescription(text)}
       />
-      <Pressable style={styles.button} onPress={handleNewBooking}>
-        <Text style={styles.buttonText}> Next </Text>
+      <Pressable style={sharedStyle.pressableStyle} onPress={handleNewBooking}>
+        <Text style={sharedStyle.pressableText}> Next </Text>
       </Pressable>
     </View>
   );
@@ -169,13 +169,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
-  },
-  autocompleteContainer: {
-    backgroundColor: "#E6E6E6",
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 20,
   },
   itemText: {
     padding: 10,

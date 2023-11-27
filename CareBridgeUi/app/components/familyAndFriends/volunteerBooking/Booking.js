@@ -5,13 +5,14 @@ import {
   Text,
   Pressable,
   FlatList,
-  ScrollView,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import UserDetailsContext from "../../shared/context/userDetailsContext";
 import { MaterialIcons } from "@expo/vector-icons";
 import sharedStyle from "../../shared/styles/sharedStyle";
 import DropDownPicker from "react-native-dropdown-picker";
+import Toast from "react-native-toast-message";
 
 const Booking = ({ navigation }) => {
   const ITEM_HEIGHT = 40;
@@ -22,7 +23,7 @@ const Booking = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
   const [allBookings, setAllBookings] = useState([]);
   const [open, setOpen] = useState(false);
-  const [volunteers,setVolunteers]= useState([]);
+  const [volunteers, setVolunteers] = useState([]);
   const initialSeniorCitizenId =
     userDetails.pairings[0]?.seniorCitizenId || null;
   const [value, setValue] = useState(initialSeniorCitizenId);
@@ -39,7 +40,6 @@ const Booking = ({ navigation }) => {
       const filteredBookings = allBookings.filter(
         (booking) => booking.seniorCitizenId === value
       );
-      console.log(filteredBookings);
       setBookings(filteredBookings);
     }
   }, [value]);
@@ -48,18 +48,18 @@ const Booking = ({ navigation }) => {
     setItems(setDropDownValue());
     getBookings();
     axios
-    .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
-    .then((response) => {
-      if (response.data) {
-        let volunteer = [];
-        response.data.map((user) => {
-          if (user.type === "volunteer") {
-            volunteer.push(user);
-          }
-        });
-        setVolunteers(volunteer);
-      }
-    });
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/users")
+      .then((response) => {
+        if (response.data) {
+          let volunteer = [];
+          response.data.map((user) => {
+            if (user.type === "volunteer") {
+              volunteer.push(user);
+            }
+          });
+          setVolunteers(volunteer);
+        }
+      });
   }, []);
 
   const getBookings = () => {
@@ -68,16 +68,67 @@ const Booking = ({ navigation }) => {
         `http://csci5308vm20.research.cs.dal.ca:8080/appointment/q?familyId=${userDetails.userID}`
       )
       .then((response) => {
-        if (response && response.data) {
+        if (response.status === 200 && response.data) {
           setAllBookings(response.data);
           setBookings(
             response.data.filter(
               (booking) => booking.seniorCitizenId === initialSeniorCitizenId
             )
           );
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Unable to fetch Bookings.",
+            text2: "API call failed",
+          });
         }
       });
   };
+
+  const deleteAppoinment = (index, bookingObj) => {
+    Alert.alert(
+      "Delete Appoinment",
+      "Are you sure you want to delete this Appoinment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            console.log(`http://csci5308vm20.research.cs.dal.ca:8080/appointment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`)
+            axios
+              .delete(
+                `http://csci5308vm20.research.cs.dal.ca:8080/appointment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`,
+                {
+                  headers: {
+                    "Content-Type": "application/json;charset=UTF-8",
+                  },
+                }
+              )
+              .then((response) => {
+                if (response.status === 200) {
+                  Toast.show({
+                    type: "success",
+                    text1: "Deleted Booking successfully.",
+                    text2: "API call was successful!",
+                  });
+                  getBookings();
+                } else {
+                  Toast.show({
+                    type: "error",
+                    text1: "Unable to delete booking.",
+                    text2: "API call failed",
+                  });
+                }
+              });
+          },
+        },
+      ]
+    );
+  };
+
   const handleNewBooking = () => {
     navigation.navigate("InitiateBooking");
   };
@@ -96,76 +147,59 @@ const Booking = ({ navigation }) => {
         setValue={setValue}
         placeholder="Select Senior Citizen"
         maxHeight={dropdownMaxHeight}
-        style={styles.dropdown}
+        style={sharedStyle.dropdown}
       />
-        <FlatList
-          data={bookings}
-          renderItem={({ item }) => {
-            let foundVolunteer = volunteers.find(object => object.userID === item.volunteerId);
-            return (
-              <View style={styles.itemContainer}>
-                <View style={styles.detailsContainer}>
-                  <Text style={styles.text}>
-                    Volunteer Name: {foundVolunteer ? foundVolunteer.first_name +" "+ foundVolunteer.last_name : ""}
-                  </Text>
-                  <Text style={styles.text}>
-                    Description: {item.description || "N/A"}
-                  </Text>
-                  <Text style={styles.text}>
-                    Booking Date: {item.bookingDate}
-                  </Text>
-                  <Text style={styles.text}>
-                    Start Time: {item.bookingStartTime}
-                  </Text>
-                  <Text style={styles.text}>
-                    End Time: {item.bookingEndTime}
-                  </Text>
-                </View>
-                <Pressable style={styles.deleteButton} onPress={() => {
-
-                }}>
-                  <MaterialIcons name="delete" size={24} color="black" />
-                </Pressable>
+      <FlatList
+        data={bookings}
+        renderItem={({ item, index }) => {
+          let foundVolunteer = volunteers.find(
+            (object) => object.userID === item.volunteerId
+          );
+          return (
+            <View style={styles.itemContainer}>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.text}>
+                  Volunteer Name:{" "}
+                  {foundVolunteer
+                    ? foundVolunteer.first_name + " " + foundVolunteer.last_name
+                    : ""}
+                </Text>
+                <Text style={styles.text}>
+                  Description: {item.description || "N/A"}
+                </Text>
+                <Text style={styles.text}>
+                  Booking Date: {item.bookingDate}
+                </Text>
+                <Text style={styles.text}>
+                  Start Time: {item.bookingStartTime}
+                </Text>
+                <Text style={styles.text}>End Time: {item.bookingEndTime}</Text>
               </View>
-            );
-          }}
-          keyExtractor={(item) => item.id}
-          style={sharedStyle.flatListStyle}
-          ListEmptyComponent={
-            <Text style={styles.emptyText}>No bookings yet</Text>
-          }
-        />
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => deleteAppoinment(index, item)}
+              >
+                <MaterialIcons name="delete" size={24} color="black" />
+              </Pressable>
+            </View>
+          );
+        }}
+        keyExtractor={(item) => item.id}
+        style={sharedStyle.flatListStyle}
+        ListEmptyComponent={
+          <Text style={sharedStyle.emptyText}>No bookings yet</Text>
+        }
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    paddingTop: 20,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  },
   item: {
     backgroundColor: "black",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-  },
-  button: {
-    backgroundColor: "black",
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    alignItems: "center",
-    alignSelf: "center",
-    width: "90%",
   },
   title: {
     fontSize: 20,
@@ -174,25 +208,6 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 16,
     color: "white",
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 18,
-  },
-  dropdown: {
-    borderWidth: 1,
-    borderColor: "black",
-    marginTop: 10,
-    flexGrow: 1,
-    marginRight: 30,
-    marginBottom: 30,
-    marginLeft: 10,
-    zIndex: 1000,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 5,
-    width: "95%",
   },
   itemContainer: {
     flexDirection: "row",
@@ -211,9 +226,6 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     marginLeft: 10,
-  },
-  scrollView: {
-    width: "100%",
   },
 });
 export default Booking;

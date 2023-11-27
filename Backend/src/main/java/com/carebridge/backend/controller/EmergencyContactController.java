@@ -30,7 +30,8 @@ private final EmailService emailService;
                     elderly.setElderlyId(newElderly.getElderlyId());
                     elderly.setGuardianId((newElderly.getGuardianId()));
                     elderly.setHobbies(newElderly.getHobbies());
-                    elderly.setEmergencyContact(newElderly.getEmergencyContact());
+                    elderly.setEmergencyContactName(newElderly.getEmergencyContactName());
+                    elderly.setEmergencyContactPhone(newElderly.getEmergencyContactPhone());
                     return emergencyContactRepository.save(elderly);
                 });
     }

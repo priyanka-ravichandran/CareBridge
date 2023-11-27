@@ -3,9 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   createStackNavigator,
-  HeaderBackButton,
 } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
 import CheckLists from "../shared/checklist/CheckLists";
 
 import MedicineList from "../shared/MedicineList";
@@ -17,6 +15,7 @@ import VolunteerProfile from "../volunteer/VolunteerProfile";
 import VolunteerHomeScreen from "../volunteer/VolunteerHomeScreen";
 import Booking from "../familyAndFriends/volunteerBooking/Booking";
 import InitiateBooking from "../familyAndFriends/volunteerBooking/InitiateBooking";
+
 import VolunteerBooking from "../shared/VolunteerBooking";
 
 import FamilyProfile from "../familyAndFriends/FamilyProfile";
@@ -29,28 +28,32 @@ import Verification from "../familyAndFriends/addexisting/Verification";
 import { Pressable } from "react-native";
 import Sos from "../seniorCitizen/Sos";
 import EmergencyContacts from "../seniorCitizen/EmergencyContacts";
+import Reminder from "../shared/Reminder";
 
 const Tab = createBottomTabNavigator();
 const ChecklistStack = createStackNavigator();
 const SeniorProfileStack = createStackNavigator();
 const VolunteerStack = createStackNavigator();
+const navigationOptions = ({ navigation }) => ({
+  headerLeft: () => (
+    <Pressable
+      onPress={() => {
+        navigation.navigate("Home");
+      }}
+    >
+      <MaterialIcons name={"arrow-back"} size={24} color="black" />
+    </Pressable>
+  ),
+  tabBarIcon: () => null,
+  tabBarButton: (props) => null,
+});
 const ChecklistNavigator = () => {
   return (
     <ChecklistStack.Navigator>
       <ChecklistStack.Screen
         name="ShoppingList"
         component={CheckLists}
-        options={({ navigation, route }) => ({
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
       />
       <ChecklistStack.Screen
         name="ShoppingListItems"
@@ -93,19 +96,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
         name="Medicine"
         component={MedicineList}
         key="medicine"
-        options={({ navigation, route }) => ({
-          tabBarIcon: () => null,
-          tabBarButton: (props) => null,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
       />,
       <Tab.Screen
         name="ShoppingListDashboard"
@@ -117,6 +108,17 @@ const renderTabsBasedOnUserType = (userDetails) => {
         }}
         key="checklist"
       />,
+      <Tab.Screen
+        name="Reminders"
+        component={Reminder}
+        key="reminder"
+        options={{
+          headerShown: false,
+          tabBarIcon: () => null,
+          tabBarButton: (props) => null,
+        }}
+      />,
+
       <Tab.Screen
         name="sosButton"
         component={Sos}
@@ -150,19 +152,13 @@ const renderTabsBasedOnUserType = (userDetails) => {
         name="Medicine"
         component={MedicineList}
         key="medicine"
-        options={({ navigation, route }) => ({
-          tabBarIcon: () => null,
-          tabBarButton: (props) => null,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
+      />,
+      <Tab.Screen
+        name="Reminders"
+        component={Reminder}
+        key="reminder"
+        options={navigationOptions}
       />,
       <Tab.Screen
         name="ShoppingListDashboard"
@@ -177,38 +173,14 @@ const renderTabsBasedOnUserType = (userDetails) => {
       <Tab.Screen
         name="AddSeniorCitizen"
         component={SeniorProfileListNavigator}
-        options={({ navigation, route }) => ({
-          tabBarIcon: () => null,
-          tabBarButton: (props) => null,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
         key="addseniorcitizen"
       />,
 
       <Tab.Screen
         name="Booking"
         component={VolunteerStackNavigator}
-        options={({ navigation, route }) => ({
-          tabBarIcon: () => null,
-          tabBarButton: (props) => null,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
         key="booking"
       />,
       <Tab.Screen name="Profile" component={FamilyProfile} key="profile" />
@@ -224,19 +196,7 @@ const renderTabsBasedOnUserType = (userDetails) => {
       <Tab.Screen
         name="VolunteerBooking"
         component={VolunteerBooking}
-        options={({ navigation, route }) => ({
-          tabBarIcon: () => null,
-          tabBarButton: (props) => null,
-          headerLeft: () => (
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-            >
-              <MaterialIcons name={"arrow-back"} size={24} color="black" />
-            </Pressable>
-          ),
-        })}
+        options={navigationOptions}
         key="volunteerbooking"
       />,
       <Tab.Screen name="Profile" component={VolunteerProfile} key="profile" />
