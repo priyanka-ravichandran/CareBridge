@@ -96,6 +96,8 @@ const VolunteerBooking = ({ route, navigation }) => {
                   selectedDay.isAfter(today)
                 ) {
                   onPressAction = () => toggleSlotAvailability(slot);
+                } else if (userDetails.type !== "volunteer"){
+                  onPressAction = () => setSelectedSlot(slot);
                 }
                 break;
               case 2:
