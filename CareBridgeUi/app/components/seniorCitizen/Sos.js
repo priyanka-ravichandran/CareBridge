@@ -8,6 +8,7 @@ import axios from 'axios';
 const getUserID = (email) => {
   axios.get("http://csci5308vm20.research.cs.dal.ca:8080/users/q?email="+email)
   .then((response)=>{
+    console.log(response.data?.userID);
     return response.data?.userID;
   });
 }
@@ -24,11 +25,8 @@ const Sos = () => {
       [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
     );
     //const message = getUserDetails().email + "is in danger!"
-    console.log(getGroupEmails(getUserID(userDetails.email)));
     sendGroup(getGroupEmails,'SOS',userDetails.email+ " is in Danger!")
-    // Here you would typically integrate the actual emergency contact functionality
   };
-
     const getGroupEmails = (userid) => {
       axios
         .get(
