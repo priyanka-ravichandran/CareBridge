@@ -30,7 +30,6 @@ class ChecklistControllerTest {
 
     @Test
     public void testCreateChecklistItem() {
-        // Mocking a new checklist item
         Checklist checklistToCreate = new Checklist(1, 2, "1", "New Checklist");
         when(checklistRepository.save(checklistToCreate)).thenReturn(checklistToCreate);
 //        Checklist result = checklistController.checklist(checklistToCreate);
