@@ -1,4 +1,5 @@
 # CareBridge
+![Logo](carebridgelogo.jpeg)
 ## Overview
 CareBridge is a mobile application designed to provide a one-stop solution to senior citizens, family members, and volunteers. Use cases for the application are as mentioned below:
  - Senior Citizens:
@@ -21,21 +22,40 @@ Other miscellaneous features include:
 To read more about the dependencies, refer to the `readme.md` mentioned in the respective folders.
 ## How to use it
 ### Front End
-Set the file to the CareBridgeUi folder
-```
-cd .\CareBridgeUi\
-```
-Install npm
+Install expo - To render the app.
 ``` bash
+npm install --global expo-cli
+```
+Install eas - To build the app.
+``` bash
+npm install -g eas-cli
+```
+Install all dependencies
+``` bash
+cd .\CareBridgeUi\
 npm i
 ```
-Install the expo globally and run
-``` bash
-expo start --tunnel
+To Run the app you need [DaLVPN](https://www.dal.ca/dept/its/new.html#:~:text=Learn%20more%20about%20VPN)
+#### Step 1
+Create your own expo account @ [Link.](https://expo.dev/signup)
+Install [Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US&pli=1) app on your phone.
+#### Step 2
+Login to your expo account in terminal inside carebridgeui.
 ```
-Then enter "w" in the terminal it will start a web server.
+cd .\CareBridgeUi\
+npx expo login
+```
+Enter the email and password after you signed up your expo account.
+#### Step 3
+Run the expo app
+```
+npm start
+```
+Press s to switch to switch to expo go.
+#### Step 4
+Scan the code and open in ExpoGo
+Make sure you are connected to the DalVPN.
 
-Additionally, you can also run our front end application using Expo Go once the Metro builder has initialized. Press "s" to run using Expo Go, after which you can scan the generated QR code using the [Expo Go](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US&pli=1) app on your phone.
 
 ### Back End
 The entire backend folder can be utilized as a separate maven project. Steps to run the project on your local machine:
@@ -71,3 +91,7 @@ Our project runs on MySQL Database.
 The initializing script can be found in `Database scripts > Database init script.sql`
 
 You can directly run the script in your database editor to create our tables which can then be used by Spring Boot.
+This project uses MySql as its backend database.
+
+### Test Coverage
+![Test_Coverage](testcoverage.png)

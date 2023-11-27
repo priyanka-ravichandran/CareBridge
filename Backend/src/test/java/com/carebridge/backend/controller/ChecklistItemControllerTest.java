@@ -42,8 +42,6 @@ public class ChecklistItemControllerTest {
     public void testGetAllChecklistItems() {
         String checklistNumber = "123";
         List<ChecklistItem> itemList = new ArrayList<>();
-        // Add mock checklist items for the given checklist number
-        // ... add items to the list
 
         when(checklistItemRepository.findChecklistItemsByChecklistNumber(checklistNumber)).thenReturn(itemList);
 
