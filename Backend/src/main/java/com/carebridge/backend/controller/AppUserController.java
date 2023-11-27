@@ -38,12 +38,6 @@ public class AppUserController {
         return appUserRepository.save(appUser);
     }
 
-    @PostMapping("")
-    @CrossOrigin(origins = "*")
-    int emailUser(@RequestBody String message) {
-        emailService.sendEmail("akshat64647@gmail.com","care",message);
-        return -1;
-    }
 
     @PostMapping("/login")
     @CrossOrigin(origins = "*")
