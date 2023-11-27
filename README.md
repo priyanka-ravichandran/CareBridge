@@ -69,3 +69,6 @@ The entire backend folder can be utilized as a separate maven project. Steps to 
 
 ### Database
 This project uses MySql as its backend database.
+
+### Test Coverage
+![Test_Coverage](testcoverage.png)
