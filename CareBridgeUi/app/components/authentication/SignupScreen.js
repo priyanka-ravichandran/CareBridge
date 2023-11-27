@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import * as AuthSession from "expo-auth-session";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -38,9 +32,9 @@ const SignupScreen = ({ navigation }) => {
   const [openUserType, setOpenUserType] = useState(false);
 
   const [usertypes, setUserTypes] = useState([
-    { label: "Family/Friends", value: 'family' },
-    { label: "Seniorcitizen", value: 'senior' },
-    { label: "Volunteer", value: 'volunteer' },
+    { label: "Family/Friends", value: "family" },
+    { label: "Seniorcitizen", value: "senior" },
+    { label: "Volunteer", value: "volunteer" },
   ]);
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
@@ -179,130 +173,133 @@ const SignupScreen = ({ navigation }) => {
         .then((response) => {
           navigation.navigate("LandingScreen");
         });
-        
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Signup</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.header}>Signup</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      {firstNameError && <Text style={styles.errorText}>{firstNameError}</Text>}
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      {lastNameError && <Text style={styles.errorText}>{lastNameError}</Text>}
-      
-          <DropDownPicker
-            open={openGender}
-            setOpen={setOpenGender}
-            value={gender}
-            items={genders}
-            setValue={setgender}
-            setItems={setgenders}
-          />
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Phone Number"
-        value={phone_number}
-        onChangeText={setPhone_number}
-        onBlur={() => {
-          if (!validatePhone_Number(phone_number)) {
-            setPhone_numberError("Invalid phone number format.");
-          } else {
-            setPhone_numberError(null);
-          }
-        }}
-      />
-      {phone_numberError && (
-        <Text style={styles.errorText}>{phone_numberError}</Text>
-      )}
-      <Pressable
-        onPress={() => setShowDatePicker(true)}
-        style={styles.dateInputContainer}
-      >
         <TextInput
-          style={[styles.input, { flex: 1 }]}
-          placeholder="YYYY-MM-DD"
-          value={birthDate}
-          editable={false}
+          style={styles.input}
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
         />
-        <Text>
-          {" "}
-          <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
-        </Text>
-      </Pressable>
-      {birthDateError && <Text style={styles.errorText}>{birthDateError}</Text>}
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={birthDate ? new Date(birthDate) : new Date()}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={onChangeBirthDate}
+        {firstNameError && (
+          <Text style={styles.errorText}>{firstNameError}</Text>
+        )}
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
         />
-      )}
-      <DropDownPicker
-        open={openUserType}
-        setOpen={setOpenUserType}
-        value={userType}
-        items={usertypes}
-        style={styles.input}
-        setValue={setUserType}
-        setItems={setUserTypes}
-        dropDownContainerStyle={styles.dropDownContainerStyle}
-        dropDownDirection="AUTO"
-      />
+        {lastNameError && <Text style={styles.errorText}>{lastNameError}</Text>}
 
+        <DropDownPicker
+          open={openGender}
+          setOpen={setOpenGender}
+          value={gender}
+          items={genders}
+          setValue={setgender}
+          setItems={setgenders}
+        />
 
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          value={phone_number}
+          onChangeText={setPhone_number}
+          onBlur={() => {
+            if (!validatePhone_Number(phone_number)) {
+              setPhone_numberError("Invalid phone number format.");
+            } else {
+              setPhone_numberError(null);
+            }
+          }}
+        />
+        {phone_numberError && (
+          <Text style={styles.errorText}>{phone_numberError}</Text>
+        )}
+        <Pressable
+          onPress={() => setShowDatePicker(true)}
+          style={styles.dateInputContainer}
+        >
           <TextInput
-            style={styles.input}
-            placeholder="Address"
-            value={Address}
-            onChangeText={(value) => {
-              setAddress(value);
-            }}
+            style={[styles.input, { flex: 1 }]}
+            placeholder="YYYY-MM-DD"
+            value={birthDate}
+            editable={false}
           />
-
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        onBlur={validateEmail}
-      />
-      {emailError && <Text style={styles.errorText}>{emailError}</Text>}
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        onBlur={validatePassword}
-        secureTextEntry
-      />
-      {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
-
-      <Pressable style={styles.signupButton} onPress={handleSignup}>
-        <Text style={styles.signupText}>Signup</Text>
-      </Pressable>
-
-      <View style={styles.row}>
-        <Pressable onPress={() => navigation.navigate("LandingScreen")}>
-          <Text style={styles.landingPage}>Go Back</Text>
+          <Text>
+            {" "}
+            <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
+          </Text>
         </Pressable>
+        {birthDateError && (
+          <Text style={styles.errorText}>{birthDateError}</Text>
+        )}
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={birthDate ? new Date(birthDate) : new Date()}
+            mode="date"
+            is24Hour={true}
+            display="default"
+            onChange={onChangeBirthDate}
+          />
+        )}
+        <DropDownPicker
+          open={openUserType}
+          setOpen={setOpenUserType}
+          value={userType}
+          items={usertypes}
+          style={styles.input}
+          setValue={setUserType}
+          setItems={setUserTypes}
+          dropDownContainerStyle={styles.dropDownContainerStyle}
+          dropDownDirection="AUTO"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Address"
+          value={Address}
+          onChangeText={(value) => {
+            setAddress(value);
+          }}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          onBlur={validateEmail}
+        />
+        {emailError && <Text style={styles.errorText}>{emailError}</Text>}
+
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          onBlur={validatePassword}
+          secureTextEntry
+        />
+        {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
+
+        <Pressable style={styles.signupButton} onPress={handleSignup}>
+          <Text style={styles.signupText}>Signup</Text>
+        </Pressable>
+
+        <View style={styles.row}>
+          <Pressable onPress={() => navigation.navigate("LandingScreen")}>
+            <Text style={styles.landingPage}>Go Back</Text>
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );
