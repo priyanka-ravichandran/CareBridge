@@ -13,6 +13,7 @@ import UserDetailsContext from "../shared/context/userDetailsContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import { unregisterIndieDevice } from "native-notify";
 
 const SeniorProfile = ({ navigation }) => {
   const [FirstName, setFirstname] = useState("");
@@ -124,6 +125,11 @@ const SeniorProfile = ({ navigation }) => {
     }
   };
   const handleLogout = () => {
+    unregisterIndieDevice(
+      email,
+      14881,
+      "JNsN0VrdyjC41kJb7doGS2"
+    );
     navigation.navigate("LandingScreen");
   };
 

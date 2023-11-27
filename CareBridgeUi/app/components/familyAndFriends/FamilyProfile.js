@@ -12,6 +12,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserDetailsContext from "../shared/context/userDetailsContext";
+import { unregisterIndieDevice } from "native-notify";
 
 import sharedStyle from "../shared/styles/sharedStyle";
 
@@ -128,6 +129,7 @@ const FamilyProfile = ({ navigation }) => {
     }
   };
   const handleLogout = () => {
+    unregisterIndieDevice(email, 14881, "JNsN0VrdyjC41kJb7doGS2");
     navigation.navigate("LandingScreen");
   };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import * as AuthSession from "expo-auth-session";
 import axios from "axios";
+import { registerIndieID } from "native-notify";
 import sharedStyle from "../shared/styles/sharedStyle";
 
 const LoginScreen = ({ navigation }) => {
@@ -62,6 +63,11 @@ const LoginScreen = ({ navigation }) => {
         email,
         password,
       };
+       registerIndieID(
+         reqBody.email,
+         14881,
+         "JNsN0VrdyjC41kJb7doGS2"
+       );
       axios
         .post("http://csci5308vm20.research.cs.dal.ca:8080/login", reqBody)
         .then((response) => {
