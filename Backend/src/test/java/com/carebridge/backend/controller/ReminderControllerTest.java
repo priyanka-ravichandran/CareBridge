@@ -2,6 +2,7 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.Reminder;
 import com.carebridge.backend.repo.ReminderRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,7 +54,7 @@ class ReminderControllerTest {
         mockMvc.perform(delete("/reminder/q?reminderNumber=1"))
                 .andExpect(status().isOk());
 
-        Mockito.verify(mockRepository, Mockito.times(1)).deleteRemindersByReminderNumber("1");
+        verify(mockRepository, times(1)).deleteRemindersByReminderNumber("1");
     }
     @Test
     void testGetAllReminders_ReturnsListOfReminders() throws Exception {
@@ -68,6 +69,20 @@ class ReminderControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].elderlyId").exists())
                 .andExpect(jsonPath("$[1].volunteerId").exists());
+    }
+
+    @Test
+    void testReminderPostEndpoint() throws Exception {
+        Reminder reminder = new Reminder();
+
+        when(mockRepository.save(any(Reminder.class))).thenReturn(reminder);
+
+        mockMvc.perform(post("/reminder")
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(reminder)))
+                .andExpect(status().isOk()); // Assuming it returns HTTP status 200 for success
+
+        verify(mockRepository, times(1)).save(any(Reminder.class));
     }
 
     @Test

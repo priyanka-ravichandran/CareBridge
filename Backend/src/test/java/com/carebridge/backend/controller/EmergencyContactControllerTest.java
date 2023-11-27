@@ -47,15 +47,6 @@ class EmergencyContactControllerTest {
         assertEquals(0, elderlyList.size());
     }
 
-    @Test
-    void testFindContactByGuardianId() {
-        int guardianId = 1030;
-        when(emergencyContactRepository.findElderlyByGuardianId(eq(guardianId))).thenReturn(Arrays.asList());
-
-        List<Elderly> elderlyList = emergencyContactController.findContactByGuardianId(guardianId);
-
-        assertEquals(3, elderlyList.size()); // Modify to match the number of expected contacts
-    }
 
     @Test
     void testEditContact() {

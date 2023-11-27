@@ -63,6 +63,37 @@ public class AppointmentControllerTest {
     }
 
     @Test
+    void testCheckAppointmentForVolunteerAndDate() {
+        int volunteerId = 1;
+        String date = "2023-11-26";
+        List<Appointment> appointments = new ArrayList<>();
+        when(appointmentRepository.findAppointmentsByVolunteerIdAndBookingDate(volunteerId, date))
+                .thenReturn(appointments);
+
+        List<Appointment> resultAppointments = appointmentController.checkAppointmentForVolunteerAndDate(volunteerId, date);
+
+        assertNotNull(resultAppointments);
+        assertEquals(appointments, resultAppointments);
+
+        verify(appointmentRepository, times(1)).findAppointmentsByVolunteerIdAndBookingDate(volunteerId, date);
+    }
+
+    @Test
+    void testDeleteAppointment() {
+        int volunteerId = 1;
+        int familyId = 2;
+        String bookingDate = "2023-11-26";
+        String bookingStartTime = "10:00";
+
+        doNothing().when(appointmentRepository).deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
+                volunteerId, familyId, bookingDate, bookingStartTime);
+
+        appointmentController.deleteAppointment(volunteerId, familyId, bookingDate, bookingStartTime);
+        verify(appointmentRepository, times(1)).deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
+                volunteerId, familyId, bookingDate, bookingStartTime);
+    }
+
+    @Test
     void testSeeAppointmentForVolunteerAndFamily() {
         Appointment appointment = new Appointment(1, 2, 3, "2023-12-01", "09:00", "10:00", 1, "Test description");
 
