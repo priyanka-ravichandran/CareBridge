@@ -35,10 +35,6 @@ public class Elderly implements Serializable {
 
     }
 
-    public Elderly() {
-
-    }
-
     public int getElderlyId() {
         return elderlyId;
     }
