@@ -1,9 +1,7 @@
 package com.carebridge.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.io.Serializable;
 
@@ -12,19 +10,29 @@ import java.io.Serializable;
 @IdClass(Elderly.class)
 public class Elderly implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
+    @Column(name = "ElderlyID")
     private int elderlyId;
-    @Id
+    @Column( name = "GuardianID")
     private int guardianId;
-    @Id
+    @Column( name = "Hobbies")
     private String hobbies;
-    @Id
-    private String emergencyContact;
+    @Column( name = "EmergencyContactName")
+    private String emergencyContactName;
+    @Column( name = "EmergencyContactPhn")
+    private String emergencyContactPhone;
 
-    public Elderly(int elderlyId, int guardianId, String hobbies, String emergencyContact) {
+    public Elderly(int elderlyId, int guardianId, String hobbies, String emergencyContactName, String emergencyContactPhone) {
         this.elderlyId = elderlyId;
         this.guardianId = guardianId;
         this.hobbies = hobbies;
-        this.emergencyContact = emergencyContact;
+        this.emergencyContactName = emergencyContactName;
+        this.emergencyContactPhone = emergencyContactPhone;
+    }
+
+    public Elderly() {
+
     }
 
     public int getElderlyId() {
@@ -39,8 +47,20 @@ public class Elderly implements Serializable {
         return hobbies;
     }
 
-    public String getEmergencyContact() {
-        return emergencyContact;
+    public String getEmergencyContactName() {
+        return emergencyContactName;
+    }
+
+    public void setEmergencyContactName(String emergencyContactName) {
+        this.emergencyContactName = emergencyContactName;
+    }
+
+    public String getEmergencyContactPhone() {
+        return emergencyContactPhone;
+    }
+
+    public void setEmergencyContactPhone(String emergencyContactPhone) {
+        this.emergencyContactPhone = emergencyContactPhone;
     }
 
     public void setElderlyId(int elderlyId) {
@@ -55,7 +75,5 @@ public class Elderly implements Serializable {
         this.hobbies = hobbies;
     }
 
-    public void setEmergencyContact(String emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
+
 }
