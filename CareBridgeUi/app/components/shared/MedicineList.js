@@ -15,6 +15,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import UserDetailsContext from "./context/userDetailsContext";
 import sharedStyle from "./styles/sharedStyle";
+import Toast from "react-native-toast-message";
 
 const ITEM_HEIGHT = 40;
 const MAX_ITEMS_VISIBLE = 4;
@@ -90,7 +91,6 @@ const MedicineList = () => {
           let medicines = initialMedicineInfo;
 
           response.data.map((medicine) => {
-            console.log(medicine);
             medicines[keyMap[medicine.day]].push(medicine);
           });
           setMedicinesByDay(medicines);
@@ -98,10 +98,11 @@ const MedicineList = () => {
         }
       })
       .catch((error) => {
-        console.error(
-          "There was an error fetching the medicine reminders:",
-          error
-        );
+        Toast.show({
+          type: "error",
+          text1: "There was an error fetching the medicine reminders:",
+          text2: error,
+        });
       });
   };
 
@@ -130,14 +131,19 @@ const MedicineList = () => {
         }
       )
       .then((response) => {
-        console.log(response);
-
-        setMedicinesByDay({
-          ...medicinesByDay,
-          [selectedDay]: [...medicinesByDay[selectedDay], newMedicine],
-        });
-        setNewMedicineName("");
-        setModalVisible(false);
+        if (response.status === 200) {
+          setMedicinesByDay({
+            ...medicinesByDay,
+            [selectedDay]: [...medicinesByDay[selectedDay], newMedicine],
+          });
+          setNewMedicineName("");
+          setModalVisible(false);
+        } else
+          Toast.show({
+            type: "error",
+            text1: "unable to update medicine details.",
+            text2: "API call failed",
+          });
       });
   };
 
@@ -150,24 +156,27 @@ const MedicineList = () => {
         `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/q?medicineReminderNumber=${medicineToDelete.medicineReminderNumber}`
       )
       .then((response) => {
-        if (response) {
+        if (response.status === 200) {
+          Toast.show({
+            type: "success",
+            text1: "Deleted Medicine Successfully ",
+            text2: "API call was successful!",
+          });
           setMedicinesByDay({
             ...medicinesByDay,
             [day]: medicinesByDay[day].filter(
               (medicine) => medicine.medicineName !== medicineName
             ),
           });
-        }
+        } else
+          Toast.show({
+            type: "error",
+            text1: "unable to delete medicine.",
+            text2: "API call failed",
+          });
       });
   };
-  // /q?elderlyId=${
-  //   item.elderlyId
-  // }&volunteerId=${item.volunteerId}&medicineReminderNumber=${
-  //   item.medicineReminderNumber
-  // }&day=${selectedDay}&time=${selectedTime.toLocaleTimeString(
-  //   "en-US",
-  //   { hour: "2-digit", minute: "2-digit", hour12: false }
-  // )}
+
   const renderMedicine = ({ item }) => {
     const [hours, minutes] = item.time.split(":");
     const currentDate = new Date();
@@ -198,7 +207,7 @@ const MedicineList = () => {
               };
               axios
                 .put(
-                  `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder`,
+                  `http://csci5308vm20.research.cs.dal.ca:8080/medicineReminder/q?elderlyId=${item.elderlyId}&volunteerId=1002&medicineReminderNumber=${item.medicineReminderNumber}`,
                   medicine,
                   {
                     headers: {
@@ -207,7 +216,18 @@ const MedicineList = () => {
                   }
                 )
                 .then((response) => {
-                  console.log(response);
+                  if (response && response.status === 200)
+                    Toast.show({
+                      type: "success",
+                      text1: "Updated Medicine Details Successfully ",
+                      text2: "API call was successful!",
+                    });
+                  else
+                    Toast.show({
+                      type: "error",
+                      text1: "unable to update medicine details.",
+                      text2: "API call failed",
+                    });
                 });
             }}
             style={styles.timePicker}
@@ -244,7 +264,7 @@ const MedicineList = () => {
         ))}
       </View>
       {userDetails.type !== "senior" && userDetails.pairings.length === 0 ? (
-        <Text style={styles.noPairingsText}>
+        <Text style={sharedStyle.emptyText}>
           Pair with a senior citizen to view checklists.
         </Text>
       ) : (
@@ -259,7 +279,7 @@ const MedicineList = () => {
               setItems={setItems}
               placeholder="Select Senior Citizen"
               maxHeight={dropdownMaxHeight}
-              style={styles.dropdown}
+              style={sharedStyle.dropdown}
             />
           )}
         </>
@@ -292,7 +312,7 @@ const MedicineList = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Pressable
-              style={styles.closeButton}
+              style={sharedStyle.modalClose}
               onPress={() => setModalVisible(false)}
             >
               <MaterialIcons name="close" size={24} color="black" />
@@ -314,8 +334,8 @@ const MedicineList = () => {
                 style={styles.timePicker}
               />
             </View>
-            <Pressable style={styles.modalButton} onPress={addMedicine}>
-              <Text style={styles.modalButtonText}>Add Medicine</Text>
+            <Pressable style={sharedStyle.modalButton} onPress={addMedicine}>
+              <Text style={sharedStyle.modalButtonText}>Add Medicine</Text>
             </Pressable>
           </View>
         </View>
@@ -424,46 +444,10 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderRadius: 5,
   },
-  modalButton: {
-    backgroundColor: "black",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  modalButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   row: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  noPairingsText: {
-    marginTop: 20,
-    textAlign: "center",
-    fontSize: 16,
-    color: "grey",
-  },
-  dropdown: {
-    borderWidth: 1,
-    borderColor: "black",
-    marginTop: 10,
-    flexGrow: 1,
-    marginRight: 30,
-    marginBottom: 30,
-    marginLeft: 10,
-    zIndex: 1000,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 5,
-    width: "95%",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
   },
 });
 export default MedicineList;

@@ -1,13 +1,21 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Pressable} from "react-native";
+import React, { useState, useEffect,useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Pressable,
+} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import UserDetailsContext from "../shared/context/userDetailsContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { unregisterIndieDevice } from "native-notify";
 
-const SeniorProfile = ({navigation}) => {
+const SeniorProfile = ({ navigation }) => {
   const [FirstName, setFirstname] = useState("");
   const [LastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -23,25 +31,27 @@ const SeniorProfile = ({navigation}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const [userId, setUserId] = useState(1001);
+  const { userDetails } = useContext(UserDetailsContext);
+
   useEffect(() => {
     axios
-      .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userId)
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userDetails.userID)
       .then((response) => {
+        let date = new Date(response.data.birthdate);
         setFirstname(response.data.first_name);
         setLastname(response.data.last_name);
         setEmail(response.data.email);
         setPhonenumber(response.data.phone_number);
-        setBirthDate("1955-05-21");
+        setBirthDate(date.getUTCFullYear() + '-' + String(date.getUTCMonth() + 1).padStart(2, '0') + '-' + String(date.getUTCDate()).padStart(2, '0'));
         setAddress(response.data.address);
-        setgender(response.data.gender)
+        setgender(response.data.gender);
       });
   }, []);
   // Validation Functions
   const onChangeBirthDate = (event, selectedDate) => {
     const currentDate = selectedDate || birthDate;
     setShowDatePicker(false);
-    setBirthDate(currentDate.toISOString().split("T")[0]);
+    setBirthDate(currentDate.getUTCFullYear() + '-' + String(currentDate.getUTCMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getUTCDate()).padStart(2, '0'));
     setErrors((prevErrors) => {
       let newErrors = { ...prevErrors };
       delete newErrors.birthDate;
@@ -87,10 +97,10 @@ const SeniorProfile = ({navigation}) => {
     if (!validateBirthDate()) errorMessages.birthDate = "Invalid Birth Date";
 
     setErrors(errorMessages);
-   
+
     if (Object.keys(errorMessages).length === 0) {
       const userData = {
-        userId: userId,
+        userId: userDetails.userId,
         email,
         phone_number: phonenumber,
         first_name: FirstName,
@@ -101,7 +111,7 @@ const SeniorProfile = ({navigation}) => {
       };
       axios
         .put(
-          "http://csci5308vm20.research.cs.dal.ca:8080/users/" + userId,
+          "http://csci5308vm20.research.cs.dal.ca:8080/users/" + userDetails.userId,
           userData,
           {
             headers: {
@@ -114,14 +124,14 @@ const SeniorProfile = ({navigation}) => {
         });
     }
   };
-  const handleLogout = () =>{
+  const handleLogout = () => {
     unregisterIndieDevice(
       email,
       14881,
       "JNsN0VrdyjC41kJb7doGS2"
     );
     navigation.navigate("LandingScreen");
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -212,11 +222,7 @@ const SeniorProfile = ({navigation}) => {
           />
           <Text>
             {" "}
-            <MaterialIcons
-              name={"calendar-today"}
-              size={20}
-              color={"black"}
-            />
+            <MaterialIcons name={"calendar-today"} size={20} color={"black"} />
           </Text>
         </Pressable>
         <Text style={{ color: "red" }}>{errors.birthDate}</Text>
@@ -242,15 +248,14 @@ const SeniorProfile = ({navigation}) => {
           }}
         />
       </View>
-      
-    
-    <Pressable style={styles.buttonContainer} onPress={handleSave}>
+
+      <Pressable style={styles.buttonContainer} onPress={handleSave}>
         <Text style={styles.createText}>Save</Text>
       </Pressable>
       <Pressable style={styles.buttonContainer} onPress={handleLogout}>
         <Text style={styles.createText}>Logout</Text>
       </Pressable>
- </View>
+    </View>
   );
 };
 
@@ -291,12 +296,12 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   logout: {
-    backgroundColor: 'black', 
+    backgroundColor: "black",
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10, 
-    width: '80%', 
-    alignItems: 'center', 
+    marginBottom: 10,
+    width: "80%",
+    alignItems: "center",
   },
   createText: {
     color: "white",

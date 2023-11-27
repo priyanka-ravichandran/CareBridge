@@ -2,65 +2,83 @@ package com.carebridge.backend.controller;
 
 import com.carebridge.backend.entity.SOSAlerts;
 import com.carebridge.backend.repo.SOSAlertsRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.carebridge.backend.service.EmailService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class SOSAlertsControllerTest {
-
-    private SOSAlertsController sosAlertsController;
 
     @Mock
     private SOSAlertsRepository sosAlertsRepository;
 
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-        sosAlertsController = new SOSAlertsController(sosAlertsRepository, emailService);
-    }
+    @Mock
+    private EmailService emailService;
+
+    @InjectMocks
+    private SOSAlertsController sosAlertsController;
 
     @Test
-    void testCreateSOSAlert() {
-        SOSAlerts sosAlert = new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency");
-        Mockito.when(sosAlertsRepository.save(sosAlert)).thenReturn(sosAlert);
+    void testAddSOSAlerts() {
+        SOSAlerts sosAlerts = new SOSAlerts(1, 2, "12:00", "Emergency");
+        String userEmail = "test@example.com";
 
-        SOSAlerts result = sosAlertsController.sosAlerts(sosAlert);
+        when(sosAlertsRepository.save(any(SOSAlerts.class))).thenReturn(sosAlerts);
 
-        assertEquals(sosAlert, result);
+        SOSAlerts savedSOSAlerts = sosAlertsController.sosAlerts(sosAlerts, userEmail);
+
+        assertEquals(1, savedSOSAlerts.getElderlyID());
+        assertEquals(2, savedSOSAlerts.getVolunteerID());
+        assertEquals("12:00", savedSOSAlerts.getTime());
+        assertEquals("Emergency", savedSOSAlerts.getReason());
+
+        verify(emailService, times(1)).sendEmail(userEmail, "Add", "Adding sosAlerts successful");
+        verify(sosAlertsRepository, times(1)).save(any(SOSAlerts.class));
     }
 
     @Test
     void testGetAllSOSAlerts() {
-        List<SOSAlerts> sosAlertsList = new ArrayList<>();
-        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency"));
-        sosAlertsList.add(new SOSAlerts(3, 4, "2023-10-30 15:00:00", "Medical"));
+        SOSAlerts sosAlerts = new SOSAlerts(1, 2, "12:00", "Emergency");
 
-        Mockito.when(sosAlertsRepository.findAll()).thenReturn(sosAlertsList);
+        when(sosAlertsRepository.findAll()).thenReturn(Collections.singletonList(sosAlerts));
 
         List<SOSAlerts> result = sosAlertsController.all();
 
-        assertEquals(sosAlertsList, result);
+        assertEquals(1, result.size());
+        SOSAlerts retrievedSOSAlerts = result.get(0);
+        assertEquals(1, retrievedSOSAlerts.getElderlyID());
+        assertEquals(2, retrievedSOSAlerts.getVolunteerID());
+        assertEquals("12:00", retrievedSOSAlerts.getTime());
+        assertEquals("Emergency", retrievedSOSAlerts.getReason());
+
+        verify(sosAlertsRepository, times(1)).findAll();
     }
 
     @Test
     void testGetSOSAlertsForElderlyAndVolunteer() {
-        int elderlyId = 1;
-        int volunteerId = 2;
-        List<SOSAlerts> sosAlertsList = new ArrayList<>();
-        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 14:30:00", "Emergency"));
-        sosAlertsList.add(new SOSAlerts(1, 2, "2023-10-30 15:00:00", "Medical"));
+        SOSAlerts sosAlerts = new SOSAlerts(1, 2, "12:00", "Emergency");
 
-        Mockito.when(sosAlertsRepository.findSOSAlertsByElderlyIDAndVolunteerID(elderlyId, volunteerId)).thenReturn(sosAlertsList);
+        when(sosAlertsRepository.findSOSAlertsByElderlyIDAndVolunteerID(1, 2))
+                .thenReturn(Collections.singletonList(sosAlerts));
 
-        List<SOSAlerts> result = sosAlertsController.forElderlyAndVolunteer(elderlyId, volunteerId);
+        List<SOSAlerts> result = sosAlertsController.forElderlyAndVolunteer(1, 2);
 
-        assertEquals(sosAlertsList, result);
+        assertEquals(1, result.size());
+        SOSAlerts retrievedSOSAlerts = result.get(0);
+        assertEquals(1, retrievedSOSAlerts.getElderlyID());
+        assertEquals(2, retrievedSOSAlerts.getVolunteerID());
+        assertEquals("12:00", retrievedSOSAlerts.getTime());
+        assertEquals("Emergency", retrievedSOSAlerts.getReason());
+
+        verify(sosAlertsRepository, times(1)).findSOSAlertsByElderlyIDAndVolunteerID(1, 2);
     }
 }

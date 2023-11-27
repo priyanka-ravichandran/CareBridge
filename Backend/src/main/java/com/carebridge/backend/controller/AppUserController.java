@@ -38,12 +38,6 @@ public class AppUserController {
         return appUserRepository.save(appUser);
     }
 
-    @PostMapping("")
-    @CrossOrigin(origins = "*")
-    int emailUser(@RequestBody String message) {
-        emailService.sendEmail("akshat64647@gmail.com","care",message);
-        return -1;
-    }
 
     @PostMapping("/login")
     @CrossOrigin(origins = "*")
@@ -72,6 +66,13 @@ public class AppUserController {
     AppUser one(@PathVariable Long userId) {
         return appUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
+
+    @GetMapping("/users/q")
+    @CrossOrigin(origins = "*")
+    AppUser getUserByEmail(@RequestParam String email) {
+        return appUserRepository.findAppUserByEmail(email).get();
     }
 
     @PutMapping("/users/{userId}")

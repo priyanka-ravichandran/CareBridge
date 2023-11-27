@@ -299,13 +299,6 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.signupText}>Signup</Text>
       </Pressable>
 
-      <Pressable
-        style={styles.googleButton}
-        onPress={() => promptAsync()}
-      >
-        <Text style={styles.googleButtonText}>Signup with Google</Text>
-      </Pressable>
-
       <View style={styles.row}>
         <Pressable onPress={() => navigation.navigate("LandingScreen")}>
           <Text style={styles.landingPage}>Go Back</Text>

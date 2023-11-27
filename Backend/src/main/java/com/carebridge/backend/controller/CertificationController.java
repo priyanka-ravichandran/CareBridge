@@ -19,8 +19,8 @@ public class CertificationController {
 
     @PostMapping("/certification")
     @CrossOrigin(origins = "*")
-    Certification certification(@RequestBody Certification certification,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding certificate was successful");
+    Certification certification(@RequestBody Certification certification) {
+        // emailService.sendEmail(userEmail,"Add","Adding certificate was successful");
         return certificationRepository.save(certification);
     }
 

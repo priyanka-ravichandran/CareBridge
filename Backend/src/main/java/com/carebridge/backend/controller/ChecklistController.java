@@ -22,8 +22,8 @@ public class ChecklistController {
 
     @PostMapping("/checklist")
     @CrossOrigin(origins = "*")
-    Checklist checklist(@RequestBody Checklist checklist ,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding CheckList was successful");
+    Checklist checklist(@RequestBody Checklist checklist) {
+        // emailService.sendEmail(userEmail,"Add","Adding CheckList was successful");
         return checklistRepository.save(checklist);
     }
 
@@ -48,8 +48,8 @@ public class ChecklistController {
     @PutMapping("/checklist/q")
     @CrossOrigin(origins = "*")
     Optional<Checklist> updateChecklistForElderlyGuardianAndNumber(@RequestBody Checklist newChecklist
-            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam String checklistNumber,@RequestParam String guardianEmail) {
-        emailService.sendEmail(guardianEmail,"Update","Updating CheckList successful");
+            , @RequestParam int guardianId, @RequestParam int elderlyId, @RequestParam String checklistNumber) {
+        // emailService.sendEmail(guardianEmail,"Update","Updating CheckList successful");
         return checklistRepository.findChecklistByGuardianIDAndElderlyIDAndChecklistNumber(guardianId, elderlyId, checklistNumber)
                 .map(checklist -> {
                     checklist.setChecklist_name(newChecklist.getChecklist_name());
@@ -60,8 +60,8 @@ public class ChecklistController {
     @Transactional
     @DeleteMapping("/checklist/q")
     @CrossOrigin(origins = "*")
-    public void deleteChecklist(@RequestParam String checklistNumber,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Delete","Deleting the CheckList successful");
+    public void deleteChecklist(@RequestParam String checklistNumber) {
+        // emailService.sendEmail(userEmail,"Delete","Deleting the CheckList successful");
         checklistRepository.deleteChecklistByChecklistNumber(checklistNumber);
 
     }

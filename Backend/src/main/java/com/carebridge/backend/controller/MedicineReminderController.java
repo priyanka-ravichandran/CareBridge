@@ -21,8 +21,8 @@ public class MedicineReminderController {
 
     @PostMapping("/medicineReminder")
     @CrossOrigin(origins = "*")
-    MedicineReminder medicineReminder(@RequestBody MedicineReminder medicineReminder,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Add","Adding medicine reminder successful");
+    MedicineReminder medicineReminder(@RequestBody MedicineReminder medicineReminder) {
+        // emailService.sendEmail(userEmail,"Add","Adding medicine reminder successful");
         return medicineReminderRepository.save(medicineReminder);
     }
 
@@ -48,8 +48,8 @@ public class MedicineReminderController {
     @CrossOrigin(origins = "*")
     Optional<MedicineReminder> updateChecklistItem(@RequestBody MedicineReminder newMedicineReminder,
                                                 @RequestParam int elderlyId, @RequestParam int volunteerId,
-                                                @RequestParam String medicineReminderNumber,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Update","Updating medicine reminder successful");
+                                                @RequestParam String medicineReminderNumber) {
+        // emailService.sendEmail(userEmail,"Update","Updating medicine reminder successful");
         return medicineReminderRepository.getMedicineReminderByElderlyIdAndVolunteerIdAndMedicineReminderNumber(elderlyId, volunteerId, medicineReminderNumber)
                 .map(medicineReminder -> {
                     medicineReminder.setMedicineName(newMedicineReminder.getMedicineName());
@@ -62,8 +62,8 @@ public class MedicineReminderController {
     @Transactional
     @DeleteMapping("/medicineReminder/q")
     @CrossOrigin(origins = "*")
-    public void deleteReminder(@RequestParam String medicineReminderNumber,@RequestParam String userEmail) {
-        emailService.sendEmail(userEmail,"Delete","Deleting medicine reminder successful");
+    public void deleteReminder(@RequestParam String medicineReminderNumber) {
+        // emailService.sendEmail(userEmail,"Delete","Deleting medicine reminder successful");
         medicineReminderRepository.deleteMedicineReminderByMedicineReminderNumber(medicineReminderNumber);
     }
 }

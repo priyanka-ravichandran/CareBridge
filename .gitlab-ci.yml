@@ -19,13 +19,34 @@
 stages:
   - build
   - test
+  - publish
   - deploy
   
 variables:
+  GROUP: "group20"
   DOCKER_IMAGE_NAME: "carebridge-backend"
   VM_SSH_USER: $SERVER_USER
   VM_SSH_HOST: $SERVER_IP
   VM_SSH_PORT: "22"
+  RSA_KEY: $ID_RSA
+
+build-frontend-job:
+  image: node:alpine
+  allow_failure: true
+  only:
+    - main
+  cache:
+    paths:
+      - .npm
+  stage: build
+  before_script:
+    - apk add git
+    - apk add openjdk11
+    - npm ci --cache .npm
+  script:
+    - apk add --no-cache bash
+    - cd CareBridgeUi
+    - npx eas-cli build --platform android --non-interactive
 
 build-backend-job:
   image: maven:3.8.3-openjdk-17
@@ -40,33 +61,60 @@ build-backend-job:
   artifacts:
     paths:
       - Backend/target/Backend-0.0.1-SNAPSHOT.jar
+    expire_in: 1 week
 
 unit-test-job:
   image: maven:3.8.3-openjdk-17
   stage: test
   script:
     - cd Backend
-    - echo "Running unit tests... This will take about 60 seconds."
+    - echo "Running unit tests... This will take about 2 minutes."
     - mvn '-Dtest=com.carebridge.backend.*Test' test
+    - echo "Tests complete!"
 
 code-quality-job:
   image: maven:3.8.3-openjdk-17
   stage: test
   script:
+    - echo "Checking for code quality"
     - java -jar DesigniteJava.jar -i Backend/ -o code_quality_outputs/ -d
+    - echo "Quality checks complete. Please refer to the artifacts for more information on the smells"
   artifacts:
     paths:
       - code_quality_outputs/*.csv
+    expire_in: 1 week
+
+backend-publish-job:
+  image: docker:latest
+  stage: publish
+  dependencies:
+    - build-backend-job
+  only:
+    - main
+  tags:
+    - backend-deployment
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: "tcp://docker:2375"
+  services:
+    - docker:dind
+  script:
+    - echo "Building a docker image for the backend"
+    - docker login -u ad943407@dal.ca -p group20@123 docker.io
+    - docker build -t $GROUP/$DOCKER_IMAGE_NAME:latest Backend
+    - docker push $GROUP/$DOCKER_IMAGE_NAME:latest
+    - echo "Docker image published to $GROUP/$DOCKER_IMAGE_NAME"
 
 deploy-job:
+  image: alpine:latest
   stage: deploy
   only:
     - main
-    - dev
   script:
     - echo "Deploying application..."
-    - scp -P $VM_SSH_PORT Backend/target/Backend-0.0.1-SNAPSHOT.jar $VM_SSH_USER@$VM_SSH_HOST:home/student/Carebridge/
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $DOCKER_IMAGE_NAME"
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "cd /home/student/CareBridge && docker build -t $DOCKER_IMAGE_NAME ."
-    - ssh -p $VM_SSH_PORT $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $DOCKER_IMAGE_NAME"
+    - chmod 600 $RSA_KEY
+    - apk update && apk add openssh-client
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker stop $DOCKER_IMAGE_NAME && docker container rm -f $DOCKER_IMAGE_NAME && docker image rm -f $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker pull $GROUP/$DOCKER_IMAGE_NAME"
+    - ssh -i $RSA_KEY -o StrictHostKeyChecking=no $VM_SSH_USER@$VM_SSH_HOST "docker run -d --name $DOCKER_IMAGE_NAME -p 8080:8080 $GROUP/$DOCKER_IMAGE_NAME"
     - echo "Application successfully deployed."

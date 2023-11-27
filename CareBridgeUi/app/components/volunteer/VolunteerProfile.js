@@ -1,7 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Pressable, ScrollView } from "react-native";
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useState, useEffect,useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Pressable,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import UserDetailsContext from "../shared/context/userDetailsContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { unregisterIndieDevice } from "native-notify";
@@ -13,36 +21,115 @@ const VolunteerProfile = ({ navigation }) => {
   const [phonenumber, setPhonenumber] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [Address, setAddress] = useState("");
-  const [volunteerExperience, setVolunteerExperience] = useState("");
 
-  const [gender, setGender] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [genders, setGenders] = useState([
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
+  const [gender, setgender] = useState(null);
+  const [genders, setgenders] = useState([
+    { label: "Male", value: 1 },
+    { label: "Female", value: 2 },
   ]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [open, setOpen] = useState(false);
+  const { userDetails } = useContext(UserDetailsContext);
   const [errors, setErrors] = useState({});
-  const [userId, setUserId] = useState(1001);
 
   useEffect(() => {
-    // Fetch user data...
+    axios
+      .get("http://csci5308vm20.research.cs.dal.ca:8080/users/" + userDetails.userID)
+      .then((response) => {
+        let date = new Date(response.data.birthdate);
+        setFirstname(response.data.first_name);
+        setLastname(response.data.last_name);
+        setEmail(response.data.email);
+        setPhonenumber(response.data.phone_number);
+        setBirthDate(date.getUTCFullYear() + '-' + String(date.getUTCMonth() + 1).padStart(2, '0') + '-' + String(date.getUTCDate()).padStart(2, '0'));
+        setAddress(response.data.address);
+        setgender(response.data.gender);
+      });
   }, []);
-
-  // Validation functions...
-
-  const handleSave = () => {
-    //TODO
-    // Handle the saving of the profile...
+  // Validation Functions
+  const onChangeBirthDate = (event, selectedDate) => {
+    const currentDate = selectedDate || birthDate;
+    setShowDatePicker(false);
+    setBirthDate(currentDate.getUTCFullYear() + '-' + String(currentDate.getUTCMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getUTCDate()).padStart(2, '0'));
+    setErrors((prevErrors) => {
+      let newErrors = { ...prevErrors };
+      delete newErrors.birthDate;
+      return newErrors;
+    });
+  };
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
   };
 
+  const validatePhoneNumber = (number) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(number);
+  };
+
+  const validateName = (name) => {
+    return name && name.trim().length > 0;
+  };
+
+  const validateBirthDate = () => {
+    const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!birthDate) {
+      return false;
+    } else if (!birthDateRegex.test(birthDate)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleSave = () => {
+    let errorMessages = {};
+
+    if (!validateName(FirstName))
+      errorMessages.FirstName = "First Name is required";
+    if (!validateName(LastName))
+      errorMessages.LastName = "Last Name is required";
+    if (!validateEmail(email)) errorMessages.email = "Invalid email";
+    if (!validatePhoneNumber(phonenumber))
+      errorMessages.phonenumber = "Invalid phone number";
+    if (!gender) errorMessages.gender = "Please select a gender";
+    if (!validateBirthDate()) errorMessages.birthDate = "Invalid Birth Date";
+
+    setErrors(errorMessages);
+
+    if (Object.keys(errorMessages).length === 0) {
+      const userData = {
+        userId: userDetails.userID,
+        email,
+        phone_number: phonenumber,
+        first_name: FirstName,
+        last_name: LastName,
+        birthdate: birthDate,
+        gender: gender,
+        address: Address,
+      };
+      axios
+        .put(
+          "http://csci5308vm20.research.cs.dal.ca:8080/users/" + userDetails.userID,
+          userData,
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    }
+  };
   const handleLogout = () => {
     unregisterIndieDevice(email, 14881, "JNsN0VrdyjC41kJb7doGS2");
     navigation.navigate("LandingScreen");
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.innerContainer}>
         <Text>First Name</Text>
         <TextInput
@@ -112,8 +199,8 @@ const VolunteerProfile = ({ navigation }) => {
           setOpen={setOpen}
           value={gender}
           items={genders}
-          setValue={setGender}
-          setItems={setGenders}
+          setValue={setgender}
+          setItems={setgenders}
           style={{ borderColor: errors.gender ? "red" : "#000" }}
         />
         <Text style={{ color: "red" }}>{errors.gender}</Text>
@@ -155,36 +242,15 @@ const VolunteerProfile = ({ navigation }) => {
             setAddress(value);
           }}
         />
-        {/*  
-        TODO
-        <Text style={styles.label}>Volunteer Experience</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your volunteer experience"
-          value={volunteerExperience}
-          onChangeText={setVolunteerExperience}
-        />
-
-        <View style={styles.buttonGroup}>
-          <Pressable
-            style={styles.button}
-            onPress={() => 
-          >
-            <Text style={styles.buttonText}>+ Add Certifications</Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            onPress={() => 
-          >
-            <Text style={styles.buttonText}>+ Add Government ID</Text>
-          </Pressable>
-        </View>
-        */}
-        <Pressable style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.createText}>Logout</Text>
-        </Pressable>
       </View>
-    </ScrollView>
+
+      <Pressable style={styles.buttonContainer} onPress={handleSave}>
+        <Text style={styles.createText}>Save</Text>
+      </Pressable>
+      <Pressable style={styles.buttonContainer} onPress={handleLogout}>
+        <Text style={styles.createText}>Logout</Text>
+      </Pressable>
+    </View>
   );
 };
 
@@ -192,55 +258,77 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   innerContainer: {
-    paddingHorizontal: 30,
+    width: "80%",
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    textAlign: "center",
-  },
-  label: {
-    fontSize: 16,
-    marginTop: 10,
   },
   input: {
     height: 40,
     backgroundColor: "#E6E6E6",
     marginVertical: 10,
     paddingHorizontal: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "black",
   },
-  buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 20,
+  addressinput: {
+    height: 90,
+    backgroundColor: "#E6E6E6",
+    marginVertical: 10,
+    paddingHorizontal: 10,
+  },
+
+  buttonContainer: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: "50%",
+  },
+  logout: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    width: "80%",
+    alignItems: "center",
   },
   createText: {
     color: "white",
     textAlign: "center",
   },
-  button: {
-    backgroundColor: "black",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    textAlign: "center",
-  },
-  logoutButton: {
-    backgroundColor: "black",
-    paddingVertical: 10,
-    borderRadius: 5,
-    alignItems: "center",
+  row: {
+    flexDirection: "row",
     marginTop: 10,
+    zIndex: -1,
+  },
+  forgotPassword: {
+    color: "black",
+    textDecorationLine: "underline",
+  },
+  login: {
+    color: "black",
+  },
+  picker: {
+    width: 10,
+    height: 50,
+  },
+  dropDownContainerStyle: {
+    backgroundColor: "#E6E6E6",
+    zIndex: 1,
+  },
+  dateInputContainer: {
+    height: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E6E6E6",
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
 });
 

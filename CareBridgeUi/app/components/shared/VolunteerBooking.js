@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Modal,
+  Alert,
 } from "react-native";
 import moment from "moment";
 import { Calendar } from "react-native-calendars";
@@ -13,6 +14,7 @@ import axios from "axios";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import UserDetailsContext from "./context/userDetailsContext";
 import sharedStyle from "./styles/sharedStyle";
+import Toast from "react-native-toast-message";
 const Arrow = ({ direction }) => {
   return (
     <MaterialIcons
@@ -75,18 +77,24 @@ const VolunteerBooking = ({ route, navigation }) => {
               selectedSlot &&
               selectedSlot.bookingStartTime === slot.bookingStartTime &&
               selectedSlot.bookingEndTime === slot.bookingEndTime;
-
+            const today = moment().startOf("day");
+            const selectedDay = moment(date);
             switch (slot.availability) {
               case 0:
                 slotStyle = styles.notAvailableSlot;
-                if (userDetails.type === "volunteer") {
+                if (
+                  userDetails.type === "volunteer" &&
+                  selectedDay.isAfter(today)
+                ) {
                   onPressAction = () => toggleSlotAvailability(slot);
                 }
                 break;
               case 1:
                 slotStyle = styles.availableSlot;
-                onPressAction = () => setSelectedSlot(slot);
-                if (userDetails.type === "volunteer") {
+                if (
+                  userDetails.type === "volunteer" &&
+                  selectedDay.isAfter(today)
+                ) {
                   onPressAction = () => toggleSlotAvailability(slot);
                 }
                 break;
@@ -148,8 +156,35 @@ const VolunteerBooking = ({ route, navigation }) => {
 
     fetchData();
   }, [selectedSlot]);
-
+  const deleteAppoinment = (bookingObj) => {
+    Alert.alert(
+      "Delete Appoinment",
+      "Are you sure you want to delete this Appoinment?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            axios
+              .delete(
+                `http://csci5308vm20.research.cs.dal.ca:8080/appointment/q?volunteerId=${bookingObj.volunteerId}&familyId=${bookingObj.familyId}&bookingDate=${bookingObj.bookingDate}&bookingStartTime=${bookingObj.bookingStartTime}`
+              )
+              .then((response) => {
+                if (response) {
+                  setSelectedSlot(null);
+                }
+              });
+          },
+        },
+      ]
+    );
+  };
   const BookingDetailsModal = () => {
+    const today = moment().startOf("day");
+    const selectedDay = moment(selectedDate);
     if (!selectedSlot || !seniorCitizenInfo) return null;
     return (
       <Modal
@@ -160,6 +195,9 @@ const VolunteerBooking = ({ route, navigation }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <Pressable style={sharedStyle.modalClose} onPress={closeModal}>
+              <MaterialIcons name="close" size={24} color="black" />
+            </Pressable>
             <Text style={styles.modalText}>Booking Details</Text>
             <Text>
               Name:{" "}
@@ -168,12 +206,14 @@ const VolunteerBooking = ({ route, navigation }) => {
             <Text>Address: {seniorCitizenInfo.address}</Text>
             <Text>phone number: {seniorCitizenInfo.phone_number}</Text>
             <Text>Description: {selectedSlot.description}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={closeModal}
-            >
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
+            {selectedDay.isAfter(today) && (
+              <Pressable
+                style={sharedStyle.modalButton}
+                onPress={() => deleteAppoinment(selectedSlot)}
+              >
+                <Text style={sharedStyle.modalButtonText}>Delete</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </Modal>
@@ -287,8 +327,19 @@ const VolunteerBooking = ({ route, navigation }) => {
       reqBody
     );
     if (response.status == 200) {
+      Toast.show({
+        type: "success",
+        text1: "Slot Updated Successfully.",
+        text2: "API call was successful!",
+      });
       fetchSlotsForDate(selectedDate);
       setSelectedSlot(null);
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Unable to update the slot.",
+        text2: "API call failed",
+      });
     }
   };
 
@@ -298,6 +349,11 @@ const VolunteerBooking = ({ route, navigation }) => {
       reqBody
     );
     if (response.status == 200) {
+      Toast.show({
+        type: "success",
+        text1: "Slot updated Successfully.",
+        text2: "API call was successful!",
+      });
       setSlots((currentSlots) => {
         const updatedSlots = { ...currentSlots };
         const slotIndex = updatedSlots[slot.bookingDate].findIndex(
@@ -312,13 +368,20 @@ const VolunteerBooking = ({ route, navigation }) => {
           slotIndex !== -1 &&
           calledFrom === "toggleSlotAvailability"
         ) {
-          updatedSlots[slot.bookingDate][slotIndex].availability = reqBody.availability;
+          updatedSlots[slot.bookingDate][slotIndex].availability =
+            reqBody.availability;
         }
 
         return updatedSlots;
       });
 
       setSelectedSlot(null);
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Unable to update the slot.",
+        text2: "API call failed",
+      });
     }
   };
 
@@ -337,7 +400,7 @@ const VolunteerBooking = ({ route, navigation }) => {
           const today = moment().startOf("day");
           const selectedDay = moment(day.dateString);
 
-          if (selectedDay.isBefore(today)) {
+          if (userDetails.type !== "volunteer" && selectedDay.isBefore(today)) {
             console.log("Cannot select a date in the past");
           } else {
             setSelectedDate(day.dateString);
@@ -378,7 +441,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "white",
+    padding: 5,
   },
   slotsContainer: {
     flex: 1,

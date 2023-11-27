@@ -4,6 +4,7 @@ package com.carebridge.backend.controller;
 import com.carebridge.backend.entity.Appointment;
 import com.carebridge.backend.repo.AppointmentRepository;
 import com.carebridge.backend.service.EmailService;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,8 +55,9 @@ private final EmailService emailService;
 
     @DeleteMapping("/appointment/q")
     @CrossOrigin(origins = "*")
-    void deleteAppointment(@RequestParam int volunteerId, @RequestParam int familyId, @RequestParam String bookingDate,
-                           @RequestParam String bookingStartTime) {
+    @Transactional
+    public void deleteAppointment(@RequestParam int volunteerId, @RequestParam int familyId, @RequestParam String bookingDate,
+                                  @RequestParam String bookingStartTime) {
         appointmentRepository.deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(volunteerId, familyId, bookingDate, bookingStartTime);
     }
 

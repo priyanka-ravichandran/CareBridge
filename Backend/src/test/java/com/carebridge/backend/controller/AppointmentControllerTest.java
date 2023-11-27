@@ -7,9 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,11 +22,11 @@ public class AppointmentControllerTest {
     @InjectMocks
     private AppointmentController appointmentController;
 
+
+
     @Test
     public void testGetAllAppointments() {
-        // Mock data
         List<Appointment> appointments = new ArrayList<>();
-        // TODO: Add mock appointments to the list
 
         when(appointmentRepository.findAll()).thenReturn(appointments);
 
@@ -64,16 +63,56 @@ public class AppointmentControllerTest {
     }
 
     @Test
-    public void testSeeAppointmentForVolunteerAndFamily() {
+    void testCheckAppointmentForVolunteerAndDate() {
         int volunteerId = 1;
-        int familyId = 1;
+        String date = "2023-11-26";
         List<Appointment> appointments = new ArrayList<>();
+        when(appointmentRepository.findAppointmentsByVolunteerIdAndBookingDate(volunteerId, date))
+                .thenReturn(appointments);
 
-        when(appointmentRepository.findAppointmentsByFamilyId(familyId)).thenReturn(appointments);
+        List<Appointment> resultAppointments = appointmentController.checkAppointmentForVolunteerAndDate(volunteerId, date);
 
-        List<Appointment> result = appointmentController.seeAppointmentForVolunteerAndFamily(volunteerId, familyId);
+        assertNotNull(resultAppointments);
+        assertEquals(appointments, resultAppointments);
 
-        assertEquals(appointments.size(), result.size());
+        verify(appointmentRepository, times(1)).findAppointmentsByVolunteerIdAndBookingDate(volunteerId, date);
+    }
+
+    @Test
+    void testDeleteAppointment() {
+        int volunteerId = 1;
+        int familyId = 2;
+        String bookingDate = "2023-11-26";
+        String bookingStartTime = "10:00";
+
+        doNothing().when(appointmentRepository).deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
+                volunteerId, familyId, bookingDate, bookingStartTime);
+
+        appointmentController.deleteAppointment(volunteerId, familyId, bookingDate, bookingStartTime);
+        verify(appointmentRepository, times(1)).deleteAppointmentByVolunteerIdAndFamilyIdAndBookingDateAndBookingStartTime(
+                volunteerId, familyId, bookingDate, bookingStartTime);
+    }
+
+    @Test
+    void testSeeAppointmentForVolunteerAndFamily() {
+        Appointment appointment = new Appointment(1, 2, 3, "2023-12-01", "09:00", "10:00", 1, "Test description");
+
+        when(appointmentRepository.findAppointmentsByVolunteerIdAndFamilyId(1, 2)).thenReturn(Collections.singletonList(appointment));
+
+        List<Appointment> result = appointmentController.seeAppointmentForVolunteerAndFamily(1, 2);
+
+        assertEquals(1, result.size());
+        Appointment retrievedAppointment = result.get(0);
+        assertEquals(1, retrievedAppointment.getVolunteerId());
+        assertEquals(2, retrievedAppointment.getFamilyId());
+        assertEquals(3, retrievedAppointment.getSeniorCitizenId());
+        assertEquals("2023-12-01", retrievedAppointment.getBookingDate());
+        assertEquals("09:00", retrievedAppointment.getBookingStartTime());
+        assertEquals("10:00", retrievedAppointment.getBookingEndTime());
+        assertEquals(1, retrievedAppointment.getAvailability());
+        assertEquals("Test description", retrievedAppointment.getDescription());
+
+        verify(appointmentRepository, times(1)).findAppointmentsByVolunteerIdAndFamilyId(1, 2);
     }
 
     @Test

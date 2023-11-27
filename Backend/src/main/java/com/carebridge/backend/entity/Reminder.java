@@ -28,16 +28,16 @@ public class Reminder implements Serializable {
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "Day")
-    private String day;
+    @Column(name = "Date")
+    private String date;
 
-    public Reminder(int elderlyId, int volunteerId, String reminderNumber, String time, String description, String day) {
+    public Reminder(int elderlyId, int volunteerId, String reminderNumber, String time, String description, String date) {
         this.elderlyId = elderlyId;
         this.volunteerId = volunteerId;
         this.reminderNumber = reminderNumber;
         this.time = time;
         this.description = description;
-        this.day = day;
+        this.date = date;
     }
 
     public Reminder() {}
@@ -58,8 +58,8 @@ public class Reminder implements Serializable {
         return description;
     }
 
-    public String getDay() {
-        return day;
+    public String getDate() {
+        return date;
     }
 
     public void setElderlyId(int elderlyId) {
@@ -78,8 +78,8 @@ public class Reminder implements Serializable {
         this.description = description;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setDate(String day) {
+        this.date = day;
     }
 
     public String getReminderNumber() {
